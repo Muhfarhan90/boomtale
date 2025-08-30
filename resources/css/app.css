@@ -9,3 +9,588 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* ================ ADMIN STYLES - BOOMTALE THEME ================ */
+
+/* CSS Variables for Admin */
+:root {
+    --boomtale-primary: #C9A877;
+    --boomtale-primary-dark: #B8986A;
+    --boomtale-primary-light: #D4B888;
+    --boomtale-secondary: #2C2C2C;
+    --boomtale-light: #F8F6F3;
+    --boomtale-dark: #1a1a1a;
+    --sidebar-width: 260px;
+}
+
+/* Admin Body Override */
+body.admin-body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    overflow-x: hidden;
+}
+
+/* ================ ADMIN LAYOUT STRUCTURE ================ */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+}
+
+.main-content-area {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease;
+}
+
+.content-wrapper {
+    flex: 1;
+    padding: 2rem;
+    background: #f8f9fa;
+}
+
+/* ================ ADMIN SIDEBAR ================ */
+.admin-sidebar {
+    width: var(--sidebar-width);
+    background: var(--boomtale-secondary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+    background: linear-gradient(135deg, var(--boomtale-primary) 0%, var(--boomtale-primary-dark) 100%);
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+}
+
+.logo-img {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 1px;
+}
+
+/* Admin Navigation */
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+}
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0.75rem;
+}
+
+.nav-item {
+    margin-bottom: 0.25rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    color: #adb5bd;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    background: rgba(201, 168, 119, 0.1);
+    color: var(--boomtale-primary);
+    transform: translateX(3px);
+    text-decoration: none;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, var(--boomtale-primary) 0%, var(--boomtale-primary-dark) 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(201, 168, 119, 0.3);
+}
+
+.nav-icon {
+    width: 20px;
+    margin-right: 12px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.nav-text {
+    flex: 1;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.submenu-arrow {
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+    margin-left: auto;
+}
+
+.nav-link[aria-expanded="true"] .submenu-arrow {
+    transform: rotate(180deg);
+}
+
+/* Admin Submenu */
+.submenu {
+    background: rgba(0, 0, 0, 0.2);
+    list-style: none;
+    margin: 0.25rem 0;
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.submenu-link {
+    display: block;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    color: #adb5bd;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.submenu-link:hover {
+    background: rgba(201, 168, 119, 0.1);
+    color: var(--boomtale-primary);
+    text-decoration: none;
+}
+
+/* Admin Sidebar Footer */
+.sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    margin-right: 0.75rem;
+}
+
+.avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--boomtale-primary);
+}
+
+.user-details {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.25rem;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: var(--boomtale-primary);
+    text-transform: uppercase;
+}
+
+.logout-form {
+    padding: 0;
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: none;
+    border: none;
+    color: #adb5bd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.btn-logout i {
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+/* ================ ADMIN NAVBAR ================ */
+.admin-navbar {
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navbar-toggle {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--boomtale-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.navbar-toggle:hover {
+    background: var(--boomtale-light);
+    color: var(--boomtale-primary);
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--boomtale-secondary);
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navbar-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: #6c757d;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.navbar-btn:hover {
+    background: var(--boomtale-light);
+    color: var(--boomtale-primary);
+}
+
+.navbar-btn .badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #dc3545;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.navbar-profile:hover {
+    background: var(--boomtale-light);
+}
+
+.profile-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--boomtale-primary);
+}
+
+.profile-name {
+    font-weight: 500;
+    color: var(--boomtale-secondary);
+}
+
+/* ================ ADMIN COMPONENTS ================ */
+
+/* Boomtale Buttons */
+.btn-boomtale {
+    background: linear-gradient(135deg, var(--boomtale-primary) 0%, var(--boomtale-primary-dark) 100%);
+    border: none;
+    color: white;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-boomtale:hover {
+    background: linear-gradient(135deg, var(--boomtale-primary-dark) 0%, #A08660 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(201, 168, 119, 0.3);
+    color: white;
+}
+
+.btn-outline-boomtale {
+    color: var(--boomtale-primary);
+    border-color: var(--boomtale-primary);
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-outline-boomtale:hover {
+    background: var(--boomtale-primary);
+    border-color: var(--boomtale-primary);
+    color: white;
+}
+
+/* Admin Cards */
+.admin-layout .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.admin-layout .card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.admin-layout .card-header {
+    background: var(--boomtale-light);
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+    color: var(--boomtale-secondary);
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* Admin Tables */
+.table-boomtale {
+    background: linear-gradient(135deg, var(--boomtale-primary) 0%, var(--boomtale-primary-dark) 100%);
+    color: white;
+}
+
+.table-boomtale th {
+    border-color: var(--boomtale-primary-dark);
+    font-weight: 600;
+}
+
+.text-boomtale {
+    color: var(--boomtale-primary) !important;
+}
+
+/* Admin Dropdowns */
+.admin-layout .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.admin-layout .dropdown-item:hover {
+    background: var(--boomtale-light);
+    color: var(--boomtale-primary);
+}
+
+/* Admin Breadcrumb */
+.admin-layout .breadcrumb {
+    background: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+.admin-layout .breadcrumb-item a {
+    color: var(--boomtale-primary);
+    text-decoration: none;
+}
+
+.admin-layout .breadcrumb-item a:hover {
+    color: var(--boomtale-primary-dark);
+}
+
+/* Admin Form Controls */
+.admin-layout .form-control:focus,
+.admin-layout .form-select:focus {
+    border-color: var(--boomtale-primary);
+    box-shadow: 0 0 0 0.2rem rgba(201, 168, 119, 0.25);
+}
+
+/* Admin Alerts */
+.admin-layout .alert {
+    border: none;
+    display: flex;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+
+.admin-layout .alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+}
+
+.admin-layout .alert-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+}
+
+.alert-boomtale .alert-content {
+    display: flex;
+    align-items: flex-start;
+    /* Mengatur agar ikon dan teks sejajar di atas */
+    width: 100%;
+}
+
+.alert-boomtale .alert-icon {
+    margin-right: 1rem;
+    /* Memberi jarak antara ikon dan teks */
+    font-size: 1.25rem;
+    /* Sedikit memperbesar ikon */
+    padding-top: 0.1rem;
+    /* Menyesuaikan posisi vertikal ikon */
+}
+
+.alert-boomtale .alert-body {
+    flex-grow: 1;
+    /* Membuat area teks mengisi ruang yang tersedia */
+}
+
+.alert-boomtale .alert-title {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.alert-boomtale .alert-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    margin-left: 1.5rem;
+    /* Memberi jarak dari teks */
+}
+
+.alert-boomtale .alert-close:hover {
+    opacity: 1;
+}
+
+.alert-boomtale .alert-list {
+    margin-bottom: 0;
+    padding-left: 1.2rem;
+}
+
+/* ================ ADMIN RESPONSIVE ================ */
+@media (max-width: 991.98px) {
+    .admin-sidebar {
+        transform: translateX(-100%);
+    }
+
+    .admin-sidebar.show {
+        transform: translateX(0);
+    }
+
+    .main-content-area {
+        margin-left: 0;
+    }
+
+    .navbar-container {
+        padding: 1rem;
+    }
+
+    .content-wrapper {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.25rem;
+    }
+
+    .page-subtitle {
+        display: none;
+    }
+
+    .profile-name {
+        display: none;
+    }
+}
+
+/* Admin Sidebar Overlay for Mobile */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.sidebar-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
