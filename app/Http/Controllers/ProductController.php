@@ -51,7 +51,7 @@ class ProductController extends Controller
             ->with('category')
             ->paginate(12);
 
-        return view('user.products.index', compact('products', 'categories'));
+        return view('products.index', compact('products', 'categories'));
     }
 
     /**
@@ -63,23 +63,66 @@ class ProductController extends Controller
             abort(404, 'Produk tidak tersedia');
         }
 
+        // Load relationships
+        $product->load(['category', 'reviews.user']);
+
         $userOwnsProduct = false;
+        $userHasReviewed = false;
+        $userReview = null;
+
         if (auth()->check()) {
+            // Check if user owns the product
             $userOwnsProduct = auth()->user()->userProducts()
                 ->where('product_id', $product->id)
                 ->exists();
+
+            // Check if user has reviewed this product
+            $userHasReviewed = auth()->user()->reviews()
+                ->where('product_id', $product->id)
+                ->exists();
+
+            if ($userHasReviewed) {
+                $userReview = auth()->user()->reviews()
+                    ->where('product_id', $product->id)
+                    ->first();
+            }
         }
 
+        // Get paginated reviews
+        $reviews = $product->reviews()
+            ->with('user:id,name')
+            ->orderBy('created_at', 'desc')
+            ->paginate(5, ['*'], 'reviews_page');
+
+        // Get related products
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', true)
             ->limit(4)
             ->get();
 
-        // Anda mungkin perlu menambahkan kolom view_count di migrasi
-        // $product->increment('view_count');
+        // Calculate review statistics
+        $reviewStats = [
+            'average' => round($product->reviews()->avg('rating') ?? 0, 1),
+            'total' => $product->reviews()->count(),
+            'distribution' => [
+                5 => $product->reviews()->where('rating', 5)->count(),
+                4 => $product->reviews()->where('rating', 4)->count(),
+                3 => $product->reviews()->where('rating', 3)->count(),
+                2 => $product->reviews()->where('rating', 2)->count(),
+                1 => $product->reviews()->where('rating', 1)->count(),
+            ]
+        ];
 
-        return view('user.products.show', compact('product', 'userOwnsProduct', 'relatedProducts'));
+        return view('products.show', compact(
+            'product',
+            'userOwnsProduct',
+            'userHasReviewed',
+            'userReview',
+            'reviews',
+            'relatedProducts',
+            'reviewStats'
+        ));
     }
 
     /**
@@ -94,8 +137,8 @@ class ProductController extends Controller
 
         // 2. Cek apakah user memiliki produk ini
         $userOwnsProduct = auth()->user()->userProducts()
-                                ->where('product_id', $product->id)
-                                ->exists();
+            ->where('product_id', $product->id)
+            ->exists();
 
         if (!$userOwnsProduct) {
             abort(403, 'Anda tidak memiliki akses untuk mengunduh file ini.');
@@ -221,7 +264,7 @@ class ProductController extends Controller
             'type' => 'required|in:digital,physical',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-           'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072 ',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072 ',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             'digital_file' => 'nullable|required_if:type,digital|file|mimes:zip,pdf,epub,mp4|max:307200',
             'stock' => 'nullable|required_if:type,physical|integer|min:0',

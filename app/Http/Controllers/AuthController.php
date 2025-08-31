@@ -90,7 +90,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('home')
+        return redirect()->route('user.home')
             ->with('success', 'Akun berhasil dibuat! Selamat datang di Boomtale.');
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -17,19 +18,28 @@ class CartController extends Controller
             return $item->product->price * $item->quantity;
         });
 
-        return view('user.cart.index', compact('cartItems', 'total'));
+        return view('cart.index', compact('cartItems', 'total'));
     }
 
     public function add(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id'
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'nullable|integer|min:1|max:10'
         ]);
 
         $product = Product::findOrFail($request->product_id);
 
+        // Check if product is active
+        if (!$product->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produk tidak tersedia'
+            ]);
+        }
+
         // Check if product is already owned
-        if (auth()->user()->ownedProducts()->where('product_id', $product->id)->exists()) {
+        if (auth()->user()->hasPurchasedProduct($product->id)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Anda sudah memiliki produk ini'
@@ -42,16 +52,34 @@ class CartController extends Controller
             ->first();
 
         if ($existingCart) {
+            // Update quantity if already in cart
+            $newQuantity = $existingCart->quantity + ($request->quantity ?? 1);
+            $maxQuantity = $product->type === 'digital' ? 1 : 10;
+
+            if ($newQuantity > $maxQuantity) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $product->type === 'digital'
+                        ? 'Produk digital hanya bisa dibeli 1 kali'
+                        : "Maksimal $maxQuantity item per produk"
+                ]);
+            }
+
+            $existingCart->update(['quantity' => $newQuantity]);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Produk sudah ada di keranjang'
+                'success' => true,
+                'message' => 'Kuantitas produk di keranjang berhasil diperbarui'
             ]);
         }
+
+        // For digital products, quantity is always 1
+        $quantity = $product->type === 'digital' ? 1 : ($request->quantity ?? 1);
 
         Cart::create([
             'user_id' => auth()->id(),
             'product_id' => $product->id,
-            'quantity' => 1
+            'quantity' => $quantity
         ]);
 
         return response()->json([
@@ -60,13 +88,61 @@ class CartController extends Controller
         ]);
     }
 
-    public function remove($id)
+    public function update(Request $request, Cart $cart)
     {
-        Cart::where('user_id', auth()->id())
-            ->where('id', $id)
-            ->delete();
+        // Verify cart belongs to current user
+        if ($cart->user_id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access'
+            ], 403);
+        }
 
-        return redirect()->back()->with('success', 'Produk dihapus dari keranjang');
+        $request->validate([
+            'quantity' => 'required|integer|min:1|max:10'
+        ]);
+
+        // Digital products can't have quantity more than 1
+        if ($cart->product->type === 'digital' && $request->quantity > 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produk digital hanya bisa dibeli 1 kali'
+            ]);
+        }
+
+        $cart->update([
+            'quantity' => $request->quantity
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kuantitas berhasil diperbarui'
+        ]);
+    }
+
+    public function remove(Cart $cart)
+    {
+        // Verify cart belongs to current user
+        if ($cart->user_id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access'
+            ], 403);
+        }
+
+        $cart->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Produk berhasil dihapus dari keranjang'
+        ]);
+    }
+
+    public function clear()
+    {
+        Cart::where('user_id', auth()->id())->delete();
+
+        return redirect()->back()->with('success', 'Keranjang berhasil dikosongkan');
     }
 
     public function count()

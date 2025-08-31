@@ -71,4 +71,77 @@ class Product extends Model
     {
         return $this->type === 'digital';
     }
+
+    /**
+     * Get average rating for this product
+     */
+    public function getAverageRatingAttribute()
+    {
+        return round($this->reviews()->avg('rating') ?? 0, 1);
+    }
+
+    /**
+     * Get total reviews count
+     */
+    public function getTotalReviewsAttribute()
+    {
+        return $this->reviews()->count();
+    }
+
+    /**
+     * Get formatted average rating
+     */
+    public function getFormattedAverageRatingAttribute()
+    {
+        return number_format($this->average_rating, 1);
+    }
+
+    /**
+     * Get rating distribution
+     */
+    public function getRatingDistributionAttribute()
+    {
+        return [
+            5 => $this->reviews()->where('rating', 5)->count(),
+            4 => $this->reviews()->where('rating', 4)->count(),
+            3 => $this->reviews()->where('rating', 3)->count(),
+            2 => $this->reviews()->where('rating', 2)->count(),
+            1 => $this->reviews()->where('rating', 1)->count(),
+        ];
+    }
+
+    /**
+     * Get stars HTML for average rating
+     */
+    public function getStarsHtmlAttribute()
+    {
+        $average = $this->average_rating;
+        $stars = '';
+
+        for ($i = 1; $i <= 5; $i++) {
+            if ($i <= floor($average)) {
+                $stars .= '<i class="fas fa-star text-warning"></i>';
+            } elseif ($i - 0.5 <= $average) {
+                $stars .= '<i class="fas fa-star-half-alt text-warning"></i>';
+            } else {
+                $stars .= '<i class="far fa-star text-muted"></i>';
+            }
+        }
+
+        return $stars;
+    }
+
+    /**
+     * Check if user can review this product
+     */
+    public function canBeReviewedBy($userId)
+    {
+        // User must own the product
+        $ownsProduct = $this->userProducts()->where('user_id', $userId)->exists();
+
+        // User hasn't reviewed yet
+        $hasReviewed = $this->reviews()->where('user_id', $userId)->exists();
+
+        return $ownsProduct && !$hasReviewed;
+    }
 }

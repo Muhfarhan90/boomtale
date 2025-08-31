@@ -5,6 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,15 +17,14 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+
 
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
 |--------------------------------------------------------------------------
 */
+
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
@@ -38,6 +40,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 Route::name('user.')->group(function () {
+    // Public Home Routes
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::post('/search', [HomeController::class, 'search'])->name('search');
+
+    // Public Review Routes
+    Route::get('/products/{product}/reviews', [ReviewController::class, 'productReviews'])->name('products.reviews');
+
+
     // Public Product Routes
     Route::prefix('products')->name('products.')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index');
@@ -51,19 +61,57 @@ Route::name('user.')->group(function () {
         Route::get('/{category:slug}', [CategoryController::class, 'show'])->name('show');
     });
 
+    Route::get('/profile', [UserController::class, 'showProfile'])->name('profile');
+
+    Route::get('/orders', [UserController::class, 'showOrders'])->name('orders.index');
+
     // Authenticated User Routes
     Route::middleware('auth')->group(function () {
-        // Cart Management
+        // Cart routes
         Route::prefix('cart')->name('cart.')->group(function () {
             Route::get('/', [CartController::class, 'index'])->name('index');
             Route::post('/add', [CartController::class, 'add'])->name('add');
-            Route::delete('/{id}', [CartController::class, 'remove'])->name('remove');
+            Route::put('/{cart}', [CartController::class, 'update'])->name('update'); // {cart} parameter
+            Route::delete('/{cart}', [CartController::class, 'remove'])->name('remove'); // {cart} parameter
+            Route::delete('/', [CartController::class, 'clear'])->name('clear');
             Route::get('/count', [CartController::class, 'count'])->name('count');
         });
 
-        // Route untuk download file digital yang aman
-        Route::get('/produk/{product}/download', [ProductController::class, 'download'])
-            ->name('products.download');
+        // Checkout routes (placeholder)
+        Route::prefix('checkout')->name('checkout.')->group(function () {
+            Route::get('/', function () {
+                return view('user.checkout.index');
+            })->name('index');
+        });
+
+        // Order routes
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [OrderController::class, 'index'])->name('index');
+            Route::post('/', [OrderController::class, 'store'])->name('store');
+            Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+            Route::patch('/{order}/cancel', [OrderController::class, 'cancel'])->name('cancel');
+            Route::post('/{order}/reorder', [OrderController::class, 'reorder'])->name('reorder');
+            Route::get('/{order}/download/{orderItem}', [OrderController::class, 'download'])->name('download');
+        });
+
+        Route::get('/orders/stats', [OrderController::class, 'getStatistics'])->name('orders.stats');
+
+        // User Review Routes
+        Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+        Route::put('/products/{product}/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+        Route::delete('/products/{product}/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+        Route::get('/my-reviews', [ReviewController::class, 'myReviews'])->name('user.reviews.index');
+
+        // Order routes
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+        // Review routes - hanya dari orders
+        Route::get('/orders/{userProduct}/review', [ReviewController::class, 'create'])->name('reviews.create');
+        Route::post('/orders/{userProduct}/review', [ReviewController::class, 'store'])->name('reviews.store');
+        Route::get('/orders/{userProduct}/review/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
+        Route::put('/orders/{userProduct}/review', [ReviewController::class, 'update'])->name('reviews.update');
+        Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     });
 });
 
@@ -113,5 +161,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('toggle-status');
         Route::post('/bulk-action', [CategoryController::class, 'bulkAction'])->name('bulk-action');
         Route::post('/reorder', [CategoryController::class, 'reorder'])->name('reorder');
+    });
+
+    // Review Management
+    Route::prefix('reviews')->name('reviews.')->group(function () {
+        Route::get('/', [ReviewController::class, 'adminIndex'])->name('index');
+        Route::get('/{review}', [ReviewController::class, 'adminShow'])->name('show');
+        Route::delete('/{review}', [ReviewController::class, 'adminDestroy'])->name('destroy');
+        Route::post('/bulk-action', [ReviewController::class, 'bulkAction'])->name('bulk-action');
+        Route::get('/api/stats', [ReviewController::class, 'getStats'])->name('stats');
+        Route::get('/api/recent/{limit?}', [ReviewController::class, 'getRecent'])->name('recent');
+    });
+
+    // Order
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'adminIndex'])->name('index');
+        Route::get('/{order}', [OrderController::class, 'adminShow'])->name('show');
+        Route::patch('/{order}/status', [OrderController::class, 'updateStatus'])->name('update-status');
     });
 });
