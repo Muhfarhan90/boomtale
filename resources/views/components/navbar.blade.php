@@ -31,13 +31,17 @@
             <!-- Right Menu with proper spacing -->
             <ul class="navbar-nav ms-auto">
                 @auth
+
+                    @php
+                        $cartCount = \App\Models\Cart::where('user_id', auth()->id())->count();
+                    @endphp
                     <!-- Cart -->
                     <li class="nav-item me-2">
                         <a class="nav-link position-relative px-3" href="{{ route('user.cart.index') }}">
                             <i class="fas fa-shopping-cart"></i>
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count"
-                                style="font-size: 0.7rem; display: none;">0</span>
+                                style="font-size: 0.7rem; {{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</span>
                             <span class="d-lg-none ms-2">Keranjang</span>
                         </a>
                     </li>
@@ -109,7 +113,11 @@
                 <i class="fas fa-shopping-cart"></i>
                 <span>Keranjang</span>
                 @auth
-                    <span class="bottom-nav-badge cart-count-mobile" style="display: none;">0</span>
+                    @php
+                        $cartCount = \App\Models\Cart::where('user_id', auth()->id())->count();
+                    @endphp
+                    <span class="bottom-nav-badge cart-count-mobile"
+                        style="{{ $cartCount > 0 ? '' : 'display: none;' }}">{{ $cartCount }}</span>
                 @endauth
             </a>
         </div>
@@ -133,10 +141,17 @@
 <style>
     /* Cart badge styling */
     .cart-count {
-        min-width: 18px;
-        height: 18px;
-        line-height: 18px;
-        text-align: center;
+        min-width: 20px !important;
+        height: 20px !important;
+        line-height: 20px !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        font-size: 0.65rem !important;
+        font-weight: bold !important;
+        border-radius: 50% !important;
     }
 
     /* Navbar spacing improvements */
@@ -218,21 +233,25 @@
         margin-top: 2px;
     }
 
-    /* Bottom nav badge for mobile */
+    /* Bottom nav badge for mobile - PERBAIKAN UNTUK CENTERING */
     .bottom-nav-badge {
-        position: absolute;
-        top: 2px;
-        right: 8px;
-        background: #dc3545;
-        color: white;
-        border-radius: 50%;
-        width: 14px;
-        height: 14px;
-        font-size: 9px;
-        line-height: 14px;
-        text-align: center;
-        font-weight: bold;
-        z-index: 10;
+        position: absolute !important;
+        top: 2px !important;
+        right: 8px !important;
+        background: #dc3545 !important;
+        color: white !important;
+        border-radius: 50% !important;
+        width: 16px !important;
+        height: 16px !important;
+        font-size: 9px !important;
+        line-height: 16px !important;
+        text-align: center !important;
+        font-weight: bold !important;
+        z-index: 10 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
     }
 
     /* Add bottom padding to body on mobile to account for bottom nav */
@@ -279,6 +298,21 @@
 
         .bottom-nav-container {
             padding: 0 8px;
+        }
+
+        /* Sesuaikan ukuran badge untuk layar kecil */
+        .bottom-nav-badge {
+            width: 14px !important;
+            height: 14px !important;
+            font-size: 8px !important;
+            line-height: 14px !important;
+        }
+
+        .cart-count {
+            min-width: 18px !important;
+            height: 18px !important;
+            line-height: 18px !important;
+            font-size: 0.6rem !important;
         }
     }
 
@@ -358,40 +392,46 @@
 <script>
     // Update cart count on page load
     $(document).ready(function() {
+        @auth
         updateCartCount();
+    @endauth
 
-        // Close mobile menu when clicking on a link
-        $('.navbar-nav .nav-link').click(function() {
-            if ($(window).width() < 992) {
-                $('.navbar-collapse').collapse('hide');
-            }
-        });
+    // Close mobile menu when clicking on a link
+    $('.navbar-nav .nav-link').click(function() {
+        if ($(window).width() < 992) {
+            $('.navbar-collapse').collapse('hide');
+        }
+    });
     });
 
     function updateCartCount() {
         @auth
-        $.get('{{ route('user.cart.count') }}')
-            .done(function(response) {
+        $.ajax({
+            url: '{{ route('user.cart.count') }}',
+            method: 'GET',
+            success: function(response) {
+                const count = response.count || 0;
+
                 // Update desktop cart count
-                $('.cart-count').text(response.count);
-                if (response.count > 0) {
-                    $('.cart-count').show();
+                if (count > 0) {
+                    $('.cart-count').text(count).show();
                 } else {
                     $('.cart-count').hide();
                 }
 
                 // Update mobile cart count
-                $('.cart-count-mobile').text(response.count);
-                if (response.count > 0) {
-                    $('.cart-count-mobile').show();
+                if (count > 0) {
+                    $('.cart-count-mobile').text(count).show();
                 } else {
                     $('.cart-count-mobile').hide();
                 }
-            })
-            .fail(function() {
+            },
+            error: function(xhr, status, error) {
+                console.log('Error updating cart count:', error);
                 $('.cart-count').hide();
                 $('.cart-count-mobile').hide();
-            });
+            }
+        });
     @endauth
     }
 

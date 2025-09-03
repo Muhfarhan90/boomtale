@@ -230,11 +230,16 @@
                                 @error('gallery_images.*')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <div class="gallery-preview-container" id="galleryImagesPreviewContainer">
+                                <div id="gallery-preview-container">
                                     @if ($product->gallery_images)
-                                        @foreach ($product->gallery_images as $image)
-                                            <div class="gallery-preview-item"><img src="{{ Storage::url($image) }}"
-                                                    alt="Gallery Image"></div>
+                                        @foreach ($product->gallery_images as $imagePath)
+                                            <div class="gallery-item">
+                                                <img src="{{ Storage::url($imagePath) }}" height="100">
+                                                <input type="hidden" name="existing_gallery_images[]"
+                                                    value="{{ $imagePath }}">
+                                                <button type="button"
+                                                    class="btn btn-danger btn-sm remove-gallery-item">Hapus</button>
+                                            </div>
                                         @endforeach
                                     @endif
                                 </div>
@@ -326,6 +331,13 @@
                     digitalFileName.textContent = '';
                 }
             });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remove-gallery-item')) {
+                // Hapus elemen visual dan input hidden-nya
+                e.target.closest('.gallery-item').remove();
+            }
         });
     </script>
 @endpush

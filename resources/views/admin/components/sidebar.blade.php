@@ -45,7 +45,8 @@
             </li>
 
             <li class="nav-item">
-                <a href="{{route('admin.users.index')}}" class="nav-link" onclick="showComingSoon('Pengguna')">
+                <a href="{{ route('admin.users.index') }}" class="nav-link
+                    {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
                     <i class="fas fa-users nav-icon"></i>
                     <span class="nav-text">Pengguna</span>
                 </a>

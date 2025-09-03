@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('guest')->group(function () {
-    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -77,11 +78,11 @@ Route::name('user.')->group(function () {
             Route::get('/count', [CartController::class, 'count'])->name('count');
         });
 
-        // Checkout routes (placeholder)
+        // Checkout routes
         Route::prefix('checkout')->name('checkout.')->group(function () {
-            Route::get('/', function () {
-                return view('user.checkout.index');
-            })->name('index');
+            Route::get('/', [TransactionController::class, 'checkout'])->name('index');
+            Route::post('/', [TransactionController::class, 'processCheckout'])->name('process');
+            Route::post('/callback', [TransactionController::class, 'handleCallback'])->name('callback');
         });
 
         // Order routes
@@ -147,6 +148,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
         Route::patch('/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('toggle-status');
         Route::post('/bulk-action', [ProductController::class, 'bulkAction'])->name('bulkAction');
+        Route::get('/products/{product}/download', [ProductController::class, 'downloadDigitalFile'])->name('download');
     });
 
     // Category Management

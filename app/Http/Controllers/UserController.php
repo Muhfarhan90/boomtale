@@ -37,7 +37,7 @@ class UserController extends Controller
             });
         }
 
-        $users = $query->orderBy('created_at', 'desc')->paginate(10);
+        $users = $query->orderBy('role', 'asc')->orderBy('created_at', 'desc')->paginate(10);
 
         $breadcrumbs = [
             ['title' => 'Pengguna', 'url' => null]

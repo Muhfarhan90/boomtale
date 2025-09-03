@@ -49,7 +49,7 @@ class AuthController extends Controller
                 return redirect()->intended(route('admin.dashboard'))
                     ->with('success', 'Selamat datang di Admin Dashboard!');
             } else {
-                return redirect()->intended(route('home'))
+                return redirect()->intended(route('user.home'))
                     ->with('success', 'Selamat datang kembali!');
             }
         }

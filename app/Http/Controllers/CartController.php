@@ -15,10 +15,10 @@ class CartController extends Controller
             ->get();
 
         $total = $cartItems->sum(function ($item) {
-            return $item->product->price * $item->quantity;
+            return $item->product->price * $item->quantity ?? 1;
         });
-
-        return view('cart.index', compact('cartItems', 'total'));
+        $count = $cartItems->count();
+        return view('cart.index', compact('cartItems', 'total', 'count'));
     }
 
     public function add(Request $request)
@@ -79,7 +79,8 @@ class CartController extends Controller
         Cart::create([
             'user_id' => auth()->id(),
             'product_id' => $product->id,
-            'quantity' => $quantity
+            'quantity' => $quantity,
+            'price' => $product->price
         ]);
 
         return response()->json([

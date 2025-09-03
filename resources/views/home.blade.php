@@ -2,105 +2,6 @@
 
 @section('title', 'Beranda - Boomtale')
 
-@push('styles')
-    <style>
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(135deg, var(--bs-primary) 0%, #6f42c1 100%);
-            color: white;
-            padding: 4rem 0;
-            margin-bottom: 3rem;
-        }
-
-        .feature-card {
-            transition: transform 0.3s ease;
-            border: none;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-slider {
-            overflow-x: auto;
-            scroll-behavior: smooth;
-        }
-
-        .product-slider::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Mobile Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #fff;
-            border-top: 1px solid #dee2e6;
-            z-index: 1000;
-            padding: 8px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .bottom-nav .nav-item {
-            flex: 1;
-            text-align: center;
-        }
-
-        .bottom-nav .nav-link {
-            color: #6c757d;
-            text-decoration: none;
-            font-size: 12px;
-            padding: 8px 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: color 0.2s;
-        }
-
-        .bottom-nav .nav-link.active,
-        .bottom-nav .nav-link:hover {
-            color: var(--bs-primary);
-        }
-
-        .bottom-nav .nav-link i {
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        @media (max-width: 767.98px) {
-            body {
-                padding-bottom: 70px;
-            }
-
-            .bottom-nav {
-                display: flex;
-            }
-
-            .navbar-toggler {
-                display: none !important;
-            }
-
-            .navbar-collapse {
-                display: none !important;
-            }
-
-            .hero-section {
-                padding: 2rem 0;
-                margin-bottom: 2rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .bottom-nav {
-                display: none;
-            }
-        }
-    </style>
-@endpush
-
 @section('content')
     <!-- Hero Section -->
     <section class="hero-section">
@@ -188,40 +89,10 @@
                     <h2>Produk Terbaru</h2>
                     <a href="{{ route('user.products.index') }}" class="btn btn-outline-boomtale">Lihat Semua</a>
                 </div>
-
-                <div class="row">
+                <div class="row g-3">
                     @foreach ($latestProducts as $product)
-                        <div class="col-6 col-md-3 mb-4">
-                            <div class="card h-100">
-                                @if ($product->featured_image)
-                                    <img src="{{ Storage::url($product->featured_image) }}" class="card-img-top"
-                                        alt="{{ $product->name }}" style="height: 160px; object-fit: cover;">
-                                @else
-                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
-                                        style="height: 160px;">
-                                        <i
-                                            class="fas fa-{{ $product->isDigital() ? 'book' : 'play-circle' }} fa-2x text-muted"></i>
-                                    </div>
-                                @endif
-
-                                <div class="card-body d-flex flex-column">
-                                    <h6 class="card-title">
-                                        <a href="{{ route('user.products.show', $product) }}"
-                                            class="text-dark text-decoration-none">
-                                            {{ Str::limit($product->name, 30) }}
-                                        </a>
-                                    </h6>
-                                    <div class="mt-auto">
-                                        <div class="price mb-2">
-                                            <span class="fw-bold text-boomtale">{{ $product->formatted_price }}</span>
-                                        </div>
-                                        <a href="{{ route('user.products.show', $product) }}"
-                                            class="btn btn-outline-boomtale btn-sm w-100">
-                                            <i class="fas fa-eye me-1"></i>Lihat Detail
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <x-product-card :product="$product" />
                         </div>
                     @endforeach
                 </div>

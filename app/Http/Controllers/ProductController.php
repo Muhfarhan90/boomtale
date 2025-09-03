@@ -18,39 +18,52 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::where('is_active', true)->get();
+        $query = Product::with(['category', 'reviews'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->withCount('userProducts as orders_count')
+            ->where('is_active', true);
 
-        $products = Product::where('is_active', true)
-            ->when($request->search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%") // Menggunakan 'name'
-                    ->orWhere('description', 'like', "%{$search}%");
-            })
-            ->when($request->category, function ($query, $category) {
-                $query->where('category_id', $category);
-            })
-            ->when($request->type, function ($query, $type) {
-                $query->where('type', $type);
-            })
-            ->when($request->sort, function ($query, $sort) {
-                switch ($sort) {
-                    case 'price_low':
-                        $query->orderBy('price', 'asc');
-                        break;
-                    case 'price_high':
-                        $query->orderBy('price', 'desc');
-                        break;
-                    case 'popular':
-                        $query->withCount(['userProducts'])->orderBy('user_products_count', 'desc'); // Menggunakan userProducts
-                        break;
-                    default:
-                        $query->orderBy('created_at', 'desc');
-                }
-            }, function ($query) {
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')
+                    ->orWhereHas('category', function ($categoryQuery) use ($search) {
+                        $categoryQuery->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        // Category filter
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Sorting
+        switch ($request->sort) {
+            case 'newest':
                 $query->orderBy('created_at', 'desc');
-            })
-            ->with('category')
-            ->paginate(12);
+                break;
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'popular':
+                $query->orderBy('reviews_count', 'desc');
+                break;
+            case 'rating':
+                $query->orderBy('reviews_avg_rating', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
 
+        $products = $query->paginate(10);
+        $categories = Category::where('is_active', true)->orderBy('name')->get();
         return view('products.index', compact('products', 'categories'));
     }
 
@@ -98,6 +111,7 @@ class ProductController extends Controller
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', true)
+            ->withCount('userProducts as orders_count') // Tambahkan juga di sini
             ->limit(4)
             ->get();
 
@@ -203,9 +217,10 @@ class ProductController extends Controller
             'type' => 'required|in:digital,physical',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072 ',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
-            'digital_file' => 'nullable|required_if:type,digital|file|mimes:zip,pdf,epub,mp4|max:307200',
+            // File digital wajib jika tipe produknya digital
+            'digital_file' => 'required_if:type,digital|file|mimes:zip,pdf,epub,mp4|max:307200',
             'stock' => 'nullable|required_if:type,physical|integer|min:0',
         ]);
 
@@ -224,9 +239,12 @@ class ProductController extends Controller
                 $galleryPaths[] = $file->store('products/gallery', 'public');
             }
             $data['gallery_images'] = $galleryPaths;
+        } else {
+            $data['gallery_images'] = []; // Pastikan selalu ada array, meskipun kosong
         }
 
         if ($request->hasFile('digital_file')) {
+            // Menggunakan disk private default untuk keamanan
             $data['digital_file_path'] = $request->file('digital_file')->store('digital_files');
         }
 
@@ -264,41 +282,59 @@ class ProductController extends Controller
             'type' => 'required|in:digital,physical',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072 ',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
-            'digital_file' => 'nullable|required_if:type,digital|file|mimes:zip,pdf,epub,mp4|max:307200',
+            // File digital tidak wajib jika sudah ada, tapi jika diupload, harus valid
+            'digital_file' => 'nullable|file|mimes:zip,pdf,epub,mp4|max:307200',
             'stock' => 'nullable|required_if:type,physical|integer|min:0',
+            // Mengharapkan array dari gambar yang ada untuk dipertahankan
+            'existing_gallery_images' => 'nullable|array'
         ]);
 
-        $data = $request->except(['featured_image', 'gallery_images', 'digital_file']);
+        // Validasi kustom untuk file digital
+        if ($request->type === 'digital' && !$product->digital_file_path && !$request->hasFile('digital_file')) {
+            return back()->withErrors(['digital_file' => 'File digital wajib diunggah untuk produk digital baru.'])->withInput();
+        }
+
+        $data = $request->except(['featured_image', 'gallery_images', 'digital_file', 'existing_gallery_images']);
         $data['slug'] = Str::slug($request->name);
         $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
 
         // Handle Featured Image Update
         if ($request->hasFile('featured_image')) {
-            // Delete old image if it exists
             if ($product->featured_image) {
                 Storage::disk('public')->delete($product->featured_image);
             }
             $data['featured_image'] = $request->file('featured_image')->store('products/featured', 'public');
         }
 
-        // Handle Gallery Images Update (menambahkan, bukan mengganti total)
+        // --- LOGIKA BARU UNTUK GALLERY IMAGES ---
+        $oldGalleryImages = $product->gallery_images ?? [];
+        $keptImages = $request->input('existing_gallery_images', []);
+
+        // 1. Hapus gambar yang tidak lagi ada di daftar 'keptImages'
+        $imagesToDelete = array_diff($oldGalleryImages, $keptImages);
+        if (!empty($imagesToDelete)) {
+            Storage::disk('public')->delete($imagesToDelete);
+        }
+
+        // 2. Tambahkan gambar baru yang diupload
+        $newGalleryPaths = [];
         if ($request->hasFile('gallery_images')) {
-            $newGalleryPaths = [];
             foreach ($request->file('gallery_images') as $file) {
                 $newGalleryPaths[] = $file->store('products/gallery', 'public');
             }
-            // Gabungkan galeri lama dengan yang baru
-            $data['gallery_images'] = array_merge($product->gallery_images ?? [], $newGalleryPaths);
         }
+
+        // 3. Gabungkan gambar yang dipertahankan dengan yang baru
+        $data['gallery_images'] = array_merge($keptImages, $newGalleryPaths);
+        // --- AKHIR LOGIKA BARU ---
 
         // Handle Digital File Update
         if ($request->hasFile('digital_file')) {
-            // Delete old file if it exists
             if ($product->digital_file_path) {
-                Storage::delete($product->digital_file_path); // Menggunakan disk default (private)
+                Storage::delete($product->digital_file_path);
             }
             $data['digital_file_path'] = $request->file('digital_file')->store('digital_files');
         }
@@ -397,5 +433,20 @@ class ProductController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => $message]);
+    }
+
+    public function downloadDigitalFile(Product $product)
+    {
+        $this->authorize('admin');
+
+        if (!$product->isDigital() || !$product->digital_file_path) {
+            abort(404, 'File digital tidak ditemukan untuk produk ini.');
+        }
+
+        if (!Storage::exists($product->digital_file_path)) {
+            abort(404, 'File tidak ditemukan di storage.');
+        }
+
+        return Storage::download($product->digital_file_path);
     }
 }

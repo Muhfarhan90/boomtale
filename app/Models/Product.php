@@ -72,6 +72,10 @@ class Product extends Model
         return $this->type === 'digital';
     }
 
+    public function isPhysical(): bool
+    {
+        return $this->type === 'fisik';
+    }
     /**
      * Get average rating for this product
      */

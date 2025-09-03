@@ -151,7 +151,7 @@
                                     <!-- Order Actions -->
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group" role="group">
-                                            <a href="{{ route('user.user.orders.show', $order) }}"
+                                            <a href="{{ route('user.orders.show', $order) }}"
                                                 class="btn btn-outline-primary btn-sm">
                                                 <i class="fas fa-eye me-1"></i>Detail
                                             </a>
@@ -173,7 +173,7 @@
 
                                         <div class="order-actions">
                                             @if ($order->can_be_paid)
-                                                <a href="{{ route('user.transactions.pay', $order) }}"
+                                                <a href="{{ route('user.checkout.process', $order) }}"
                                                     class="btn btn-success btn-sm">
                                                     <i class="fas fa-credit-card me-1"></i>Bayar Sekarang
                                                 </a>
