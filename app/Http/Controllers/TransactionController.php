@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Transaction;
+use App\Models\UserProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +33,9 @@ class TransactionController extends Controller
         }
 
         $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
-        $tax = floor($subtotal * 0.11);
+        // $tax = floor($subtotal * 0.11);
+
+        $tax = 0; // No tax
         $total = $subtotal + $tax;
 
         return view('checkout.index', compact('cartItems', 'subtotal', 'tax', 'total'));
@@ -58,9 +61,14 @@ class TransactionController extends Controller
 
         try {
             return DB::transaction(function () use ($user, $cartItems, $request) {
+                $currency = $request->currency ?? 'IDR'; // Default to IDR
+                $country = $request->country ?? 'ID'; // Default to Indonesia
                 // 1. Kalkulasi Total
                 $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
-                $tax = floor($subtotal * 0.11);
+                // if ($country === 'ID') {
+                //     $tax = floor($subtotal * 0.11); // PPN 11% only for Indonesia
+                // }
+                $tax = 0;
                 $totalAmount = $subtotal + $tax;
 
                 // 2. Buat Order utama
@@ -88,9 +96,11 @@ class TransactionController extends Controller
                         'name' => Str::limit($cartItem->product->name, 50),
                     ];
                 }
-                if ($tax > 0) {
-                    $itemDetails[] = ['id' => 'TAX', 'price' => (int) $tax, 'quantity' => 1, 'name' => 'PPN 11%'];
-                }
+                // // COMMENT: Add tax as item detail (only for Indonesia)
+                // if ($tax > 0) {
+                //     $itemDetails[] = ['id' => 'TAX', 'price' => (int) $tax, 'quantity' => 1, 'name' => 'PPN 11%'];
+                // }
+
 
                 // 4. Konfigurasi Midtrans
                 $this->configureMidtrans();
@@ -107,6 +117,12 @@ class TransactionController extends Controller
                         'phone' => $request->phone,
                     ],
                     'item_details' => $itemDetails,
+                    // INTERNATIONAL: Enable international cards
+                    'credit_card' => [
+                        'secure' => true,
+                        'channel' => 'migs', // Support international cards
+                        'bank' => 'bni', // Can be changed based on your Midtrans setup
+                    ],
                 ];
 
                 // 6. Dapatkan Snap Token
@@ -128,6 +144,7 @@ class TransactionController extends Controller
                     'success' => true,
                     'snap_token' => $snapToken,
                     'order_invoice' => $order->invoice_number,
+                    'currency' => $currency, // Return currency info
                 ]);
             });
         } catch (\Exception $e) {
@@ -176,14 +193,14 @@ class TransactionController extends Controller
         try {
             // 2. Buat instance notifikasi dari Midtrans
             $notification = new Notification();
-
+            Log::info('Midtrans Notification Received', ['payload' => $notification]);
             // 3. Ambil status dan ID pesanan
             $transactionStatus = $notification->transaction_status;
             $fraudStatus = $notification->fraud_status;
             $invoiceNumber = $notification->order_id;
 
             // 4. Cari Order berdasarkan invoice number
-            $order = Order::where('invoice_number', $invoiceNumber)->first();
+            $order = Order::with('orderItems')->where('invoice_number', $invoiceNumber)->first();
 
             if (!$order) {
                 Log::warning('Midtrans notification for non-existent order.', ['order_id' => $invoiceNumber]);
@@ -213,6 +230,23 @@ class TransactionController extends Controller
                         'transaction_id' => $notification->transaction_id,
                         'payment_type' => $notification->payment_type,
                     ]);
+                }
+
+                if ($orderStatus === 'completed') {
+                    foreach ($order->orderItems as $item) {
+                        // Cek untuk menghindari duplikasi jika notifikasi terkirim lebih dari sekali
+                        UserProduct::firstOrCreate(
+                            [
+                                'user_id' => $order->user_id,
+                                'product_id' => $item->product_id,
+                                'order_id' => $order->id
+                            ],
+                            [
+                                'order_item_id' => $item->id,
+                                'purchase_price' => $item->price,
+                            ]
+                        );
+                    }
                 }
             });
 

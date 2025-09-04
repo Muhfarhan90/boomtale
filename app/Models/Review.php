@@ -25,6 +25,9 @@ class Review extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function orderItem() {
+        return $this->belongsTo(OrderItem::class);
+    }
     /**
      * Get the star rating as HTML
      */

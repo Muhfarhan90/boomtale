@@ -1,7 +1,16 @@
-{{-- filepath: d:\FREELANCE\boomtale\resources\views\components\product-card.blade.php --}}
 @props(['product'])
 
-<div class="card h-100 product-card">
+@push('styles')
+    <style>
+        .product-card .rating-stars {
+            color: #ffc107;
+            /* Warna kuning untuk bintang */
+            font-size: 0.85rem;
+        }
+    </style>
+@endpush
+
+<div class="card h-100 product-card shadow-md border-0">
     <!-- Product Image -->
     <a href="{{ route('user.products.show', $product) }}">
         @if ($product->featured_image)
@@ -21,7 +30,7 @@
     <div class="card-body d-flex flex-column p-2 p-md-3">
         <!-- Category Badge -->
         @if ($product->category)
-            <span class="badge bg-secondary text-white mb-2 d-none d-md-inline" style="font-size: 0.7rem;">
+            <span class="badge bg-secondary text-white mb-2 d-inline" style="font-size: 0.7rem;">
                 {{ $product->category->name }}
             </span>
         @endif
@@ -57,6 +66,7 @@
                 @for ($i = 0; $i < 5; $i++)
                     <i class="far fa-star"></i>
                 @endfor
+                <br/>
                 <span class="rating-text">Belum ada ulasan</span>
             </div>
         @endif
@@ -91,7 +101,7 @@
                 </a>
                 <button class="btn btn-boomtale btn-sm btn-add-cart" data-product-id="{{ $product->id }}">
                     <i class="fas fa-cart-plus me-1"></i>
-                    <span class="d-md-inline">Keranjang</span>
+                    <span class="d-md-inline">Cart</span>
                 </button>
             </div>
         </div>

@@ -107,8 +107,9 @@
                                 <div class="card-body">
                                     <!-- Order Items Preview -->
                                     <div class="order-items mb-3">
-                                        @foreach ($order->orderItems->take(3) as $item)
-                                            <div class="d-flex align-items-center mb-2">
+                                        @foreach ($order->orderItems as $item)
+                                            <div
+                                                class="d-flex align-items-center mb-2 pb-2 @if (!$loop->last) border-bottom @endif">
                                                 <div class="product-thumbnail me-3">
                                                     @if ($item->product && $item->product->featured_image)
                                                         <img src="{{ Storage::url($item->product->featured_image) }}"
@@ -126,30 +127,31 @@
                                                     <div class="fw-medium">{{ $item->product_name }}</div>
                                                     <small class="text-muted">
                                                         {{ $item->quantity }}x {{ $item->formatted_price }}
-                                                        @if ($item->product && $item->product->type === 'digital')
-                                                            <span class="badge bg-info ms-1">
-                                                                <i class="fas fa-download me-1"></i>Digital
-                                                            </span>
-                                                        @endif
                                                     </small>
                                                 </div>
-                                                <div class="text-end">
-                                                    <div class="fw-medium">{{ $item->formatted_subtotal }}</div>
-                                                </div>
+                                                {{-- MODIFIKASI: Tambahkan tombol review di sini --}}
+                                                @if ($order->status === 'completed')
+                                                    <div class="text-end ms-2">
+                                                        @if ($item->review)
+                                                            <a href="#"
+                                                                class="btn btn-outline-secondary btn-sm disabled"
+                                                                aria-disabled="true">
+                                                                <i class="fas fa-check-circle me-1"></i>Direview
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ route('user.reviews.create', $item) }}"
+                                                                class="btn btn-outline-warning btn-sm">
+                                                                <i class="fas fa-star me-1"></i>Beri Review
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                @endif
                                             </div>
                                         @endforeach
-
-                                        @if ($order->orderItems->count() > 3)
-                                            <div class="text-center">
-                                                <small class="text-muted">
-                                                    dan {{ $order->orderItems->count() - 3 }} produk lainnya
-                                                </small>
-                                            </div>
-                                        @endif
                                     </div>
 
                                     <!-- Order Actions -->
-                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
                                         <div class="btn-group" role="group">
                                             <a href="{{ route('user.orders.show', $order) }}"
                                                 class="btn btn-outline-primary btn-sm">
@@ -163,20 +165,21 @@
                                                 </button>
                                             @endif
 
-                                            @if ($order->status === 'completed')
+                                            {{-- @if ($order->status === 'completed')
                                                 <button type="button" class="btn btn-outline-success btn-sm"
                                                     onclick="reorder({{ $order->id }})">
                                                     <i class="fas fa-redo me-1"></i>Pesan Lagi
                                                 </button>
-                                            @endif
+                                            @endif --}}
                                         </div>
 
                                         <div class="order-actions">
                                             @if ($order->can_be_paid)
-                                                <a href="{{ route('user.checkout.process', $order) }}"
-                                                    class="btn btn-success btn-sm">
-                                                    <i class="fas fa-credit-card me-1"></i>Bayar Sekarang
-                                                </a>
+                                                <form action="{{ route('user.checkout.process') }}">
+                                                    <button class="btn btn-success btn-sm" type="submit">
+                                                        <i class="fas fa-credit-card me-1"></i>Bayar Sekarang
+                                                    </button>
+                                                </form>
                                             @endif
 
                                             @if ($order->status === 'completed')

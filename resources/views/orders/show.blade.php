@@ -98,9 +98,14 @@
                                     </li>
                                     <li
                                         class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
+                                        Biaya Admin
+                                        <span>Rp 0</span>
+                                    </li>
+                                    {{-- <li
+                                        class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
                                         Pajak (11%)
                                         <span>Rp {{ number_format($order->total_amount - $subtotal, 0, ',', '.') }}</span>
-                                    </li>
+                                    </li> --}}
                                     <li
                                         class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent fw-bold fs-5">
                                         Total

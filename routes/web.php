@@ -97,22 +97,19 @@ Route::name('user.')->group(function () {
 
         Route::get('/orders/stats', [OrderController::class, 'getStatistics'])->name('orders.stats');
 
-        // User Review Routes
-        Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-        Route::put('/products/{product}/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
-        Route::delete('/products/{product}/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
-        Route::get('/my-reviews', [ReviewController::class, 'myReviews'])->name('user.reviews.index');
-
         // Order routes
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
-        // Review routes - hanya dari orders
-        Route::get('/orders/{userProduct}/review', [ReviewController::class, 'create'])->name('reviews.create');
-        Route::post('/orders/{userProduct}/review', [ReviewController::class, 'store'])->name('reviews.store');
-        Route::get('/orders/{userProduct}/review/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
-        Route::put('/orders/{userProduct}/review', [ReviewController::class, 'update'])->name('reviews.update');
-        Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+        // User Review Routes (Tied to OrderItem)
+        Route::prefix('reviews')->name('reviews.')->group(function () {
+            Route::get('/', [ReviewController::class, 'myReviews'])->name('index');
+            Route::get('/create/{orderItem}', [ReviewController::class, 'create'])->name('create');
+            Route::post('/store/{orderItem}', [ReviewController::class, 'store'])->name('store');
+            Route::get('/{review}/edit', [ReviewController::class, 'edit'])->name('edit');
+            Route::put('/{review}', [ReviewController::class, 'update'])->name('update');
+            Route::delete('/{review}', [ReviewController::class, 'destroy'])->name('destroy');
+        });
     });
 });
 

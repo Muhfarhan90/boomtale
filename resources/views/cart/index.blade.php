@@ -137,18 +137,18 @@
                                             <span class="text-success fs-7">Gratis</span>
                                         </div>
 
-                                        <div class="d-flex justify-content-between mb-2">
+                                        {{-- <div class="d-flex justify-content-between mb-2">
                                             <span class="fs-7">Pajak (PPN 11%)</span>
                                             <span id="cart-tax" class="fs-7">Rp
                                                 {{ number_format($total * 0.11, 0, ',', '.') }}</span>
-                                        </div>
+                                        </div> --}}
 
                                         <hr class="border-2">
 
                                         <div class="d-flex justify-content-between mb-3">
                                             <span class="fw-bold fs-6">Total Pembayaran</span>
                                             <span class="fw-bold text-primary fs-5" id="cart-total">
-                                                Rp {{ number_format($total + $total * 0.11, 0, ',', '.') }}
+                                                Rp {{ number_format($total, 0, ',', '.') }}
                                             </span>
                                         </div>
 

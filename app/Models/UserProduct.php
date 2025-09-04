@@ -9,10 +9,12 @@ class UserProduct extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_products';
     protected $fillable = [
         'user_id',
         'product_id',
         'order_id',
+        'order_item_id',
         'purchase_price',
         'purchased_at',
     ];

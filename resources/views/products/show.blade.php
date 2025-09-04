@@ -1022,14 +1022,18 @@
                                         <div class="card-body p-4">
                                             <h6 class="card-title mb-3">Distribusi Rating</h6>
                                             @if ($product->total_reviews > 0)
+                                                {{-- Loop melalui distribusi rating --}}
                                                 @foreach ($product->rating_distribution as $star => $data)
                                                     <div class="d-flex align-items-center mb-2">
                                                         <span class="me-2">{{ $star }} ⭐</span>
                                                         <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                                            {{-- PERBAIKAN: Hitung persentase di sini --}}
                                                             <div class="progress-bar bg-warning"
-                                                                style="width: {{ $data['percentage'] }}%"></div>
+                                                                style="width: {{ ($data / $product->total_reviews) * 100 }}%">
+                                                            </div>
                                                         </div>
-                                                        <small class="text-muted">{{ $data['count'] }}</small>
+                                                        {{-- PERBAIKAN: Gunakan $data langsung sebagai jumlah --}}
+                                                        <small class="text-muted">{{ $data }}</small>
                                                     </div>
                                                 @endforeach
                                             @else
@@ -1174,33 +1178,8 @@
                 <div class="row">
                     @foreach ($relatedProducts as $related)
                         <div class="col-6 col-md-3 mb-4">
-                            <div class="card h-100 product-card border-0 shadow-sm">
-                                @if ($related->featured_image)
-                                    <img src="{{ Storage::url($related->featured_image) }}" class="card-img-top"
-                                        alt="{{ $related->name }}" style="height: 180px; object-fit: cover;">
-                                @else
-                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
-                                        style="height: 180px;">
-                                        <i class="fas fa-image fa-2x text-muted"></i>
-                                    </div>
-                                @endif
-
-                                <div class="card-body p-3">
-                                    <h6 class="card-title">
-                                        <a href="{{ route('user.products.show', $related) }}"
-                                            class="text-dark text-decoration-none">
-                                            {{ Str::limit($related->name, 40) }}
-                                        </a>
-                                    </h6>
-                                    <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <span class="fw-bold text-primary">{{ $related->formatted_price }}</span>
-                                        <a href="{{ route('user.products.show', $related) }}"
-                                            class="btn btn-outline-primary btn-sm">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                            {{-- Gunakan komponen product-card --}}
+                            <x-product-card :product="$related" />
                         </div>
                     @endforeach
                 </div>

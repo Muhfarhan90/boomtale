@@ -3,60 +3,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrderItem;
 use App\Models\Review;
 use App\Models\Product;
 use App\Models\UserProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Show form to create review for purchased product
      */
-    public function create(UserProduct $userProduct)
+    public function create(OrderItem $orderItem)
     {
-        // Check if user owns this product
-        if ($userProduct->user_id !== auth()->id()) {
+        // PERBAIKI LOGIKA: Cek kepemilikan melalui relasi order
+        if ($orderItem->order->user_id !== Auth::id()) {
             abort(403, 'Anda tidak memiliki akses untuk memberikan review produk ini.');
         }
 
-        // Check if user already reviewed this product
-        $existingReview = Review::where('user_id', auth()->id())
-            ->where('product_id', $userProduct->product_id)
-            ->first();
-
-        if ($existingReview) {
-            return redirect()->route('user.reviews.edit', $userProduct)
+        // Cek apakah item ini sudah pernah direview
+        if ($orderItem->review) {
+            return redirect()->route('user.reviews.edit', $orderItem)
                 ->with('info', 'Anda sudah memberikan review untuk produk ini. Anda dapat mengeditnya.');
         }
 
-        $userProduct->load('product');
+        $orderItem->load('product');
 
-        return view('user.reviews.create', compact('userProduct'));
+        return view('reviews.create', compact('orderItem'));
     }
 
     /**
      * Store review for purchased product
      */
-    public function store(Request $request, UserProduct $userProduct)
+    public function store(Request $request, OrderItem $orderItem)
     {
-        // Check ownership
-        if ($userProduct->user_id !== auth()->id()) {
+        // PERBAIKI LOGIKA: Cek kepemilikan melalui relasi order
+        if ($orderItem->order->user_id !== Auth::id()) {
             abort(403, 'Anda tidak memiliki akses untuk memberikan review produk ini.');
         }
 
-        // Check if already reviewed
-        $existingReview = Review::where('user_id', auth()->id())
-            ->where('product_id', $userProduct->product_id)
-            ->first();
-
-        if ($existingReview) {
+        if ($orderItem->review) {
             return back()->with('error', 'Anda sudah memberikan review untuk produk ini.');
         }
 
@@ -65,11 +53,12 @@ class ReviewController extends Controller
             'comment' => 'nullable|string|max:1000'
         ]);
 
-        Review::create([
-            'user_id' => auth()->id(),
-            'product_id' => $userProduct->product_id,
+        // Simpan review dengan relasi yang benar
+        $orderItem->review()->create([
+            'user_id' => Auth::id(),
+            'product_id' => $orderItem->product_id,
             'rating' => $request->rating,
-            'comment' => $request->comment
+            'comment' => $request->comment,
         ]);
 
         return redirect()->route('user.orders.index')
@@ -79,45 +68,36 @@ class ReviewController extends Controller
     /**
      * Show form to edit review
      */
-    public function edit(UserProduct $userProduct)
+    public function edit(OrderItem $orderItem)
     {
-        // Check ownership
-        if ($userProduct->user_id !== auth()->id()) {
-            abort(403, 'Anda tidak memiliki akses untuk mengedit review produk ini.');
+        if ($orderItem->order->user_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit review ini.');
         }
 
-        $review = Review::where('user_id', auth()->id())
-            ->where('product_id', $userProduct->product_id)
-            ->firstOrFail();
+        // Ambil review melalui relasi, atau gagal jika tidak ada
+        $review = $orderItem->review()->firstOrFail();
+        $orderItem->load('product');
 
-        $userProduct->load('product');
-
-        return view('user.reviews.edit', compact('userProduct', 'review'));
+        return view('reviews.edit', compact('orderItem', 'review'));
     }
 
     /**
      * Update review
      */
-    public function update(Request $request, UserProduct $userProduct)
+    public function update(Request $request, OrderItem $orderItem)
     {
-        // Check ownership
-        if ($userProduct->user_id !== auth()->id()) {
-            abort(403, 'Anda tidak memiliki akses untuk mengedit review produk ini.');
+        if ($orderItem->order->user_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit review ini.');
         }
 
-        $review = Review::where('user_id', auth()->id())
-            ->where('product_id', $userProduct->product_id)
-            ->firstOrFail();
+        $review = $orderItem->review()->firstOrFail();
 
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:1000'
         ]);
 
-        $review->update([
-            'rating' => $request->rating,
-            'comment' => $request->comment
-        ]);
+        $review->update($request->only('rating', 'comment'));
 
         return redirect()->route('user.orders.index')
             ->with('success', 'Review berhasil diperbarui.');
