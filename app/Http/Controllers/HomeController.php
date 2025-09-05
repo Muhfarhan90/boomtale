@@ -15,16 +15,19 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // Get latest 8 products
-        $latestProducts = Product::with(['category'])
-            ->where('is_active', true)
-            ->latest()
+        // Load latest products dengan data yang lengkap
+        $latestProducts = Product::where('is_active', true)
+            ->with(['category', 'reviews']) // Load reviews relationship
+            ->withAvg('reviews', 'rating') // Load average rating
+            ->withCount('reviews') // Load review count
+            ->withCount('userProducts as orders_count') // PERBAIKAN: Load sales count
+            ->orderBy('created_at', 'desc')
             ->limit(8)
             ->get();
 
-        // Get all categories with product count
-        $categories = Category::withCount('products')
-            ->where('is_active', true)
+        $categories = Category::where('is_active', true)
+            ->withCount('products')
+            ->orderBy('name')
             ->get();
 
         return view('home', compact('latestProducts', 'categories'));

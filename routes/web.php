@@ -7,9 +7,12 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UserProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,7 +65,11 @@ Route::name('user.')->group(function () {
         Route::get('/{category:slug}', [CategoryController::class, 'show'])->name('show');
     });
 
-    Route::get('/profile', [UserController::class, 'showProfile'])->name('profile');
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::put('/update', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/delete', [ProfileController::class, 'delete'])->name('delete');
+    });
 
     Route::get('/orders', [UserController::class, 'showOrders'])->name('orders.index');
 
@@ -90,7 +97,7 @@ Route::name('user.')->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('index');
             Route::post('/', [OrderController::class, 'store'])->name('store');
             Route::get('/{order}', [OrderController::class, 'show'])->name('show');
-            Route::patch('/{order}/cancel', [OrderController::class, 'cancel'])->name('cancel');
+            Route::post('/{order}/cancel', [OrderController::class, 'cancel'])->name('cancel');
             Route::post('/{order}/reorder', [OrderController::class, 'reorder'])->name('reorder');
             Route::get('/{order}/download/{orderItem}', [OrderController::class, 'download'])->name('download');
         });
@@ -101,6 +108,7 @@ Route::name('user.')->group(function () {
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
+
         // User Review Routes (Tied to OrderItem)
         Route::prefix('reviews')->name('reviews.')->group(function () {
             Route::get('/', [ReviewController::class, 'myReviews'])->name('index');
@@ -109,6 +117,14 @@ Route::name('user.')->group(function () {
             Route::get('/{review}/edit', [ReviewController::class, 'edit'])->name('edit');
             Route::put('/{review}', [ReviewController::class, 'update'])->name('update');
             Route::delete('/{review}', [ReviewController::class, 'destroy'])->name('destroy');
+        });
+
+        // Route User Products
+        Route::prefix('user-products')->name('user-products.')->group(function () {
+            Route::get('/', [UserProductController::class, 'index'])->name('index');
+            Route::get('/{id}', [UserProductController::class, 'show'])->name('show');
+            Route::get('/{id}/download', [UserProductController::class, 'download'])->name('download');
+            Route::get('/{id}/stream', [UserProductController::class, 'stream'])->name('stream');
         });
     });
 });
@@ -177,5 +193,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/', [OrderController::class, 'adminIndex'])->name('index');
         Route::get('/{order}', [OrderController::class, 'adminShow'])->name('show');
         Route::patch('/{order}/status', [OrderController::class, 'updateStatus'])->name('update-status');
+    });
+
+    // Settings Routes
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/', [SettingController::class, 'index'])->name('index');
+        Route::put('/general', [SettingController::class, 'updateGeneral'])->name('update.general');
+        Route::put('/system', [SettingController::class, 'updateSystem'])->name('update.system');
+        Route::post('/maintenance', [SettingController::class, 'toggleMaintenance'])->name('toggle.maintenance');
+        Route::post('/cache', [SettingController::class, 'clearCache'])->name('clear.cache');
+        Route::post('/backup', [SettingController::class, 'backupDatabase'])->name('backup.database');
+        Route::get('/system-info', [SettingController::class, 'systemInfo'])->name('system.info');
     });
 });

@@ -7,6 +7,11 @@
             /* Warna kuning untuk bintang */
             font-size: 0.85rem;
         }
+
+        .product-card .rating-text {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
     </style>
 @endpush
 
@@ -43,31 +48,37 @@
         </h6>
 
         <!-- Rating -->
-        @if ($product->reviews_count > 0)
-            <div class="rating-stars">
-                @php
-                    $rating = $product->reviews_avg_rating ?? 0;
-                    $fullStars = floor($rating);
-                    $hasHalfStar = $rating - $fullStars >= 0.5;
-                @endphp
+        @php
+            // PERBAIKAN: Gunakan accessor yang sudah ada di model atau hitung manual
+            $averageRating = $product->reviews_avg_rating ?? ($product->average_rating ?? 0);
+            $totalReviews = $product->reviews_count ?? ($product->total_reviews ?? 0);
+            $fullStars = floor($averageRating);
+            $hasHalfStar = $averageRating - $fullStars >= 0.5;
+            $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
+        @endphp
+
+        @if ($totalReviews > 0)
+            <div class="rating-stars mb-2">
+                {{-- Full stars --}}
                 @for ($i = 0; $i < $fullStars; $i++)
                     <i class="fas fa-star"></i>
                 @endfor
+                {{-- Half star --}}
                 @if ($hasHalfStar)
                     <i class="fas fa-star-half-alt"></i>
                 @endif
-                @for ($i = 0; $i < 5 - $fullStars - ($hasHalfStar ? 1 : 0); $i++)
+                {{-- Empty stars --}}
+                @for ($i = 0; $i < $emptyStars; $i++)
                     <i class="far fa-star"></i>
                 @endfor
-                <span class="rating-text">({{ number_format($rating, 1) }})</span>
+                <span class="rating-text ms-1">({{ number_format($averageRating, 1) }})</span>
             </div>
         @else
-            <div class="rating-stars">
+            <div class="rating-stars mb-2">
                 @for ($i = 0; $i < 5; $i++)
                     <i class="far fa-star"></i>
                 @endfor
-                <br/>
-                <span class="rating-text">Belum ada ulasan</span>
+                <span class="rating-text ms-1">Belum ada ulasan</span>
             </div>
         @endif
 
@@ -99,10 +110,17 @@
                     <i class="fas fa-eye me-1"></i>
                     <span class="d-md-inline">Detail</span>
                 </a>
-                <button class="btn btn-boomtale btn-sm btn-add-cart" data-product-id="{{ $product->id }}">
-                    <i class="fas fa-cart-plus me-1"></i>
-                    <span class="d-md-inline">Cart</span>
-                </button>
+                @auth
+                    <button class="btn btn-boomtale btn-sm btn-add-cart" data-product-id="{{ $product->id }}">
+                        <i class="fas fa-cart-plus me-1"></i>
+                        <span class="d-md-inline">Cart</span>
+                    </button>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-boomtale btn-sm">
+                        <i class="fas fa-cart-plus me-1"></i>
+                        <span class="d-md-inline">Cart</span>
+                    </a>
+                @endauth
             </div>
         </div>
     </div>

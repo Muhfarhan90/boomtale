@@ -33,7 +33,7 @@ class DashboardController extends Controller
         }
 
         try {
-            $totalRevenue = \DB::table('orders')->where('status', 'paid')->sum('total_amount');
+            $totalRevenue = \DB::table('orders')->where('status', 'completed')->sum('total_amount');
         } catch (\Exception $e) {
             $totalRevenue = 0;
         }

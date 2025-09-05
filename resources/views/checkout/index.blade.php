@@ -115,9 +115,13 @@
                                     Subtotal
                                     <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                                 </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                {{-- <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     Pajak (11%)
                                     <span>Rp {{ number_format($tax, 0, ',', '.') }}</span>
+                                </li> --}}
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Biaya admin
+                                    <span>Rp 0</span>
                                 </li>
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center px-0 bg-light fw-bold fs-5">

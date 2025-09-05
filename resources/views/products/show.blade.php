@@ -867,10 +867,10 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Kuantitas</label>
                                 <div class="quantity-selector">
-                                    <button type="button" id="decreaseQty">-</button>
+                                    {{-- <button type="button" id="decreaseQty">-</button> --}}
                                     <input type="number" id="quantity" value="1" min="1" max="10"
                                         readonly>
-                                    <button type="button" id="increaseQty">+</button>
+                                    {{-- <button type="button" id="increaseQty" disabled>+</button> --}}
                                 </div>
                             </div>
 

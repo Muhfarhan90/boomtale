@@ -38,29 +38,31 @@
             </li>
 
             <li class="nav-item">
-                <a href="#" class="nav-link" onclick="showComingSoon('Pesanan')">
+                <a href="{{ route('admin.orders.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
                     <i class="fas fa-shopping-cart nav-icon"></i>
                     <span class="nav-text">Pesanan</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="{{ route('admin.users.index') }}" class="nav-link
+                <a href="{{ route('admin.users.index') }}"
+                    class="nav-link
                     {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
                     <i class="fas fa-users nav-icon"></i>
                     <span class="nav-text">Pengguna</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#" class="nav-link" onclick="showComingSoon('Laporan')">
                     <i class="fas fa-chart-bar nav-icon"></i>
                     <span class="nav-text">Laporan</span>
                 </a>
-            </li>
+            </li> --}}
 
             <li class="nav-item">
-                <a href="#" class="nav-link" onclick="showComingSoon('Pengaturan')">
+                <a href="{{route('admin.settings.index')}}" class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                     <i class="fas fa-cog nav-icon"></i>
                     <span class="nav-text">Pengaturan</span>
                 </a>

@@ -451,7 +451,7 @@
             $('#confirmRemove').click(function() {
                 if (itemToRemove) {
                     $.ajax({
-                        url: `/user/cart/${itemToRemove}`,
+                        url: `/cart/${itemToRemove}`,
                         method: 'DELETE',
                         data: {
                             _token: $('meta[name="csrf-token"]').attr('content')
@@ -487,7 +487,7 @@
 
             window.confirmClearCart = function() {
                 $.ajax({
-                    url: '/user/cart',
+                    url: '/cart',
                     method: 'DELETE',
                     data: {
                         _token: $('meta[name="csrf-token"]').attr('content')

@@ -139,9 +139,13 @@ class CartController extends Controller
         ]);
     }
 
-    public function clear()
+    public function clear(Request $request)
     {
         Cart::where('user_id', auth()->id())->delete();
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Keranjang berhasil dikosongkan']);
+        }
 
         return redirect()->back()->with('success', 'Keranjang berhasil dikosongkan');
     }

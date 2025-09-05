@@ -267,8 +267,8 @@
                                 </option>
                                 <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>
                                     Diproses</option>
-                                <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Dikirim
-                                </option>
+                                {{-- <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Dikirim
+                                </option> --}}
                                 <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai
                                 </option>
                                 <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
@@ -500,8 +500,39 @@
                 }, 3000);
             }
 
-            // Example usage
-            showNotification('Order placed successfully!');
+            // PERBAIKAN: Function untuk cancel order
+            window.cancelOrder = function(orderId) {
+                if (!confirm('Yakin ingin membatalkan pesanan ini?')) return;
+
+                $.ajax({
+                    url: '/orders/' + orderId + '/cancel', // Pastikan URL sesuai dengan route
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content') // Gunakan meta token
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            showNotification(response.message, 'success');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1200);
+                        } else {
+                            showNotification(response.message, 'danger');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', xhr.responseText);
+                        let errorMessage = 'Gagal membatalkan pesanan';
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                        showNotification(errorMessage, 'danger');
+                    }
+                });
+            }
         });
     </script>
 @endpush

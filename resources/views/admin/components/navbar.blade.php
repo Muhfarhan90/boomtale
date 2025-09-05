@@ -38,7 +38,7 @@
                     <li><a class="dropdown-item" href="#" onclick="alert('Coming Soon')">
                             <i class="fas fa-cog me-2"></i>Pengaturan
                         </a></li>
-                    <li><a class="dropdown-item" href="{{ route('user.products.index') }}" target="_blank">
+                    <li><a class="dropdown-item" href="{{ route('user.home') }}" target="_blank">
                             <i class="fas fa-external-link-alt me-2"></i>Lihat Website
                         </a></li>
                     <li>

@@ -107,7 +107,7 @@
                         <i class="fas fa-list-alt me-2"></i>
                         Pesanan Terbaru
                     </h6>
-                    <a href="#" class="btn btn-sm btn-boomtale">Lihat Semua</a>
+                    <a href="{{route('admin.orders.index')}}" class="btn btn-sm btn-boomtale">Lihat Semua</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -199,19 +199,19 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <a href="{{ route('admin.dashboard') }}" class="btn btn-action btn-action-users">
+                            <a href="{{ route('admin.users.index') }}" class="btn btn-action btn-action-users">
                                 <i class="fas fa-users mb-2"></i>
                                 <span>Kelola Users</span>
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="#" class="btn btn-action btn-action-products">
+                            <a href="{{route('admin.products.index')}}" class="btn btn-action btn-action-products">
                                 <i class="fas fa-box mb-2"></i>
                                 <span>Kelola Produk</span>
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="#" class="btn btn-action btn-action-orders">
+                            <a href="{{route('admin.orders.index')}}" class="btn btn-action btn-action-orders">
                                 <i class="fas fa-shopping-cart mb-2"></i>
                                 <span>Lihat Pesanan</span>
                             </a>

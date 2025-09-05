@@ -121,7 +121,7 @@ class TransactionController extends Controller
                     'credit_card' => [
                         'secure' => true,
                         'channel' => 'migs', // Support international cards
-                        'bank' => 'bni', // Can be changed based on your Midtrans setup
+                        'bank' => 'bca', // Can be changed based on your Midtrans setup
                     ],
                 ];
 
