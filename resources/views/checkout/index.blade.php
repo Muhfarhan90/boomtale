@@ -150,7 +150,7 @@
 
 @push('scripts')
     <!-- Midtrans Snap.js (pastikan client key sudah ada di .env) -->
-    <script src="https://app.{{ config('midtrans.isProduction' ? '' : 'sandbox') }}.midtrans.com/snap/snap.js"
+    <script src="https://app.{{ config('midtrans.isProduction' ? '' : 'sandbox') }}midtrans.com/snap/snap.js"
         data-client-key="{{ config('midtrans.client_key') }}"></script>
     <!-- SweetAlert2 for better user feedback -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

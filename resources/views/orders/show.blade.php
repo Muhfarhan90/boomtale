@@ -75,15 +75,37 @@
         }
 
         @keyframes pulse-warning {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
-            50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(255, 193, 7, 0.1); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+            }
+
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 8px rgba(255, 193, 7, 0.1);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+            }
         }
 
         @keyframes pulse-danger {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0.1); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(220, 53, 69, 0.1);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+            }
         }
 
         .payment-section {
@@ -101,12 +123,15 @@
             .countdown-display {
                 font-size: 1.2rem;
             }
+
             .time-number {
                 font-size: 1.4rem;
             }
+
             .time-text {
                 font-size: 0.6rem;
             }
+
             .time-unit {
                 margin: 0 0.3rem;
             }
@@ -231,17 +256,21 @@
                             <div class="card-body">
                                 <h5 class="card-title mb-3">Ringkasan Pembayaran</h5>
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
+                                    <li
+                                        class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
                                         Subtotal
                                         <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                                     </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
+                                    <li
+                                        class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
                                         Biaya Admin
                                         <span>Rp 0</span>
                                     </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent fw-bold fs-5">
+                                    <li
+                                        class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent fw-bold fs-5">
                                         Total
-                                        <span class="text-primary">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                                        <span class="text-primary">Rp
+                                            {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                                     </li>
                                 </ul>
 
@@ -270,9 +299,19 @@
                                     {{ ucwords(str_replace('_', ' ', $order->transaction->payment_type ?? '-')) }}</p>
                                 <p class="mb-1"><strong class="d-inline-block" style="width: 120px;">Status</strong>:
                                     {{ ucwords($order->transaction->status ?? '-') }}</p>
-                                <p class="mb-0"><strong class="d-inline-block" style="width: 120px;">ID Transaksi</strong>: 
-                                    <span class="text-break">{{ $order->transaction->transaction_id ?? 'Belum tersedia' }}</span>
+                                <p class="mb-0"><strong class="d-inline-block" style="width: 120px;">ID
+                                        Transaksi</strong>:
+                                    <span
+                                        class="text-break">{{ $order->transaction->transaction_id ?? 'Belum tersedia' }}</span>
                                 </p>
+                                @if ($order->status == 'completed')
+                                    <p class="mb-0">
+                                        <strong class="d-inline-block" style="width: 120px;">Waktu Transaksi</strong>:
+                                        <span
+                                            data-utc-time="{{ $order->transaction->created_at ? $order->transaction->created_at->toIsoString() : '' }}">
+                                        </span>
+                                    </p>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -299,11 +338,13 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Pembayaran Berhasil!',
-                                text: 'Halaman akan dimuat ulang.',
-                                timer: 2000,
+                                text: 'Anda akan diarahkan ke halaman produk saya.',
+                                timer: 3000,
                                 showConfirmButton: false
                             }).then(() => {
-                                window.location.reload();
+                                // Arahkan ke halaman produk saya
+                                window.location.href =
+                                    '{{ route('user.user-products.index') }}';
                             });
                         },
                         onPending: function(result) {
@@ -316,7 +357,8 @@
                         },
                         onError: function(result) {
                             console.error('Payment Error:', result);
-                            Swal.fire('Pembayaran Gagal', 'Terjadi kesalahan saat memproses pembayaran.', 'error');
+                            Swal.fire('Pembayaran Gagal',
+                                'Terjadi kesalahan saat memproses pembayaran.', 'error');
                         },
                         onClose: function() {
                             console.log('Payment popup closed');
@@ -326,89 +368,89 @@
 
                 // Enhanced Countdown Timer
                 @if ($order->expired_at && $order->status === 'waiting_payment')
-                const expiredAt = new Date('{{ $order->expired_at->toISOString() }}').getTime();
-                const countdownContainer = $('#countdown-container');
-                const hoursElement = $('#hours');
-                const minutesElement = $('#minutes');
-                const secondsElement = $('#seconds');
-                const messageElement = $('#countdown-message');
-                const payButton = $('#pay-button');
+                    const expiredAt = new Date('{{ $order->expired_at->toISOString() }}').getTime();
+                    const countdownContainer = $('#countdown-container');
+                    const hoursElement = $('#hours');
+                    const minutesElement = $('#minutes');
+                    const secondsElement = $('#seconds');
+                    const messageElement = $('#countdown-message');
+                    const payButton = $('#pay-button');
 
-                function updateCountdown() {
-                    const now = new Date().getTime();
-                    const distance = expiredAt - now;
+                    function updateCountdown() {
+                        const now = new Date().getTime();
+                        const distance = expiredAt - now;
 
-                    if (distance < 0) {
-                        // Expired
-                        hoursElement.text('00');
-                        minutesElement.text('00');
-                        secondsElement.text('00');
-                        
-                        countdownContainer.removeClass('danger').addClass('expired');
-                        messageElement.html(`
+                        if (distance < 0) {
+                            // Expired
+                            hoursElement.text('00');
+                            minutesElement.text('00');
+                            secondsElement.text('00');
+
+                            countdownContainer.removeClass('danger').addClass('expired');
+                            messageElement.html(`
                             <div class="alert alert-danger mb-0">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
                                 <strong>Waktu pembayaran telah habis!</strong><br>
                                 <small>Silakan lakukan pemesanan ulang.</small>
                             </div>
                         `);
-                        
-                        payButton.prop('disabled', true)
-                                 .removeClass('btn-success')
-                                 .addClass('btn-secondary')
-                                 .html('<i class="fas fa-times me-2"></i>Pembayaran Expired');
-                        
-                        return;
-                    }
 
-                    // Calculate time units
-                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                            payButton.prop('disabled', true)
+                                .removeClass('btn-success')
+                                .addClass('btn-secondary')
+                                .html('<i class="fas fa-times me-2"></i>Pembayaran Expired');
 
-                    // Update display
-                    hoursElement.text(String(hours).padStart(2, '0'));
-                    minutesElement.text(String(minutes).padStart(2, '0'));
-                    secondsElement.text(String(seconds).padStart(2, '0'));
+                            return;
+                        }
 
-                    // Change style based on remaining time
-                    if (distance < 1800000) { // Less than 30 minutes
-                        countdownContainer.addClass('danger');
-                        if (distance < 300000) { // Less than 5 minutes
-                            messageElement.html(`
+                        // Calculate time units
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                        // Update display
+                        hoursElement.text(String(hours).padStart(2, '0'));
+                        minutesElement.text(String(minutes).padStart(2, '0'));
+                        secondsElement.text(String(seconds).padStart(2, '0'));
+
+                        // Change style based on remaining time
+                        if (distance < 1800000) { // Less than 30 minutes
+                            countdownContainer.addClass('danger');
+                            if (distance < 300000) { // Less than 5 minutes
+                                messageElement.html(`
                                 <div class="alert alert-warning mb-0">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
                                     <strong>Segera lakukan pembayaran!</strong><br>
                                     <small>Waktu hampir habis.</small>
                                 </div>
                             `);
-                        } else {
-                            messageElement.html(`
+                            } else {
+                                messageElement.html(`
                                 <div class="alert alert-info mb-0">
                                     <i class="fas fa-info-circle me-2"></i>
                                     <small>Segera selesaikan pembayaran Anda.</small>
                                 </div>
                             `);
-                        }
-                    } else {
-                        countdownContainer.removeClass('danger');
-                        messageElement.html(`
+                            }
+                        } else {
+                            countdownContainer.removeClass('danger');
+                            messageElement.html(`
                             <div class="alert alert-success mb-0">
                                 <i class="fas fa-check-circle me-2"></i>
                                 <small>Masih banyak waktu untuk menyelesaikan pembayaran.</small>
                             </div>
                         `);
+                        }
                     }
-                }
 
-                // Initial update and set interval
-                updateCountdown();
-                const countdownInterval = setInterval(updateCountdown, 1000);
+                    // Initial update and set interval
+                    updateCountdown();
+                    const countdownInterval = setInterval(updateCountdown, 1000);
 
-                // Clean up interval when page is unloaded
-                $(window).on('beforeunload', function() {
-                    clearInterval(countdownInterval);
-                });
+                    // Clean up interval when page is unloaded
+                    $(window).on('beforeunload', function() {
+                        clearInterval(countdownInterval);
+                    });
                 @endif
             });
         </script>

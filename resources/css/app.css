@@ -460,12 +460,21 @@ body.admin-body {
     border-color: var(--boomtale-primary);
     border-radius: 8px;
     font-weight: 500;
+    padding: 0.75rem 1.5rem;
 }
 
 .btn-outline-boomtale:hover {
     background: var(--boomtale-primary);
     border-color: var(--boomtale-primary);
     color: white;
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
 }
 
 /* Admin Cards */
@@ -652,7 +661,8 @@ body.admin-body {
 }
 
 /* User Cart Badge */
-.user-cart-count, .user-cart-count-mobile {
+.user-cart-count,
+.user-cart-count-mobile {
     min-width: 18px !important;
     height: 18px !important;
     line-height: 18px !important;

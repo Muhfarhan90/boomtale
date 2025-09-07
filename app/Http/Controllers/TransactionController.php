@@ -59,6 +59,32 @@ class TransactionController extends Controller
             return response()->json(['error' => 'Keranjang belanja kosong.'], 400);
         }
 
+        // =============================================================
+        // MODIFIKASI: Lakukan pengecekan duplikasi produk digital
+        // =============================================================
+        foreach ($cartItems as $cartItem) {
+            // Check jika produk digital sudah pernah dibeli (status completed)
+            if ($cartItem->product->type === 'digital' && $user->hasPurchasedProduct($cartItem->product->id)) {
+                return response()->json([
+                    'error' => "Anda sudah memiliki produk digital '{$cartItem->product->name}'. Silakan hapus dari keranjang untuk melanjutkan."
+                ], 400);
+            }
+
+            // MODIFIKASI: Check jika produk digital sudah ada di transaksi yang belum selesai (pending/waiting_payment)
+            $existingPendingOrder = Order::where('user_id', $user->id)
+                ->whereIn('status', ['pending', 'waiting_payment'])
+                ->whereHas('orderItems', function ($query) use ($cartItem) {
+                    $query->where('product_id', $cartItem->product_id);
+                })
+                ->first();
+
+            if ($existingPendingOrder) {
+                return response()->json([
+                    'error' => "Produk digital '{$cartItem->product->name}' sudah ada di pesanan Anda yang sedang menunggu pembayaran (Invoice: {$existingPendingOrder->invoice_number})."
+                ], 400);
+            }
+        }
+        
         try {
             return DB::transaction(function () use ($user, $cartItems, $request) {
                 $currency = $request->currency ?? 'IDR'; // Default to IDR
