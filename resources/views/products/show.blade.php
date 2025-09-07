@@ -882,9 +882,9 @@
                                         data-product-id="{{ $product->id }}">
                                         <i class="fas fa-shopping-cart me-2"></i>Tambah ke Keranjang
                                     </button>
-                                    <button class="btn btn-outline-primary flex-fill" id="buyNow">
+                                    {{-- <button class="btn btn-outline-primary flex-fill" id="buyNow">
                                         <i class="fas fa-bolt me-2"></i>Beli Sekarang
-                                    </button>
+                                    </button> --}}
                                 </div>
                             </div>
                         </div>
@@ -898,7 +898,7 @@
                 </div>
 
                 <!-- Product Specifications -->
-                <div class="product-specs mb-4">
+                {{-- <div class="product-specs mb-4">
                     <h5 class="fw-bold mb-3">Spesifikasi</h5>
                     <div class="spec-item">
                         <span class="text-muted">Format</span>
@@ -916,7 +916,7 @@
                         <span class="text-muted">Tersedia Sejak</span>
                         <span class="fw-bold">{{ $product->created_at->format('d M Y') }}</span>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Share Buttons -->
                 <div class="mb-4">
@@ -958,12 +958,12 @@
                         <i class="fas fa-star me-2"></i>Ulasan ({{ $product->total_reviews }})
                     </button>
                 </li>
-                <li class="nav-item" role="presentation">
+                {{-- <li class="nav-item" role="presentation">
                     <button class="nav-link" id="download-tab" data-bs-toggle="tab" data-bs-target="#download"
                         type="button" role="tab">
                         <i class="fas fa-download me-2"></i>Download Info
                     </button>
-                </li>
+                </li> --}}
             </ul>
 
             <div class="tab-content mt-4" id="productTabsContent">
@@ -1111,7 +1111,7 @@
                 </div>
 
                 <!-- Download Info Tab -->
-                <div class="tab-pane fade" id="download" role="tabpanel">
+                {{-- <div class="tab-pane fade" id="download" role="tabpanel">
                     <div class="row">
                         <div class="col-lg-8 mx-auto">
                             <div class="card border-0 shadow-sm">
@@ -1163,7 +1163,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
 

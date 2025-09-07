@@ -27,7 +27,7 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
@@ -83,7 +83,8 @@ class Order extends Model
      */
     public function getCanBePaidAttribute()
     {
-        return $this->status === 'waiting_payment' && !$this->is_expired;
+        return in_array($this->status, ['pending', 'waiting_payment']) &&
+            ($this->expired_at === null || $this->expired_at->isFuture());
     }
 
     /**

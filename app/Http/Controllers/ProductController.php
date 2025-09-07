@@ -217,10 +217,10 @@ class ProductController extends Controller
             'type' => 'required|in:digital,physical',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
-            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20000',
             // File digital wajib jika tipe produknya digital
-            'digital_file' => 'required_if:type,digital|file|mimes:zip,pdf,epub,mp4|max:307200',
+            'digital_file' => 'required_if:type,digital|file|mimes:zip,pdf,epub,mp4|max:300000',
             'stock' => 'nullable|required_if:type,physical|integer|min:0',
         ]);
 

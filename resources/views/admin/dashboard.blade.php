@@ -90,7 +90,7 @@
                     <div class="col-md-4 text-md-end">
                         <div class="welcome-info">
                             <small>Email: {{ auth()->user()->email }}</small><br>
-                            <small>Login: {{ now()->format('d M Y, H:i') }}</small>
+                            <small>Login: <span data-utc-time="{{ now()->toISOString() }}"></span></small>
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                         <i class="fas fa-list-alt me-2"></i>
                         Pesanan Terbaru
                     </h6>
-                    <a href="{{route('admin.orders.index')}}" class="btn btn-sm btn-boomtale">Lihat Semua</a>
+                    <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-boomtale">Lihat Semua</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -205,19 +205,19 @@
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="{{route('admin.products.index')}}" class="btn btn-action btn-action-products">
+                            <a href="{{ route('admin.products.index') }}" class="btn btn-action btn-action-products">
                                 <i class="fas fa-box mb-2"></i>
                                 <span>Kelola Produk</span>
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="{{route('admin.orders.index')}}" class="btn btn-action btn-action-orders">
+                            <a href="{{ route('admin.orders.index') }}" class="btn btn-action btn-action-orders">
                                 <i class="fas fa-shopping-cart mb-2"></i>
                                 <span>Lihat Pesanan</span>
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="#" class="btn btn-action btn-action-settings">
+                            <a href="{{ route('admin.settings.index') }}" class="btn btn-action btn-action-settings">
                                 <i class="fas fa-cog mb-2"></i>
                                 <span>Pengaturan</span>
                             </a>

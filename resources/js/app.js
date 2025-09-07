@@ -243,6 +243,45 @@ window.formatNumber = function (number) {
     return new Intl.NumberFormat("id-ID").format(number);
 };
 
+// ================ Global Time and Date Formatting ================
+window.formatDateFromUTC = function (utcDateString) {
+    if (!utcDateString) return "";
+    const date = new Date(utcDateString);
+
+    // Opsi format untuk tanggal dan waktu numerik
+    const options = {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false, // Pastikan format 24 jam
+    };
+
+    // Gunakan Intl.DateTimeFormat untuk format lokal otomatis
+    const formatter = new Intl.DateTimeFormat(navigator.language, options);
+
+    // Ambil bagian-bagian yang diformat
+    const parts = formatter.formatToParts(date);
+    let day = parts.find((part) => part.type === "day").value;
+    let month = parts.find((part) => part.type === "month").value;
+    let year = parts.find((part) => part.type === "year").value;
+    let hour = parts.find((part) => part.type === "hour").value;
+    let minute = parts.find((part) => part.type === "minute").value;
+
+    // Gabungkan bagian-bagian tersebut
+    return `${day}-${month}-${year} ${hour}:${minute}`;
+};
+
+// Terapkan format ke semua elemen dengan data-utc-time
+document.addEventListener("DOMContentLoaded", function () {
+    const timeElements = document.querySelectorAll("[data-utc-time]");
+    timeElements.forEach(function (el) {
+        const utcTime = el.getAttribute("data-utc-time");
+        el.textContent = window.formatDateFromUTC(utcTime);
+    });
+});
+
 // Debug helper
 window.debugBoomtale = function () {
     console.log("🚀 Boomtale Debug Info:");

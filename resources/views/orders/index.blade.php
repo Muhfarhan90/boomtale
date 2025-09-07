@@ -93,8 +93,8 @@
                                                 @endif
                                             </div>
                                             <small class="text-muted d-block mt-1">
-                                                <i
-                                                    class="fas fa-calendar me-1"></i>{{ $order->created_at->format('d M Y, H:i') }}
+                                                <i class="fas fa-calendar me-1"></i>
+                                                <span data-utc-time="{{ $order->created_at->toIsoString() }}"></span>
                                             </small>
                                         </div>
                                         <div class="col-md-6 text-md-end">
@@ -175,9 +175,9 @@
 
                                         <div class="order-actions">
                                             @if ($order->can_be_paid)
-                                                <form action="{{ route('user.checkout.process') }}">
+                                                <form action="{{ route('user.orders.show', $order) }}">
                                                     <button class="btn btn-success btn-sm" type="submit">
-                                                        <i class="fas fa-credit-card me-1"></i>Bayar Sekarang
+                                                        <i class="fas fa-credit-card me-1"></i>Lanjutkan Pembayaran
                                                     </button>
                                                 </form>
                                             @endif
@@ -189,10 +189,10 @@
                                                         0;
                                                 @endphp
                                                 @if ($hasDigitalProducts)
-                                                    <button type="button" class="btn btn-primary btn-sm"
-                                                        onclick="showDownloads({{ $order->id }})">
-                                                        <i class="fas fa-download me-1"></i>Download
-                                                    </button>
+                                                    <a href="{{ route('user.user-products.index') }}"
+                                                        class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-eye me-1"></i>Ke Produk Saya
+                                                    </a>
                                                 @endif
                                             @endif
                                         </div>
@@ -207,7 +207,11 @@
                                                 @if ($order->expired_at && $order->status === 'waiting_payment')
                                                     <span class="ms-2">
                                                         <i class="fas fa-clock me-1"></i>
-                                                        Batas waktu: {{ $order->expired_at->format('d M Y, H:i') }}
+                                                        Batas waktu:
+                                                        <span class="countdown-timer fw-bold text-warning"
+                                                            data-expired="{{ $order->expired_at->toISOString() }}">
+                                                            Loading...
+                                                        </span>
                                                     </span>
                                                 @endif
                                             </small>
@@ -534,5 +538,35 @@
                 });
             }
         });
+
+        // Countdown Timer untuk semua order
+        function updateCountdowns() {
+            $('.countdown-timer').each(function() {
+                const element = $(this);
+                const expiredAt = new Date(element.data('expired')).getTime();
+                const now = new Date().getTime();
+                const distance = expiredAt - now;
+
+                if (distance < 0) {
+                    element.html('EXPIRED').removeClass('text-warning').addClass('text-danger');
+                    return;
+                }
+
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                element.html(
+                    String(hours).padStart(2, '0') + ':' +
+                    String(minutes).padStart(2, '0') + ':' +
+                    String(seconds).padStart(2, '0')
+                );
+            });
+        }
+
+        if ($('.countdown-timer').length > 0) {
+            updateCountdowns();
+            setInterval(updateCountdowns, 1000);
+        }
     </script>
 @endpush

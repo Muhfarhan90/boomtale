@@ -1,4 +1,3 @@
-{{-- filepath: d:\FREELANCE\boomtale\resources\views\admin\orders\index.blade.php --}}
 @extends('admin.layouts.app')
 
 @section('page-title', 'Manajemen Pesanan')
@@ -81,13 +80,14 @@
                                         <small class="text-muted">{{ $order->user->email ?? '-' }}</small>
                                     </td>
                                     <td>
-                                        {{ $order->created_at->format('d M Y, H:i') }}
+                                        <span data-utc-time="{{ $order->created_at->toISOString() }}"></span>
+                                        <!-- $order->created_at->format('d M Y, H:i') -->
                                     </td>
                                     <td>
-                                        <span class="fw-bold text-boomtale">{{ $order->formatted_total_amount }}</span>
+                                        <span class="fw-bold text-boomtale">{{ $order->total_amount }}</span>
                                     </td>
                                     <td class="text-center">
-                                        <span class="badge bg-light text-dark">{{ $order->order_items_count }}</span>
+                                        <span class="badge bg-light text-dark">{{ $order->items_count }}</span>
                                     </td>
                                     <td class="text-center">
                                         @if ($order->status == 'completed')

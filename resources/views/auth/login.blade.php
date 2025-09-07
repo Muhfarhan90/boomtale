@@ -1,4 +1,3 @@
-{{-- resources/views/auth/login.blade.php --}}
 <!DOCTYPE html>
 <html lang="id">
 
@@ -6,6 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Boomtale</title>
+
+    {{-- Import Poppins Font --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -15,10 +21,17 @@
             --secondary-color: #2C2C2C;
         }
 
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
         body {
-            background: linear-gradient(135deg, var(--secondary-color) 0%, #1a1a1a 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif !important;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
         }
 
         .auth-container {
@@ -26,7 +39,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 1rem;
+            /* Reduced padding for better mobile view */
         }
 
         .auth-card {
@@ -94,6 +108,47 @@
         .alert {
             border-radius: 10px;
             border: none;
+        }
+
+        /* Media Query for mobile devices (less than 576px) */
+        @media (max-width: 575.98px) {
+            .auth-card {
+                margin: 1rem;
+            }
+
+            .auth-header {
+                padding: 1.5rem;
+            }
+
+            .auth-logo {
+                font-size: 1.5rem;
+            }
+
+            .auth-header p {
+                font-size: 0.9rem;
+            }
+
+            .auth-body {
+                padding: 1.5rem;
+            }
+
+            .form-label {
+                font-size: 0.9rem;
+            }
+
+            .form-control {
+                font-size: 0.9rem;
+                padding: 0.6rem 0.8rem;
+            }
+
+            .btn-primary {
+                font-size: 0.9rem;
+                padding: 0.6rem 1.5rem;
+            }
+
+            .form-check-label {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>

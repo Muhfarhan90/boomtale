@@ -14,8 +14,8 @@ class SettingSeeder extends Seeder
     {
         $settings = [
             ['setting_key' => 'site_name', 'setting_value' => 'Boomtale'],
-            ['setting_key' => 'site_email', 'setting_value' => 'admin@boomtale.com'],
-            ['setting_key' => 'site_phone', 'setting_value' => '+62 812-3456-7890'],
+            ['setting_key' => 'site_email', 'setting_value' => 'boomtaleadm@gmail.com'],
+            ['setting_key' => 'site_phone', 'setting_value' => '+62 811-3333-4444'],
             ['setting_key' => 'site_description', 'setting_value' => 'Platform digital marketplace terpercaya'],
         ];
 

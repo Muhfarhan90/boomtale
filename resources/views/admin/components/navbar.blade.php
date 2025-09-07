@@ -28,14 +28,14 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li class="dropdown-header">{{ auth()->user()->email ?? 'admin@boomtale.com' }}</li>
+                    <li class="dropdown-header">{{ auth()->user()->email ?? '' }}</li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#" onclick="alert('Coming Soon')">
+                    {{-- <li><a class="dropdown-item" href="#" onclick="alert('Coming Soon')">
                             <i class="fas fa-user me-2"></i>Profile Saya
-                        </a></li>
-                    <li><a class="dropdown-item" href="#" onclick="alert('Coming Soon')">
+                        </a></li> --}}
+                    <li><a class="dropdown-item" href="{{route('admin.settings.index')}}">
                             <i class="fas fa-cog me-2"></i>Pengaturan
                         </a></li>
                     <li><a class="dropdown-item" href="{{ route('user.home') }}" target="_blank">

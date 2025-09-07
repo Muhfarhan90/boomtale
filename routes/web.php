@@ -122,9 +122,10 @@ Route::name('user.')->group(function () {
         // Route User Products
         Route::prefix('user-products')->name('user-products.')->group(function () {
             Route::get('/', [UserProductController::class, 'index'])->name('index');
-            Route::get('/{id}', [UserProductController::class, 'show'])->name('show');
-            Route::get('/{id}/download', [UserProductController::class, 'download'])->name('download');
-            Route::get('/{id}/stream', [UserProductController::class, 'stream'])->name('stream');
+            Route::get('/{userProduct}', [UserProductController::class, 'show'])->name('show');
+            Route::get('/{userProduct}/download', [UserProductController::class, 'download'])->name('download');
+            Route::get('/{userProduct}/stream', [UserProductController::class, 'stream'])->name('stream');
+            Route::get('/{userProduct}/view-digital', [UserProductController::class, 'pdfStream'])->name('pdf-stream');
         });
     });
 });

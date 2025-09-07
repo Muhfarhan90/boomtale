@@ -16,9 +16,9 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name' => 'Super Admin',
-            'email' => 'admin@boomtale.com',
+            'email' => 'boomtaleadm@gmail.com',
             'password' => Hash::make('password'),
-            'phone_number' => '08123456789',
+            'phone_number' => '081234567891',
             'role' => 'admin',
             'is_active' => true,
             'email_verified_at' => now(),

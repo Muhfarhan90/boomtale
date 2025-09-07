@@ -10,6 +10,9 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+/* ================ GLOBAL FONT SETUP ================ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 /* ================ ADMIN STYLES - BOOMTALE THEME ================ */
 
 /* CSS Variables for Admin */
@@ -21,6 +24,67 @@
     --boomtale-light: #F8F6F3;
     --boomtale-dark: #1a1a1a;
     --sidebar-width: 260px;
+    /* Font Family Variables */
+    --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Text Colors */
+.text-boomtale {
+    color: var(--boomtale-primary) !important;
+}
+
+.text-boomtale-dark {
+    color: var(--boomtale-primary-dark) !important;
+}
+
+.text-boomtale-light {
+    color: var(--boomtale-primary-light) !important;
+}
+
+/* Background Colors */
+.bg-boomtale {
+    background-color: var(--boomtale-primary) !important;
+}
+
+.bg-boomtale-gradient {
+    background: linear-gradient(135deg, var(--boomtale-primary) 0%, var(--boomtale-primary-dark) 100%) !important;
+}
+
+.bg-boomtale-light {
+    background-color: var(--boomtale-light) !important;
+}
+
+/* Border Colors */
+.border-boomtale {
+    border-color: var(--boomtale-primary) !important;
+}
+
+.border-boomtale-2 {
+    border: 2px solid var(--boomtale-primary) !important;
+}
+
+/* Button Variants */
+.btn-boomtale-custom {
+    background: var(--boomtale-primary);
+    border-color: var(--boomtale-primary);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-boomtale-custom:hover {
+    background: var(--boomtale-primary-dark);
+    border-color: var(--boomtale-primary-dark);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Shadow dengan warna boomtale */
+.shadow-boomtale {
+    box-shadow: 0 4px 15px rgba(201, 168, 119, 0.3) !important;
+}
+
+.shadow-boomtale-lg {
+    box-shadow: 0 8px 25px rgba(201, 168, 119, 0.4) !important;
 }
 
 /* Admin Body Override */
@@ -108,11 +172,11 @@ body.admin-body {
     padding: 0 0.75rem;
 }
 
-.nav-item {
+.admin-layout .nav-item {
     margin-bottom: 0.25rem;
 }
 
-.nav-link {
+.admin-layout .nav-link {
     display: flex;
     align-items: center;
     padding: 0.875rem 1rem;
@@ -123,14 +187,14 @@ body.admin-body {
     position: relative;
 }
 
-.nav-link:hover {
+.admin-layout .nav-link:hover {
     background: rgba(201, 168, 119, 0.1);
     color: var(--boomtale-primary);
     transform: translateX(3px);
     text-decoration: none;
 }
 
-.nav-link.active {
+.admin-layout .nav-link.active {
     background: linear-gradient(135deg, var(--boomtale-primary) 0%, var(--boomtale-primary-dark) 100%);
     color: white;
     box-shadow: 0 4px 15px rgba(201, 168, 119, 0.3);
@@ -155,7 +219,7 @@ body.admin-body {
     margin-left: auto;
 }
 
-.nav-link[aria-expanded="true"] .submenu-arrow {
+.admin-layout .nav-link[aria-expanded="true"] .submenu-arrow {
     transform: rotate(180deg);
 }
 
@@ -435,10 +499,6 @@ body.admin-body {
     font-weight: 600;
 }
 
-.text-boomtale {
-    color: var(--boomtale-primary) !important;
-}
-
 /* Admin Dropdowns */
 .admin-layout .dropdown-menu {
     border: none;
@@ -484,7 +544,6 @@ body.admin-body {
     margin-bottom: 1.5rem;
 }
 
-
 .admin-layout .alert-success {
     background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
     color: #155724;
@@ -498,22 +557,17 @@ body.admin-body {
 .alert-boomtale .alert-content {
     display: flex;
     align-items: flex-start;
-    /* Mengatur agar ikon dan teks sejajar di atas */
     width: 100%;
 }
 
 .alert-boomtale .alert-icon {
     margin-right: 1rem;
-    /* Memberi jarak antara ikon dan teks */
     font-size: 1.25rem;
-    /* Sedikit memperbesar ikon */
     padding-top: 0.1rem;
-    /* Menyesuaikan posisi vertikal ikon */
 }
 
 .alert-boomtale .alert-body {
     flex-grow: 1;
-    /* Membuat area teks mengisi ruang yang tersedia */
 }
 
 .alert-boomtale .alert-title {
@@ -527,7 +581,6 @@ body.admin-body {
     font-size: 1.2rem;
     opacity: 0.7;
     margin-left: 1.5rem;
-    /* Memberi jarak dari teks */
 }
 
 .alert-boomtale .alert-close:hover {
@@ -537,6 +590,246 @@ body.admin-body {
 .alert-boomtale .alert-list {
     margin-bottom: 0;
     padding-left: 1.2rem;
+}
+
+/* ================ USER NAVBAR STYLES ================ */
+
+/* User Navbar Brand */
+.user-navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    color: var(--boomtale-primary);
+    display: flex;
+    align-items: center;
+}
+
+.user-navbar-brand:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+/* User Desktop Navigation */
+.user-navbar {
+    width: 100%;
+}
+
+.user-navbar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.user-nav-item {
+    margin: 0;
+    padding: 0;
+}
+
+.user-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    color: #495057;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.user-nav-link:hover {
+    color: var(--boomtale-primary);
+    background-color: rgba(201, 168, 119, 0.1);
+    text-decoration: none;
+}
+
+.user-nav-link.active {
+    color: var(--boomtale-primary);
+    background-color: rgba(201, 168, 119, 0.15);
+    font-weight: 600;
+}
+
+/* User Cart Badge */
+.user-cart-count, .user-cart-count-mobile {
+    min-width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    font-size: 0.65rem !important;
+    font-weight: bold !important;
+    border-radius: 50% !important;
+}
+
+/* User Mobile Top Navigation */
+.user-mobile-nav {
+    display: flex;
+    align-items: center;
+}
+
+.user-mobile-nav .user-mobile-link {
+    color: #6c757d;
+    transition: all 0.2s ease;
+    padding: 8px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.user-mobile-nav .user-mobile-link:hover {
+    color: var(--boomtale-primary);
+    background-color: rgba(201, 168, 119, 0.1);
+    text-decoration: none;
+}
+
+/* User Dropdown Menus */
+.user-dropdown-menu {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    margin-top: 8px;
+}
+
+.user-dropdown-item {
+    border-radius: 8px;
+    margin: 2px 8px;
+    transition: all 0.2s ease;
+    padding: 0.5rem 1rem;
+    color: inherit;
+    text-decoration: none;
+    display: block;
+}
+
+.user-dropdown-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(4px);
+    color: inherit;
+    text-decoration: none;
+}
+
+/* User Mobile Bottom Navigation */
+.user-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    z-index: 1000;
+    padding: 8px 0;
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.user-bottom-nav-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    margin: 0;
+}
+
+.user-bottom-nav .user-bottom-nav-item {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 0;
+    padding: 0 4px;
+}
+
+.user-bottom-nav .user-bottom-nav-link {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 12px;
+    padding: 8px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+    width: 100%;
+    text-align: center;
+    min-height: 55px;
+    border-radius: 12px;
+    background-color: transparent;
+}
+
+.user-bottom-nav .user-bottom-nav-link:hover {
+    color: var(--boomtale-primary);
+    text-decoration: none;
+}
+
+.user-bottom-nav .user-bottom-nav-link.active {
+    color: var(--boomtale-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(201, 168, 119, 0.3);
+}
+
+.user-bottom-nav .user-bottom-nav-link:hover:not(.active) {
+    color: var(--boomtale-primary);
+    background-color: rgba(201, 168, 119, 0.05);
+    transform: translateY(-1px);
+}
+
+.user-bottom-nav .user-bottom-nav-link i {
+    font-size: 18px;
+    margin-bottom: 4px;
+    line-height: 1;
+}
+
+.user-bottom-nav .user-bottom-nav-link span {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* ================ USER RESPONSIVE STYLES ================ */
+@media (max-width: 991.98px) {
+    body {
+        padding-bottom: 75px;
+    }
+
+    .user-bottom-nav {
+        display: block;
+    }
+}
+
+@media (min-width: 992px) {
+    .user-bottom-nav {
+        display: none;
+    }
+}
+
+/* Responsive adjustments for very small screens */
+@media (max-width: 360px) {
+    .user-bottom-nav .user-bottom-nav-link span {
+        font-size: 9px;
+    }
+
+    .user-bottom-nav .user-bottom-nav-link i {
+        font-size: 16px;
+    }
+
+    .user-bottom-nav-container {
+        padding: 0 4px;
+    }
+
+    .user-bottom-nav .user-bottom-nav-item {
+        padding: 0 2px;
+    }
 }
 
 /* ================ ADMIN RESPONSIVE ================ */
@@ -853,14 +1146,14 @@ body.admin-body {
 
 /* Price highlighting */
 .text-boomtale {
-    color: var(--bs-primary, #0d6efd) !important;
+    color: var(--boomtale-primary) !important;
     font-weight: 600;
 }
 
 /* Filter section improvements */
 .form-select:focus {
-    border-color: var(--bs-primary, #0d6efd);
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    border-color: var(--boomtale-primary);
+    box-shadow: 0 0 0 0.2rem rgba(201, 168, 119, 0.25);
 }
 
 .custom-search-bar {
@@ -872,7 +1165,7 @@ body.admin-body {
 }
 
 .custom-search-bar:focus-within {
-    border-color: var(--boomtale-primary, #C9A877);
+    border-color: var(--boomtale-primary);
     box-shadow: 0 0 0 0.2rem rgba(201, 168, 119, 0.25);
 }
 
@@ -892,20 +1185,17 @@ body.admin-body {
 }
 
 .custom-search-bar .btn-search {
-    background-color: var(--boomtale-primary, #C9A877) !important;
-    /* TAMBAHKAN !important */
+    background-color: var(--boomtale-primary) !important;
     color: white;
     border: none;
     font-weight: 500;
     padding: 0 1.5rem;
     transition: background-color 0.3s ease;
     border-radius: 0;
-    /* Hapus border-radius default dari tombol */
 }
 
 .custom-search-bar .btn-search:hover {
-    background-color: var(--boomtale-primary-dark, #B8986A) !important;
-    /* TAMBAHKAN !important */
+    background-color: var(--boomtale-primary-dark) !important;
     color: white;
 }
 
@@ -920,7 +1210,6 @@ body.admin-body {
 .rating-stars .fa-star,
 .rating-stars .fa-star-half-alt {
     color: #ffc107 !important;
-    /* Paksa ikon bintang menjadi kuning dengan !important */
 }
 
 .rating-stars .fa-star {

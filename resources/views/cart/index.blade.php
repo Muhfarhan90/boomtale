@@ -344,7 +344,6 @@
             .sticky-top {
                 position: relative !important;
                 top: auto !important;
-                margin-top: 1.5rem;
             }
 
             .card-body {
