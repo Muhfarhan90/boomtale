@@ -4,13 +4,64 @@
     <style>
         .product-card .rating-stars {
             color: #ffc107;
-            /* Warna kuning untuk bintang */
             font-size: 0.85rem;
         }
 
         .product-card .rating-text {
             font-size: 0.75rem;
             color: #6c757d;
+        }
+
+        /* Price styling untuk product card */
+        .product-card .price-section {
+            margin-bottom: 1rem;
+        }
+
+        .product-card .original-price {
+            text-decoration: line-through;
+            color: #6c757d;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .product-card .discount-price {
+            color: var(--boomtale-primary, #C5A572);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .product-card .discount-badge {
+            background: #dc3545;
+            color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.65rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .product-card .no-discount-price {
+            color: var(--boomtale-primary, #C5A572);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .product-card .price-display {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card .sales-count {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        .product-card .sales-count i {
+            font-size: 0.7rem;
+            margin-right: 0.25rem;
         }
     </style>
 @endpush
@@ -49,7 +100,6 @@
 
         <!-- Rating -->
         @php
-            // PERBAIKAN: Gunakan accessor yang sudah ada di model atau hitung manual
             $averageRating = $product->reviews_avg_rating ?? ($product->average_rating ?? 0);
             $totalReviews = $product->reviews_count ?? ($product->total_reviews ?? 0);
             $fullStars = floor($averageRating);
@@ -83,21 +133,45 @@
         @endif
 
         <div class="mt-auto">
-            <!-- Price -->
-            <div class="price mb-2">
-                <div class="d-flex align-items-center flex-wrap">
-                    <span class="fw-bold text-boomtale me-2" style="font-size: 0.9rem;">
-                        {{ $product->formatted_price }}
-                    </span>
+            <!-- Price Section - DIPERBAIKI -->
+            <div class="price-section">
+                @php
+                    // Ambil harga dari database
+                    $originalPrice = $product->price ?? 0;
+                    $discountPrice = $product->discount_price ?? $product->price ?? 0;
+                    $hasDiscount = $originalPrice > $discountPrice && $originalPrice > 0;
+                    $discountPercentage = $hasDiscount ? round((($originalPrice - $discountPrice) / $originalPrice) * 100) : 0;
+                @endphp
+
+                <div class="price-display">
+                    @if ($hasDiscount)
+                        <!-- Ada diskon -->
+                        <span class="original-price">
+                            Rp {{ number_format($originalPrice, 0, ',', '.') }}
+                        </span>
+                        <span class="discount-price">
+                            Rp {{ number_format($discountPrice, 0, ',', '.') }}
+                        </span>
+                        <span class="discount-badge">
+                            {{ $discountPercentage }}% OFF
+                        </span>
+                    @else
+                        <!-- Tidak ada diskon -->
+                        <span class="no-discount-price">
+                            Rp {{ number_format($discountPrice, 0, ',', '.') }}
+                        </span>
+                    @endif
+
                     @if ($product->isDigital())
                         <span class="badge bg-info" style="font-size: 0.6rem;">
                             <i class="fas fa-download me-1"></i>Digital
                         </span>
                     @endif
                 </div>
-                {{-- JUMLAH TERJUAL --}}
+
+                {{-- Sales Count --}}
                 @if ($product)
-                    <div class="sales-count mt-1">
+                    <div class="sales-count">
                         <i class="fas fa-fire-alt text-danger"></i>
                         <span>{{ $product->orders_count ?? 0 }} terjual</span>
                     </div>

@@ -439,7 +439,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // File size limits (dalam bytes)
             const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-            const MAX_DIGITAL_FILE_SIZE = 300 * 1024 * 1024; // 300MB
+            const MAX_DIGITAL_FILE_SIZE = 1000 * 1024 * 1024; // 1000MB
 
             // Allowed file types
             const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
@@ -561,7 +561,7 @@
 
                 // Check file size
                 if (file.size > MAX_DIGITAL_FILE_SIZE) {
-                    showError(errorId, `Ukuran file terlalu besar (${formatFileSize(file.size)}). Maksimal 300MB.`);
+                    showError(errorId, `Ukuran file terlalu besar (${formatFileSize(file.size)}). Maksimal 1GB.`);
                     return false;
                 }
 
