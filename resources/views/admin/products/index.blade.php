@@ -68,7 +68,8 @@
                                 <th>Produk</th>
                                 <th>Tipe</th>
                                 <th>Kategori</th>
-                                <th>Harga</th>
+                                <th>Harga Asli</th>
+                                <th>Harga Diskon</th>
                                 <th class="text-center">Terjual</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center" width="150">Aksi</th>
@@ -110,6 +111,9 @@
                                     </td>
                                     <td>
                                         <span class="fw-bold text-boomtale">{{ $product->formatted_price }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold text-boomtale">{{ $product->formatted_discount_price }}</span>
                                     </td>
                                     <td class="text-center">
                                         <span class="badge bg-light text-dark">{{ $product->user_products_count }}</span>

@@ -4,9 +4,8 @@
     <div class="sidebar-header">
         <div class="sidebar-logo">
             <div class="logo-img">
-                <i class="fas fa-rocket"></i>
+                <img src="{{ asset('logo_boomtale.png') }}" alt="Boomtale Logo">
             </div>
-            <div class="logo-text">BOOMTALE</div>
         </div>
     </div>
 
@@ -62,7 +61,8 @@
             </li> --}}
 
             <li class="nav-item">
-                <a href="{{route('admin.settings.index')}}" class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+                <a href="{{ route('admin.settings.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                     <i class="fas fa-cog nav-icon"></i>
                     <span class="nav-text">Pengaturan</span>
                 </a>

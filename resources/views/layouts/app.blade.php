@@ -18,6 +18,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
+    {{-- Icon Browser --}}
+    <link rel="shortcut icon" href="{{ asset('logo_boomtale.png') }}">
     {{-- Vite CSS --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -35,6 +37,7 @@
             margin: 0;
             padding: 0;
         }
+
         .navbar-brand {
             font-weight: 700;
             font-size: 1.5rem;

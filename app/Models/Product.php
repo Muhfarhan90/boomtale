@@ -14,6 +14,7 @@ class Product extends Model
         'name',
         'slug',
         'price',
+        'discount_price',
         'description',
         'category_id',
         'is_active',
@@ -30,12 +31,19 @@ class Product extends Model
         'is_featured' => 'boolean',
         'gallery_images' => 'array', // Otomatis konversi JSON ke array dan sebaliknya
         'price' => 'decimal:2',
+        'discount_price' => 'decimal:2'
     ];
 
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
             get: fn() => 'Rp ' . number_format($this->price ?? 0, 0, ',', '.'),
+        );
+    }
+    public function formattedDiscountPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => 'Rp ' . number_format($this->discount_price ?? 0, 0, ',', '.'),
         );
     }
     public function category()

@@ -7,12 +7,12 @@
     <!-- Hero Section -->
     <section class="hero-section text-center text-lg-start">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-items-center pt-4">
                 <div class="col-lg-6">
                     {{-- PERBAIKAN: Ukuran font dibuat responsif --}}
-                    <h1 class="display-5 fw-bold mb-3">Selamat Datang di Boomtale</h1>
+                    <h1 class="fs-2 fw-bold mb-3">Selamat Datang di Boomtale</h1>
                     <p class="lead mb-4">Temukan berbagai produk digital berkualitas tinggi untuk kebutuhan Anda.</p>
-                    <a href="{{ route('user.products.index') }}" class="btn btn-light btn-lg">
+                    <a href="{{ route('user.products.index') }}" class="btn btn-boomtale btn-sm">
                         <i class="fas fa-play me-2"></i>Mulai Jelajahi
                     </a>
                 </div>
@@ -120,10 +120,7 @@
                     <!-- Company Info -->
                     <div class="col-lg-6 mb-4 mb-lg-0">
                         <div class="footer-brand mb-3">
-                            <h3 class="footer-title">
-                                <i class="fas fa-rocket me-2"></i>
-                                {{ $footerSettings['site_name'] ?? 'Boomtale' }}
-                            </h3>
+                            <img src="{{ asset('logo_boomtale.png') }}" alt="Boomtale Logo" class="footer-logo">
                             <p class="footer-tagline">
                                 {{ $footerSettings['site_description'] ?? 'Platform Digital Terdepan' }}</p>
                         </div>
@@ -241,6 +238,20 @@
 
         .footer-brand {
             position: relative;
+        }
+
+        .footer-logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo {
+            width: 300px;
+            height: 100px;
+            object-fit: contain;
+            margin-right: 1rem;
+            filter: brightness(1.2) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
         }
 
         .footer-title {
@@ -578,9 +589,9 @@
             const toast = document.createElement('div');
             toast.className = `toast-notification alert ${toastTypes[type] || toastTypes.info} text-white position-fixed`;
             toast.style.cssText = `
-            top: 20px; 
-            right: 20px; 
-            z-index: 9999; 
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
             min-width: 300px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);

@@ -3,8 +3,7 @@
     <div class="container">
         <!-- Brand -->
         <a class="user-navbar-brand fw-bold" href="{{ route('user.home') }}">
-            <i class="fas fa-rocket me-2" style="color: #c9a877"></i>
-            BOOMTALE
+            <img src="{{ asset('logo_boomtale.png') }}" alt="Boomtale Logo" class="user-navbar-logo">
         </a>
 
         <!-- Mobile Cart & User Menu (Pojok Kanan Atas) -->
@@ -15,7 +14,7 @@
                 @endphp
                 <!-- Mobile Cart Icon -->
                 <a href="{{ route('user.cart.index') }}" class="user-mobile-link position-relative me-3">
-                    <i class="fas fa-shopping-cart fs-5"></i>
+                    <i class="fas fa-shopping-cart"></i>
                     <span
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger user-cart-count-mobile"
                         style="font-size: 0.65rem; {{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</span>
