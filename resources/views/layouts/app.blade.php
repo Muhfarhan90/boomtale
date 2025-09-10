@@ -81,6 +81,12 @@
             align-items: center;
             justify-content: center;
         }
+
+        @media(max-width: 992px) {
+            main {
+                padding-bottom: 3rem;
+            }
+        }
     </style>
 
     @stack('styles')
@@ -89,7 +95,7 @@
 <body>
     @include('components.navbar')
 
-    <main>
+    <main class="pt-4">
         @yield('content')
     </main>
 
