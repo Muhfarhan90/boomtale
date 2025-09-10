@@ -1,7 +1,7 @@
 {{-- filepath: d:\FREELANCE\boomtale\resources\views\home.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Beranda - Boomtale')
+@section('title', 'Home - Boomtale')
 
 @section('content')
     <!-- Hero Section -->
@@ -10,10 +10,10 @@
             <div class="row align-items-center pt-4">
                 <div class="col-lg-6">
                     {{-- PERBAIKAN: Ukuran font dibuat responsif --}}
-                    <h1 class="fs-2 fw-bold mb-3">Selamat Datang di Boomtale</h1>
-                    <p class="lead mb-4">Temukan berbagai produk digital berkualitas tinggi untuk kebutuhan Anda.</p>
+                    <h1 class="fs-2 fw-bold mb-3">Welcome to Boomtale</h1>
+                    <p class="lead mb-4">Discover various high-quality digital products for your needs.</p>
                     <a href="{{ route('user.products.index') }}" class="btn btn-boomtale btn-sm">
-                        <i class="fas fa-play me-2"></i>Mulai Jelajahi
+                        <i class="fas fa-play me-2"></i>Start Exploring
                     </a>
                 </div>
                 <div class="col-lg-6 text-center d-none d-lg-block">
@@ -32,8 +32,8 @@
                         <form action="{{ route('user.products.index') }}" method="GET">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" name="search" class="form-control" placeholder="Cari produk...">
-                                <button class="btn btn-boomtale" type="submit">Cari</button>
+                                <input type="text" name="search" class="form-control" placeholder="Search for products...">
+                                <button class="btn btn-boomtale" type="submit">Search</button>
                             </div>
                         </form>
                     </div>
@@ -50,8 +50,8 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     {{-- PERBAIKAN: Ukuran font dibuat lebih kecil untuk mobile --}}
-                    <h2 class="h3 mb-0">Produk Terbaru</h2>
-                    <a href="{{ route('user.products.index') }}" class="btn btn-outline-boomtale btn-sm">Lihat Semua</a>
+                    <h2 class="h3 mb-0">Latest Products</h2>
+                    <a href="{{ route('user.products.index') }}" class="btn btn-outline-boomtale btn-sm">View All</a>
                 </div>
                 <div class="row g-3">
                     @forelse ($latestProducts as $product)
@@ -60,7 +60,7 @@
                         </div>
                     @empty
                         <div class="col-12">
-                            <p class="text-center text-muted">Belum ada produk yang tersedia.</p>
+                            <p class="text-center text-muted">There are no products available yet.</p>
                         </div>
                     @endforelse
                 </div>
@@ -71,7 +71,7 @@
         <div class="row mb-5">
             <div class="col-12">
                 {{-- PERBAIKAN: Ukuran font dibuat lebih kecil untuk mobile --}}
-                <h2 class="h3 text-center mb-3">Jelajahi Kategori</h2>
+                <h2 class="h3 text-center mb-3">Explore Categories</h2>
                 <div class="row g-3">
                     @forelse ($categories as $category)
                         <div class="col-6 col-md-3">
@@ -81,14 +81,14 @@
                                     <div class="card-body">
                                         <i class="fas fa-folder fa-2x text-boomtale mb-2"></i>
                                         <h6 class="mb-0">{{ $category->name }}</h6>
-                                        <small class="text-muted">{{ $category->products_count }} produk</small>
+                                        <small class="text-muted">{{ $category->products_count }} products</small>
                                     </div>
                                 </div>
                             </a>
                         </div>
                     @empty
                         <div class="col-12">
-                            <p class="text-center text-muted">Belum ada kategori yang tersedia.</p>
+                            <p class="text-center text-muted">There are no categories available yet.</p>
                         </div>
                     @endforelse
                 </div>
@@ -122,7 +122,7 @@
                         <div class="footer-brand mb-3">
                             <img src="{{ asset('logo_boomtale.png') }}" alt="Boomtale Logo" class="footer-logo">
                             <p class="footer-tagline">
-                                {{ $footerSettings['site_description'] ?? 'Platform Digital Terdepan' }}</p>
+                                {{ $footerSettings['site_description'] ?? 'Leading Digital Platform' }}</p>
                         </div>
 
                         <div class="contact-info">
@@ -163,7 +163,7 @@
                     <!-- Social Media & Copyright -->
                     <div class="col-lg-6 text-lg-end">
                         <div class="social-section mb-4">
-                            <h5 class="social-title mb-3">Ikuti Kami</h5>
+                            <h5 class="social-title mb-3">Follow me</h5>
                             <div class="social-links">
                                 @if (!empty($footerSettings['social_facebook']))
                                     <a href="{{ $footerSettings['social_facebook'] }}" target="_blank"
@@ -538,7 +538,7 @@
                         .then(data => {
                             if (data.success) {
                                 // Show success message
-                                showToast('Produk berhasil ditambahkan ke keranjang!',
+                                showToast('Product successfully add to cart!',
                                     'success');
 
                                 // Update cart badge if exists
@@ -559,12 +559,12 @@
 
                             } else {
                                 throw new Error(data.message ||
-                                    'Gagal menambahkan ke keranjang');
+                                    'Failed to add to cart');
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            showToast(error.message || 'Terjadi kesalahan!', 'error');
+                            showToast(error.message || 'An error occurred!', 'error');
 
                             // Reset button
                             this.innerHTML = originalText;

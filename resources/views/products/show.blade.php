@@ -644,9 +644,9 @@
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('user.home') }}" class="text-decoration-none">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('user.home') }}" class="text-decoration-none">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('user.products.index') }}"
-                        class="text-decoration-none">Produk</a></li>
+                        class="text-decoration-none">Products</a></li>
                 @if ($product->category)
                     <li class="breadcrumb-item"><a
                             href="{{ route('user.products.index', ['category' => $product->category->id]) }}"
@@ -825,7 +825,7 @@
                             {!! $product->stars_html !!}
                         </div>
                         <span class="text-muted">({{ $product->formatted_average_rating }}) •
-                            {{ $product->total_reviews }} ulasan</span>
+                            {{ $product->total_reviews }} reviews</span>
                     </div>
                 </div>
 
@@ -845,7 +845,7 @@
                             @endif
                         </div>
                         <div class="text-end">
-                            <small class="text-muted d-block">Tipe Produk</small>
+                            <small class="text-muted d-block">Type Product</small>
                             <span class="badge bg-info">{{ ucfirst($product->type ?? 'Digital') }}</span>
                         </div>
                     </div>
@@ -853,7 +853,7 @@
 
                 <!-- Product Description -->
                 <div class="mb-4">
-                    <h5 class="fw-bold mb-3">Deskripsi Produk</h5>
+                    <h5 class="fw-bold mb-3">Description Product</h5>
                     <div class="text-muted">
                         {!! nl2br(e($product->description)) !!}
                     </div>
@@ -865,7 +865,7 @@
                         <div class="row g-3">
                             <!-- Quantity Selector -->
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">Kuantitas</label>
+                                <label class="form-label fw-bold">Quantity</label>
                                 <div class="quantity-selector">
                                     {{-- <button type="button" id="decreaseQty">-</button> --}}
                                     <input type="number" id="quantity" value="1" min="1" max="10"
@@ -876,11 +876,11 @@
 
                             <!-- Action Buttons -->
                             <div class="col-md-8">
-                                <label class="form-label fw-bold">Aksi</label>
+                                <label class="form-label fw-bold">Action</label>
                                 <div class="d-grid gap-2 d-md-flex">
                                     <button class="btn btn-add-to-cart text-white flex-fill" id="addToCart"
                                         data-product-id="{{ $product->id }}">
-                                        <i class="fas fa-shopping-cart me-2"></i>Tambah ke Keranjang
+                                        <i class="fas fa-shopping-cart me-2"></i>Add to Cart
                                     </button>
                                     {{-- <button class="btn btn-outline-primary flex-fill" id="buyNow">
                                         <i class="fas fa-bolt me-2"></i>Beli Sekarang
@@ -891,8 +891,8 @@
                     @else
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
-                            <a href="{{ route('login') }}" class="alert-link">Masuk</a> atau
-                            <a href="{{ route('register') }}" class="alert-link">Daftar</a> untuk membeli produk ini.
+                            <a href="{{ route('login') }}" class="alert-link">Login</a> atau
+                            <a href="{{ route('register') }}" class="alert-link">Register</a> to buy this product.
                         </div>
                     @endauth
                 </div>
@@ -920,7 +920,7 @@
 
                 <!-- Share Buttons -->
                 <div class="mb-4">
-                    <h6 class="fw-bold mb-2">Bagikan</h6>
+                    <h6 class="fw-bold mb-2">Share</h6>
                     <div class="share-buttons">
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}"
                             target="_blank" style="background: #3b5998;">
@@ -949,13 +949,13 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
                         data-bs-target="#description" type="button" role="tab">
-                        <i class="fas fa-align-left me-2"></i>Deskripsi Detail
+                        <i class="fas fa-align-left me-2"></i>Description Detail
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews"
                         type="button" role="tab">
-                        <i class="fas fa-star me-2"></i>Ulasan ({{ $product->total_reviews }})
+                        <i class="fas fa-star me-2"></i>Reviews ({{ $product->total_reviews }})
                     </button>
                 </li>
                 {{-- <li class="nav-item" role="presentation">
@@ -973,13 +973,13 @@
                         <div class="col-lg-8 mx-auto">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-body p-4">
-                                    <h5 class="card-title mb-3">Detail Produk</h5>
+                                    <h5 class="card-title mb-3">Detail Product</h5>
                                     <div class="content">
                                         {!! nl2br(e($product->long_description ?? $product->description)) !!}
                                     </div>
 
                                     @if ($product->features)
-                                        <h6 class="mt-4 mb-3">Fitur Utama:</h6>
+                                        <h6 class="mt-4 mb-3">Main feature:</h6>
                                         <ul class="list-unstyled">
                                             @foreach (explode("\n", $product->features) as $feature)
                                                 @if (trim($feature))
@@ -1012,7 +1012,7 @@
                                                 {!! $product->stars_html !!}
                                             </div>
                                             <p class="text-muted mb-0" id="totalReviewsText">
-                                                {{ $product->total_reviews }} ulasan</p>
+                                                {{ $product->total_reviews }} Reviews</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1020,7 +1020,7 @@
                                 <div class="col-md-8">
                                     <div class="card border-0 shadow-sm">
                                         <div class="card-body p-4">
-                                            <h6 class="card-title mb-3">Distribusi Rating</h6>
+                                            <h6 class="card-title mb-3">Distribution Rating</h6>
                                             @if ($product->total_reviews > 0)
                                                 {{-- Loop melalui distribusi rating --}}
                                                 @foreach ($product->rating_distribution as $star => $data)
@@ -1037,7 +1037,7 @@
                                                     </div>
                                                 @endforeach
                                             @else
-                                                <p class="text-muted text-center">Belum ada rating untuk produk ini</p>
+                                                <p class="text-muted text-center">No reviews yet for this product</p>
                                             @endif
                                         </div>
                                     </div>
@@ -1047,11 +1047,11 @@
                             <!-- Info untuk Review -->
                             <div class="alert alert-info mb-4">
                                 <i class="fas fa-info-circle me-2"></i>
-                                <strong>Cara memberikan review:</strong>
+                                <strong>How to leave a review:</strong>
                                 <ol class="mb-0 mt-2">
-                                    <li>Beli produk ini</li>
-                                    <li>Setelah pembelian selesai, buka halaman <strong>Pesanan Saya</strong></li>
-                                    <li>Klik tombol <strong>"Beri Review"</strong> pada produk yang sudah dibeli</li>
+                                    <li>Buy this product</li>
+                                    <li>After the purchase is complete, go to the <strong>My Orders</strong> page</li>
+                                    <li>Click the <strong>"Leave a Review"</strong> button on the purchased product</li>
                                 </ol>
                             </div>
 
@@ -1093,9 +1093,8 @@
                                 @empty
                                     <div class="text-center py-4">
                                         <i class="fas fa-comments fa-3x text-muted mb-3"></i>
-                                        <h5 class="text-muted">Belum ada review</h5>
-                                        <p class="text-muted">Jadilah yang pertama memberikan review dengan membeli produk
-                                            ini!</p>
+                                        <h5 class="text-muted">No reviews yet</h5>
+                                        <p class="text-muted">Be the first to leave a review by purchasing this product!</p>
                                     </div>
                                 @endforelse
 
@@ -1171,8 +1170,8 @@
         @if ($relatedProducts->count() > 0)
             <div class="related-products mt-5">
                 <div class="text-center mb-4">
-                    <h3 class="fw-bold">Produk Terkait</h3>
-                    <p class="text-muted">Produk lain yang mungkin Anda sukai</p>
+                    <h3 class="fw-bold">Related Products</h3>
+                    <p class="text-muted">Other products you might like</p>
                 </div>
 
                 <div class="row">
@@ -1213,7 +1212,7 @@
                 const button = $(this);
 
                 button.prop('disabled', true).html(
-                    '<i class="fas fa-spinner fa-spin me-2"></i>Menambahkan...');
+                    '<i class="fas fa-spinner fa-spin me-2"></i>Adding...');
 
                 $.post('{{ route('user.cart.add') }}', {
                         product_id: productId,
@@ -1222,7 +1221,7 @@
                     })
                     .done(function(response) {
                         if (response.success) {
-                            button.html('<i class="fas fa-check me-2"></i>Berhasil Ditambahkan');
+                            button.html('<i class="fas fa-check me-2"></i>Added Successfully');
 
                             // Update cart count
                             if (typeof window.updateCartCount === 'function') {
@@ -1230,24 +1229,24 @@
                             }
 
                             // Show success notification
-                            showNotification('Produk berhasil ditambahkan ke keranjang!', 'success');
+                            showNotification('Products added to cart successfully!', 'success');
 
                             setTimeout(() => {
                                 button.prop('disabled', false).html(
-                                    '<i class="fas fa-shopping-cart me-2"></i>Tambah ke Keranjang'
+                                    '<i class="fas fa-shopping-cart me-2"></i>Add to Cart'
                                 );
                             }, 2000);
                         } else {
-                            showNotification(response.message || 'Gagal menambahkan ke keranjang',
+                            showNotification(response.message || 'Failed to add to cart',
                                 'error');
                             button.prop('disabled', false).html(
-                                '<i class="fas fa-shopping-cart me-2"></i>Tambah ke Keranjang');
+                                '<i class="fas fa-shopping-cart me-2"></i>Add to cart');
                         }
                     })
                     .fail(function() {
-                        showNotification('Terjadi kesalahan. Silakan coba lagi.', 'error');
+                        showNotification('An error occurred. Please try again.', 'error');
                         button.prop('disabled', false).html(
-                            '<i class="fas fa-shopping-cart me-2"></i>Tambah ke Keranjang');
+                            '<i class="fas fa-shopping-cart me-2"></i>Add to Cart');
                     });
             });
 
@@ -1266,11 +1265,11 @@
                         if (response.success) {
                             window.location.href = '{{ route('user.cart.index') }}';
                         } else {
-                            showNotification(response.message || 'Gagal memproses pembelian', 'error');
+                            showNotification(response.message || 'Failed to process purchase', 'error');
                         }
                     })
                     .fail(function() {
-                        showNotification('Terjadi kesalahan. Silakan coba lagi.', 'error');
+                        showNotification('An error occurred. Please try again.', 'error');
                     });
             });
 

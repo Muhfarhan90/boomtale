@@ -12,8 +12,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
+    {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    {{-- Icon Browser --}}
+    <link rel="shortcut icon" href="{{ asset('logo_boomtale.png') }}">
+    {{-- Vite CSS --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
     <style>
         :root {
             --primary-color: #C5A572;
@@ -53,7 +60,7 @@
         }
 
         .auth-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-dark));
             color: white;
             padding: 2rem;
             text-align: center;
@@ -157,8 +164,8 @@
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
-                <div class="auth-logo">BOOMTALE</div>
-                <p class="mb-0">Masuk ke akun Anda</p>
+                <img src="{{ asset('logo_boomtale.png') }}" alt="BOOMTALE" class="">
+                <p class="mb-0">Login to your account</p>
             </div>
 
             <div class="auth-body">
@@ -188,7 +195,7 @@
                             </span>
                             <input type="email" class="form-control @error('email') is-invalid @enderror"
                                 id="email" name="email" value="{{ old('email') }}" required
-                                placeholder="Masukkan email Anda">
+                                placeholder="Input your email">
                         </div>
                     </div>
 
@@ -199,26 +206,26 @@
                                 <i class="fas fa-lock"></i>
                             </span>
                             <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                id="password" name="password" required placeholder="Masukkan password Anda">
+                                id="password" name="password" required placeholder="Input your password">
                         </div>
                     </div>
 
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="remember" name="remember">
                         <label class="form-check-label" for="remember">
-                            Ingat saya
+                            Remember me
                         </label>
                     </div>
 
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt me-2"></i>Masuk
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
                     </button>
                 </form>
 
                 <div class="text-center mt-3">
                     <p class="mb-0">
-                        Belum punya akun?
-                        <a href="{{ route('register') }}" class="auth-link">Daftar sekarang</a>
+                        Don't have an account yet?
+                        <a href="{{ route('register') }}" class="auth-link">Register now</a>
                     </p>
                 </div>
             </div>

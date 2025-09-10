@@ -128,7 +128,7 @@
                 @for ($i = 0; $i < 5; $i++)
                     <i class="far fa-star"></i>
                 @endfor
-                <span class="rating-text ms-1">Belum ada ulasan</span>
+                <span class="rating-text ms-1">No reviews yet</span>
             </div>
         @endif
 
@@ -173,7 +173,7 @@
                 @if ($product)
                     <div class="sales-count">
                         <i class="fas fa-fire-alt text-danger"></i>
-                        <span>{{ $product->orders_count ?? 0 }} terjual</span>
+                        <span>{{ $product->orders_count ?? 0 }} Sold</span>
                     </div>
                 @endif
             </div>

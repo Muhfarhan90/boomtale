@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tulis Review untuk ' . $orderItem->product->name)
+@section('title', 'Write Review for ' . $orderItem->product->name)
 
 @push('styles')
     <style>
@@ -15,7 +15,7 @@
         .star-rating {
             display: flex;
             flex-direction: row-reverse;
-            /* Penting untuk hover effect */
+            /* Important for hover effect */
             justify-content: flex-end;
             font-size: 2.5rem;
             color: #ddd;
@@ -34,13 +34,13 @@
         .star-rating label:hover,
         .star-rating label:hover~label {
             color: #ffc107;
-            /* Warna bintang saat hover */
+            /* Star color on hover */
         }
 
         /* Checked effect */
         .star-rating input[type="radio"]:checked~label {
             color: #ffc107;
-            /* Warna bintang saat dipilih */
+            /* Star color when selected */
         }
     </style>
 @endpush
@@ -50,8 +50,8 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="text-center mb-4">
-                    <h1 class="h3">Tulis Review Anda</h1>
-                    <p class="text-muted">Bagikan pendapat Anda tentang produk yang telah Anda beli.</p>
+                    <h1 class="h3">Write Your Review</h1>
+                    <p class="text-muted">Share your opinion about the product you purchased.</p>
                 </div>
 
                 @if (session('info'))
@@ -68,8 +68,8 @@
                                 alt="{{ $orderItem->product->name }}" class="me-3">
                             <div>
                                 <h5 class="card-title mb-0">{{ $orderItem->product->name }}</h5>
-                                <small class="text-muted">Dibeli pada
-                                    {{ $orderItem->created_at->format('d F Y') }}</small>
+                                <small class="text-muted">Purchased on
+                                    {{ $orderItem->created_at->format('F d, Y') }}</small>
                             </div>
                         </div>
 
@@ -78,7 +78,7 @@
 
                             <!-- Star Rating Input -->
                             <div class="mb-4">
-                                <label class="form-label fw-bold">Rating Anda <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold">Your Rating <span class="text-danger">*</span></label>
                                 <div class="star-rating">
                                     <input type="radio" id="star5" name="rating" value="5"
                                         {{ old('rating') == 5 ? 'checked' : '' }} required><label for="star5"
@@ -103,9 +103,9 @@
 
                             <!-- Comment Input -->
                             <div class="mb-3">
-                                <label for="comment" class="form-label fw-bold">Komentar Anda (Opsional)</label>
+                                <label for="comment" class="form-label fw-bold">Your Comment (Optional)</label>
                                 <textarea class="form-control @error('comment') is-invalid @enderror" id="comment" name="comment" rows="5"
-                                    placeholder="Tuliskan pengalaman Anda menggunakan produk ini...">{{ old('comment') }}</textarea>
+                                    placeholder="Write your experience using this product...">{{ old('comment') }}</textarea>
                                 @error('comment')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -113,7 +113,7 @@
 
                             <div class="d-grid mt-4">
                                 <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-paper-plane me-2"></i>Kirim Review
+                                    <i class="fas fa-paper-plane me-2"></i>Submit Review
                                 </button>
                             </div>
                         </form>

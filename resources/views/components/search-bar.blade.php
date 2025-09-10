@@ -7,8 +7,8 @@
             <i class="fas fa-search"></i>
         </span>
         <input type="text" name="search" class="form-control search-input"
-            placeholder="Cari produk yang Anda inginkan..." value="{{ $value }}" aria-label="Cari produk">
-        <button class="btn btn-boomtale" type="submit">Cari</button>
+            placeholder="Search for products..." value="{{ $value }}" aria-label="Search Products">
+        <button class="btn btn-boomtale" type="submit">Search</button>
     </div>
     {{-- Slot untuk menyimpan filter lain saat melakukan pencarian --}}
     <div class="d-none">

@@ -2,7 +2,7 @@
 
 @extends('layouts.app')
 
-@section('title', 'Riwayat Pesanan - Boomtale')
+@section('title', 'Order History - Boomtale')
 
 @section('content')
     <div class="container py-4">
@@ -10,7 +10,7 @@
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('user.home') }}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Riwayat Pesanan</li>
+                <li class="breadcrumb-item active" aria-current="page">Order History</li>
             </ol>
         </nav>
 
@@ -20,7 +20,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">
                         <i class="fas fa-list-alt me-2 text-primary"></i>
-                        Riwayat Pesanan
+                        Order History
                     </h2>
                     <div class="d-flex gap-2">
                         <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
@@ -28,7 +28,7 @@
                             <i class="fas fa-filter me-1"></i>Filter
                         </button>
                         <a href="{{ route('user.products.index') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-shopping-bag me-1"></i>Belanja Lagi
+                            <i class="fas fa-shopping-bag me-1"></i>Shop Again
                         </a>
                     </div>
                 </div>
@@ -38,27 +38,27 @@
                     <div class="card-body py-3">
                         <form method="GET" class="row g-3 align-items-center">
                             <div class="col-md-3">
-                                <select name="status" class="form-select form-select-sm">
-                                    <option value="">Semua Status</option>
+                                <select name="status" class="form-select form-select-md">
+                                    <option value="">All Status</option>
                                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending
                                     </option>
                                     <option value="waiting_payment"
-                                        {{ request('status') == 'waiting_payment' ? 'selected' : '' }}>Menunggu Pembayaran
+                                        {{ request('status') == 'waiting_payment' ? 'selected' : '' }}>Waiting for Payment
                                     </option>
                                     <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>
-                                        Diproses</option>
-                                    <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Dikirim
+                                        Processing</option>
+                                    <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Shipped
                                     </option>
                                     <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
-                                        Selesai</option>
+                                        Completed</option>
                                     <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
-                                        Dibatalkan</option>
+                                        Cancelled</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <div class="input-group input-group-sm">
+                                <div class="input-group input-group-md">
                                     <input type="text" name="search" class="form-control"
-                                        placeholder="Cari nomor invoice..." value="{{ request('search') }}">
+                                        placeholder="Search invoice number..." value="{{ request('search') }}">
                                     <button class="btn btn-outline-secondary" type="submit">
                                         <i class="fas fa-search"></i>
                                     </button>
@@ -99,7 +99,7 @@
                                         </div>
                                         <div class="col-md-6 text-md-end">
                                             <div class="fw-bold text-primary h6 mb-1">{{ $order->formatted_total }}</div>
-                                            <small class="text-muted">{{ $order->items_count }} item</small>
+                                            <small class="text-muted">{{ $order->items_count }} item(s)</small>
                                         </div>
                                     </div>
                                 </div>
@@ -129,19 +129,18 @@
                                                         {{ $item->quantity }}x {{ $item->formatted_price }}
                                                     </small>
                                                 </div>
-                                                {{-- MODIFIKASI: Tambahkan tombol review di sini --}}
                                                 @if ($order->status === 'completed')
                                                     <div class="text-end ms-2">
                                                         @if ($item->review)
                                                             <a href="#"
                                                                 class="btn btn-outline-secondary btn-sm disabled"
                                                                 aria-disabled="true">
-                                                                <i class="fas fa-check-circle me-1"></i>Direview
+                                                                <i class="fas fa-check-circle me-1"></i>Reviewed
                                                             </a>
                                                         @else
                                                             <a href="{{ route('user.reviews.create', $item) }}"
                                                                 class="btn btn-outline-warning btn-sm">
-                                                                <i class="fas fa-star me-1"></i>Beri Review
+                                                                <i class="fas fa-star me-1"></i>Leave a Review
                                                             </a>
                                                         @endif
                                                     </div>
@@ -155,29 +154,22 @@
                                         <div class="btn-group" role="group">
                                             <a href="{{ route('user.orders.show', $order) }}"
                                                 class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-eye me-1"></i>Detail
+                                                <i class="fas fa-eye me-1"></i>Details
                                             </a>
 
                                             @if ($order->can_be_cancelled)
                                                 <button type="button" class="btn btn-outline-danger btn-sm"
                                                     onclick="cancelOrder({{ $order->id }})">
-                                                    <i class="fas fa-times me-1"></i>Batal
+                                                    <i class="fas fa-times me-1"></i>Cancel
                                                 </button>
                                             @endif
-
-                                            {{-- @if ($order->status === 'completed')
-                                                <button type="button" class="btn btn-outline-success btn-sm"
-                                                    onclick="reorder({{ $order->id }})">
-                                                    <i class="fas fa-redo me-1"></i>Pesan Lagi
-                                                </button>
-                                            @endif --}}
                                         </div>
 
                                         <div class="order-actions">
                                             @if ($order->can_be_paid)
                                                 <form action="{{ route('user.orders.show', $order) }}">
                                                     <button class="btn btn-success btn-sm" type="submit">
-                                                        <i class="fas fa-credit-card me-1"></i>Lanjutkan Pembayaran
+                                                        <i class="fas fa-credit-card me-1"></i>Continue Payment
                                                     </button>
                                                 </form>
                                             @endif
@@ -191,7 +183,7 @@
                                                 @if ($hasDigitalProducts)
                                                     <a href="{{ route('user.user-products.index') }}"
                                                         class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-eye me-1"></i>Ke Produk Saya
+                                                        <i class="fas fa-eye me-1"></i>My Products
                                                     </a>
                                                 @endif
                                             @endif
@@ -203,11 +195,11 @@
                                         <div class="order-timeline mt-3 pt-3 border-top">
                                             <small class="text-muted">
                                                 <i class="fas fa-info-circle me-1"></i>
-                                                Status terakhir: {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                                                Last status: {{ ucfirst(str_replace('_', ' ', $order->status)) }}
                                                 @if ($order->expired_at && $order->status === 'waiting_payment')
                                                     <span class="ms-2">
                                                         <i class="fas fa-clock me-1"></i>
-                                                        Batas waktu:
+                                                        Expiration time:
                                                         <span class="countdown-timer fw-bold text-warning"
                                                             data-expired="{{ $order->expired_at->toISOString() }}">
                                                             Loading...
@@ -231,14 +223,14 @@
                     <div class="text-center py-5">
                         <div class="empty-orders-illustration mb-4">
                             <i class="fas fa-shopping-cart fa-5x text-muted mb-3"></i>
-                            <h4 class="text-muted">Belum Ada Pesanan</h4>
+                            <h4 class="text-muted">No Orders Yet</h4>
                             <p class="text-muted mb-4">
-                                Anda belum pernah melakukan pemesanan.
-                                Ayo mulai berbelanja sekarang!
+                                You haven’t placed any orders yet.
+                                Start shopping now!
                             </p>
                             <div class="d-grid gap-2 d-md-block">
                                 <a href="{{ route('user.products.index') }}" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-shopping-bag me-2"></i>Mulai Belanja
+                                    <i class="fas fa-shopping-bag me-2"></i>Start Shopping
                                 </a>
                             </div>
                         </div>
@@ -254,7 +246,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="filterModalLabel">
-                        <i class="fas fa-filter me-2"></i>Filter Pesanan
+                        <i class="fas fa-filter me-2"></i>Filter Orders
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -263,31 +255,29 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select name="status" id="status" class="form-select">
-                                <option value="">Semua Status</option>
+                                <option value="">All Status</option>
                                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending
                                 </option>
                                 <option value="waiting_payment"
-                                    {{ request('status') == 'waiting_payment' ? 'selected' : '' }}>Menunggu Pembayaran
+                                    {{ request('status') == 'waiting_payment' ? 'selected' : '' }}>Waiting for Payment
                                 </option>
                                 <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>
-                                    Diproses</option>
-                                {{-- <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Dikirim
-                                </option> --}}
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai
+                                    Processing</option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed
                                 </option>
                                 <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
-                                    Dibatalkan</option>
+                                    Cancelled</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="search" class="form-label">Cari Invoice</label>
+                            <label for="search" class="form-label">Search Invoice</label>
                             <input type="text" name="search" id="search" class="form-control"
-                                placeholder="Masukkan nomor invoice" value="{{ request('search') }}">
+                                placeholder="Enter invoice number" value="{{ request('search') }}">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Terapkan Filter</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Apply Filter</button>
                     </div>
                 </form>
             </div>
@@ -301,7 +291,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="downloadsModalLabel">
-                        <i class="fas fa-download me-2"></i>Download Produk Digital
+                        <i class="fas fa-download me-2"></i>Download Digital Products
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -319,163 +309,24 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="cancelOrderModalLabel">
-                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>Konfirmasi Pembatalan
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>Cancel Confirmation
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Apakah Anda yakin ingin membatalkan pesanan ini?</p>
-                    <p class="text-muted"><small>Tindakan ini tidak dapat dibatalkan.</small></p>
+                    <p>Are you sure you want to cancel this order?</p>
+                    <p class="text-muted"><small>This action cannot be undone.</small></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     <button type="button" class="btn btn-danger" id="confirmCancelOrder">
-                        <i class="fas fa-times me-2"></i>Ya, Batalkan
+                        <i class="fas fa-times me-2"></i>Yes, Cancel
                     </button>
                 </div>
             </div>
         </div>
     </div>
 @endsection
-
-@push('styles')
-    <style>
-        .product-thumbnail img {
-            transition: transform 0.3s ease;
-        }
-
-        .product-thumbnail:hover img {
-            transform: scale(1.05);
-        }
-
-        .order-timeline {
-            position: relative;
-        }
-
-        .empty-orders-illustration i {
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            20%,
-            50%,
-            80%,
-            100% {
-                transform: translateY(0);
-            }
-
-            40% {
-                transform: translateY(-10px);
-            }
-
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-
-        .card {
-            transition: box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        }
-
-        /* Mobile Optimizations */
-        @media (max-width: 768px) {
-            h2 {
-                font-size: 1.5rem !important;
-            }
-
-            h4 {
-                font-size: 1.2rem !important;
-            }
-
-            h5 {
-                font-size: 1.1rem !important;
-            }
-
-            h6 {
-                font-size: 0.95rem !important;
-            }
-
-            .card-header {
-                padding: 0.75rem !important;
-            }
-
-            .card-body {
-                padding: 0.75rem !important;
-            }
-
-            .btn-sm {
-                font-size: 0.8rem !important;
-                padding: 0.375rem 0.5rem !important;
-            }
-
-            .form-select-sm {
-                font-size: 0.85rem !important;
-            }
-
-            .badge {
-                font-size: 0.7rem !important;
-            }
-
-            .product-thumbnail img,
-            .product-thumbnail div {
-                width: 40px !important;
-                height: 40px !important;
-            }
-
-            .fw-medium {
-                font-size: 0.9rem !important;
-            }
-
-            .breadcrumb {
-                font-size: 0.8rem;
-            }
-
-            .modal-body {
-                font-size: 0.9rem;
-            }
-
-            .alert.position-fixed {
-                min-width: 280px !important;
-                font-size: 0.85rem !important;
-                top: 10px !important;
-                right: 10px !important;
-                left: 10px !important;
-                margin: 0 auto;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .container {
-                padding-left: 10px !important;
-                padding-right: 10px !important;
-            }
-
-            h2 {
-                font-size: 1.3rem !important;
-            }
-
-            .card-header .row>div {
-                margin-bottom: 0.5rem;
-            }
-
-            .btn-group .btn {
-                font-size: 0.75rem !important;
-                padding: 0.3rem 0.4rem !important;
-            }
-
-            .order-actions .btn {
-                font-size: 0.75rem !important;
-                padding: 0.3rem 0.4rem !important;
-            }
-        }
-    </style>
-@endpush
 
 @push('scripts')
     <script>
@@ -504,16 +355,15 @@
                 }, 3000);
             }
 
-            // PERBAIKAN: Function untuk cancel order
+            // Cancel order function
             window.cancelOrder = function(orderId) {
-                if (!confirm('Yakin ingin membatalkan pesanan ini?')) return;
+                if (!confirm('Are you sure you want to cancel this order?')) return;
 
                 $.ajax({
-                    url: '/orders/' + orderId + '/cancel', // Pastikan URL sesuai dengan route
+                    url: '/orders/' + orderId + '/cancel',
                     type: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                            'content') // Gunakan meta token
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
                         if (response.success) {
@@ -527,7 +377,7 @@
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', xhr.responseText);
-                        let errorMessage = 'Gagal membatalkan pesanan';
+                        let errorMessage = 'Failed to cancel order';
 
                         if (xhr.responseJSON && xhr.responseJSON.message) {
                             errorMessage = xhr.responseJSON.message;
@@ -539,7 +389,7 @@
             }
         });
 
-        // Countdown Timer untuk semua order
+        // Countdown Timer
         function updateCountdowns() {
             $('.countdown-timer').each(function() {
                 const element = $(this);

@@ -58,7 +58,7 @@
                                 <i class="fas fa-sign-in-alt me-2 text-primary"></i>Login
                             </a></li>
                         <li><a class="user-dropdown-item py-2" href="{{ route('register') }}">
-                                <i class="fas fa-user-plus me-2 text-success"></i>Daftar
+                                <i class="fas fa-user-plus me-2 text-success"></i>Register
                             </a></li>
                     </ul>
                 </div>
@@ -71,12 +71,12 @@
             <ul class="user-navbar-nav me-auto ms-lg-4">
                 <li class="user-nav-item">
                     <a class="user-nav-link px-3 {{ request()->routeIs('user.home') ? 'active' : '' }}" href="{{ route('user.home') }}">
-                        Beranda
+                        Home
                     </a>
                 </li>
                 <li class="user-nav-item">
                     <a class="user-nav-link px-3 {{ request()->routeIs('user.products.index') ? 'active' : '' }}" href="{{ route('user.products.index') }}">
-                        Produk
+                        Products
                     </a>
                 </li>
             </ul>
@@ -94,7 +94,7 @@
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger user-cart-count"
                                 style="font-size: 0.7rem; {{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</span>
-                            <span class="d-lg-none ms-2">Keranjang</span>
+                            <span class="d-lg-none ms-2">Cart</span>
                         </a>
                     </li>
 
@@ -110,10 +110,10 @@
                                     <i class="fas fa-user me-2 text-primary"></i>Profile
                                 </a></li>
                             <li><a class="user-dropdown-item py-2" href="{{ route('user.user-products.index') }}">
-                                    <i class="fas fa-box me-2 text-secondary"></i>Produk Saya
+                                    <i class="fas fa-box me-2 text-secondary"></i>My Products
                                 </a></li>
                             <li><a class="user-dropdown-item py-2" href="{{ route('user.orders.index') }}">
-                                    <i class="fas fa-shopping-bag me-2 text-success"></i>Pesanan Saya
+                                    <i class="fas fa-shopping-bag me-2 text-success"></i>Orders
                                 </a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -137,7 +137,7 @@
                     <li class="user-nav-item">
                         <a class="user-nav-link btn btn-boomtale text-white px-4 py-2 rounded-pill"
                             href="{{ route('register') }}">
-                            <i class="fas fa-user-plus me-1"></i>Daftar
+                            <i class="fas fa-user-plus me-1"></i>Register
                         </a>
                     </li>
                 @endauth
@@ -153,14 +153,14 @@
             <a href="{{ route('user.home') }}"
                 class="user-bottom-nav-link {{ request()->routeIs('user.home') ? 'active' : '' }}">
                 <i class="fas fa-home"></i>
-                <span>Beranda</span>
+                <span>Home</span>
             </a>
         </div>
         <div class="user-bottom-nav-item">
             <a href="{{ route('user.products.index') }}"
                 class="user-bottom-nav-link {{ request()->routeIs('user.products.*') ? 'active' : '' }}">
                 <i class="fas fa-th-large"></i>
-                <span>Produk</span>
+                <span>Products</span>
             </a>
         </div>
         @auth
@@ -168,14 +168,14 @@
                 <a href="{{ route('user.user-products.index') }}"
                     class="user-bottom-nav-link {{ request()->routeIs('user.user-products.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i>
-                    <span>Produk Saya</span>
+                    <span>My Products</span>
                 </a>
             </div>
             <div class="user-bottom-nav-item">
                 <a href="{{ route('user.orders.index') }}"
                     class="user-bottom-nav-link {{ request()->routeIs('user.orders.*') ? 'active' : '' }}">
                     <i class="fas fa-shopping-bag"></i>
-                    <span>Pesanan</span>
+                    <span>Orders</span>
                 </a>
             </div>
         @else
@@ -188,7 +188,7 @@
             <div class="user-bottom-nav-item">
                 <a href="{{ route('register') }}" class="user-bottom-nav-link">
                     <i class="fas fa-user-plus"></i>
-                    <span>Daftar</span>
+                    <span>Register</span>
                 </a>
             </div>
         @endauth

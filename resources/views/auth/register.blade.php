@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar - Boomtale</title>
+    <title>Register - Boomtale</title>
 
     {{-- Import Poppins Font --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,8 +12,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
+    {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    {{-- Icon Browser --}}
+    <link rel="shortcut icon" href="{{ asset('logo_boomtale.png') }}">
+    {{-- Vite CSS --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
         :root {
             --primary-color: #C5A572;
@@ -53,7 +60,7 @@
         }
 
         .auth-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-dark));
             color: white;
             padding: 2rem;
             text-align: center;
@@ -153,8 +160,8 @@
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
-                <div class="auth-logo">BOOMTALE</div>
-                <p class="mb-0">Buat akun baru</p>
+                <img src="{{ asset('logo_boomtale.png') }}" alt="BOOMTALE" class="">
+                <p class="mb-0">Create New Account</p>
             </div>
 
             <div class="auth-body">
@@ -171,14 +178,14 @@
                     @csrf
 
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nama Lengkap</label>
+                        <label for="name" class="form-label">Full Name</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="fas fa-user"></i>
                             </span>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                 id="name" name="name" value="{{ old('name') }}" required
-                                placeholder="Masukkan nama lengkap">
+                                placeholder="Input Fullname">
                         </div>
                     </div>
 
@@ -190,19 +197,19 @@
                             </span>
                             <input type="email" class="form-control @error('email') is-invalid @enderror"
                                 id="email" name="email" value="{{ old('email') }}" required
-                                placeholder="Masukkan email Anda">
+                                placeholder="Input your email">
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="phone_number" class="form-label">No. Telepon (Opsional)</label>
+                        <label for="phone_number" class="form-label">Phone Number (Optional)</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="fas fa-phone"></i>
                             </span>
                             <input type="tel" class="form-control @error('phone_number') is-invalid @enderror"
                                 id="phone_number" name="phone_number" value="{{ old('phone_number') }}"
-                                placeholder="Masukkan nomor telepon">
+                                placeholder="Input phone number">
                         </div>
                     </div>
 
@@ -213,30 +220,30 @@
                                 <i class="fas fa-lock"></i>
                             </span>
                             <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                id="password" name="password" required placeholder="Masukkan password">
+                                id="password" name="password" required placeholder="Input password">
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                        <label for="password_confirmation" class="form-label">Password Confirmation</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="fas fa-lock"></i>
                             </span>
                             <input type="password" class="form-control" id="password_confirmation"
-                                name="password_confirmation" required placeholder="Konfirmasi password">
+                                name="password_confirmation" required placeholder="Password confirmation">
                         </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-user-plus me-2"></i>Daftar
+                        <i class="fas fa-user-plus me-2"></i>Register
                     </button>
                 </form>
 
                 <div class="text-center mt-3">
                     <p class="mb-0">
-                        Sudah punya akun?
-                        <a href="{{ route('login') }}" class="auth-link">Masuk di sini</a>
+                        Already have an account?
+                        <a href="{{ route('login') }}" class="auth-link">Sign in here</a>
                     </p>
                 </div>
             </div>

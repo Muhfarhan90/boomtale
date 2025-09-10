@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Profile Saya')
+@section('title', 'My Profile')
 
 @push('styles')
     <style>
@@ -89,13 +89,13 @@
                             @csrf
                             @method('PUT')
 
-                            <!-- Nama -->
+                            <!-- Full Name -->
                             <div class="form-floating">
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
                                     id="name" name="name" value="{{ old('name', auth()->user()->name) }}"
-                                    placeholder="Nama Lengkap" required>
+                                    placeholder="Full Name" required>
                                 <label for="name">
-                                    <i class="fas fa-user me-1"></i>Nama Lengkap
+                                    <i class="fas fa-user me-1"></i>Full Name
                                 </label>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -111,25 +111,25 @@
                                 </label>
                                 <div class="form-text text-muted">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Email tidak dapat diubah untuk keamanan akun
+                                    Email cannot be changed for account security
                                 </div>
                             </div>
 
-                            <!-- Nomor Telepon -->
+                            <!-- Phone Number -->
                             <div class="form-floating">
                                 <input type="tel" class="form-control @error('phone_number') is-invalid @enderror"
                                     id="phone_number" name="phone_number"
                                     value="{{ old('phone_number', auth()->user()->phone_number) }}"
-                                    placeholder="Nomor Telepon">
+                                    placeholder="Phone Number">
                                 <label for="phone_number">
-                                    <i class="fas fa-phone me-1"></i>Nomor Telepon
+                                    <i class="fas fa-phone me-1"></i>Phone Number
                                 </label>
                                 @error('phone_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                                 <div class="form-text text-muted">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Contoh: 08123456789 atau +6281234567890
+                                    Example: 08123456789 or +6281234567890
                                 </div>
                             </div>
 
@@ -137,7 +137,7 @@
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-save text-white">
                                     <i class="fas fa-save me-2"></i>
-                                    Simpan Perubahan
+                                    Save Changes
                                 </button>
                             </div>
                         </form>
@@ -159,7 +159,7 @@
                 // Validate name
                 if (name.length < 2) {
                     e.preventDefault();
-                    showNotification('Nama harus minimal 2 karakter', 'danger');
+                    showNotification('Name must be at least 2 characters', 'danger');
                     $('#name').focus();
                     return false;
                 }
@@ -167,7 +167,7 @@
                 // Validate phone if filled
                 if (phone && !isValidPhone(phone)) {
                     e.preventDefault();
-                    showNotification('Format nomor telepon tidak valid', 'danger');
+                    showNotification('Invalid phone number format', 'danger');
                     $('#phone_number').focus();
                     return false;
                 }

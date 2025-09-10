@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Produk Saya - Boomtale')
+@section('title', 'My Products - Boomtale')
 
 @section('content')
     <div class="container py-4">
@@ -10,15 +10,15 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('user.home') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Produk Saya</li>
+                        <li class="breadcrumb-item active">My Products</li>
                     </ol>
                 </nav>
 
                 <h2 class="mb-3">
                     <i class="fas fa-book me-2 text-primary"></i>
-                    Produk Saya
+                    My Products
                 </h2>
-                <p class="text-muted">Koleksi produk digital yang sudah Anda beli</p>
+                <p class="text-muted">Your collection of purchased digital products</p>
             </div>
         </div>
 
@@ -78,7 +78,7 @@
                             <div class="position-absolute top-0 end-0 m-2">
                                 <div class="d-flex flex-column gap-1">
                                     <span class="badge bg-success">
-                                        <i class="fas fa-check me-1"></i>Dimiliki
+                                        <i class="fas fa-check me-1"></i>Owned
                                     </span>
                                     @if ($fileExists)
                                         <span class="badge bg-info">
@@ -86,7 +86,7 @@
                                         </span>
                                     @else
                                         <span class="badge bg-warning">
-                                            <i class="fas fa-exclamation-triangle me-1"></i>File Hilang
+                                            <i class="fas fa-exclamation-triangle me-1"></i>File Missing
                                         </span>
                                     @endif
                                 </div>
@@ -116,12 +116,12 @@
                             @if ($fileExists)
                                 <small class="text-success mb-2">
                                     <i class="fas fa-check-circle me-1"></i>
-                                    File tersedia ({{ strtoupper($fileExtension) }})
+                                    File available ({{ strtoupper($fileExtension) }})
                                 </small>
                             @else
                                 <small class="text-danger mb-2">
                                     <i class="fas fa-exclamation-triangle me-1"></i>
-                                    File tidak ditemukan
+                                    File not found
                                 </small>
                             @endif
 
@@ -129,11 +129,11 @@
                             <div class="mb-3">
                                 <small class="text-muted d-block">
                                     <i class="fas fa-calendar me-1"></i>
-                                    Dibeli: {{ $userProduct->purchased_at->format('d M Y') }}
+                                    Purchased: {{ $userProduct->purchased_at->format('d M Y') }}
                                 </small>
                                 <small class="text-muted">
                                     <i class="fas fa-money-bill me-1"></i>
-                                    Harga: Rp {{ number_format($userProduct->purchase_price, 0, ',', '.') }}
+                                    Price: Rp {{ number_format($userProduct->purchase_price, 0, ',', '.') }}
                                 </small>
                             </div>
 
@@ -141,30 +141,30 @@
                             <div class="mt-auto">
                                 @if ($fileExists)
                                     <div class="d-grid gap-2">
-                                        <!-- PERBAIKAN: Semua file type ke show page untuk consistent UX -->
+                                        <!-- FIX: All file types go to show page for consistent UX -->
                                         @if ($isPdf)
-                                            <!-- PDF: Buka di show page untuk reading inline -->
+                                            <!-- PDF: Open in show page for inline reading -->
                                             <a href="{{ route('user.user-products.show', $userProduct->id) }}"
                                                 class="btn btn-primary btn-sm">
                                                 <i class="fas fa-book-open me-1"></i>
-                                                Baca Ebook
+                                                Read Ebook
                                             </a>
                                         @elseif($isVideo)
-                                            <!-- Video: Buka di show page -->
+                                            <!-- Video: Open in show page -->
                                             <a href="{{ route('user.user-products.show', $userProduct->id) }}"
                                                 class="btn btn-primary btn-sm">
                                                 <i class="fas fa-play me-1"></i>
-                                                Tonton Video
+                                                Watch Video
                                             </a>
                                         @else
-                                            <!-- File lain: Lihat detail -->
+                                            <!-- Other files: View details -->
                                             <a href="{{ route('user.user-products.show', $userProduct->id) }}"
                                                 class="btn btn-primary btn-sm">
-                                                <i class="fas fa-eye me-1"></i>Lihat Detail
+                                                <i class="fas fa-eye me-1"></i>View Details
                                             </a>
                                         @endif
 
-                                        <!-- PERBAIKAN: Download sederhana tanpa JavaScript -->
+                                        <!-- FIX: Simple download without JavaScript -->
                                         {{-- <a href="{{ route('user.user-products.download', $userProduct->id) }}"
                                             class="btn btn-outline-secondary btn-sm">
                                             <i class="fas fa-download me-1"></i>
@@ -175,9 +175,9 @@
                                     <div class="d-grid">
                                         <button class="btn btn-outline-danger btn-sm" disabled>
                                             <i class="fas fa-exclamation-triangle me-1"></i>
-                                            File Tidak Tersedia
+                                            File Not Available
                                         </button>
-                                        <small class="text-muted mt-1 text-center">Hubungi admin untuk bantuan</small>
+                                        <small class="text-muted mt-1 text-center">Contact admin for assistance</small>
                                     </div>
                                 @endif
                             </div>
@@ -186,15 +186,15 @@
                 </div>
             @empty
                 <div class="col-12">
-                    <x-empty-state icon="fas fa-shopping-bag" title="Belum Ada Produk Digital"
-                        message="Anda belum memiliki produk digital. Mulai berbelanja sekarang!" :actionUrl="route('user.products.index')"
-                        actionText="Mulai Belanja" />
+                    <x-empty-state icon="fas fa-shopping-bag" title="No Digital Products Yet"
+                        message="You don't have any digital products yet. Start shopping now!" :actionUrl="route('user.products.index')"
+                        actionText="Start Shopping" />
                 </div>
             @endforelse
         </div>
     </div>
 
-    <!-- Download Modal untuk Progress -->
+    <!-- Download Modal for Progress -->
     <div class="modal fade" id="downloadModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
@@ -202,8 +202,8 @@
                     <div class="spinner-border text-primary mb-3" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <h6 class="mb-2">Mempersiapkan Download</h6>
-                    <p class="mb-0 text-muted" id="download-filename">Mohon tunggu...</p>
+                    <h6 class="mb-2">Preparing Download</h6>
+                    <p class="mb-0 text-muted" id="download-filename">Please wait...</p>
                 </div>
             </div>
         </div>

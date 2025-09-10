@@ -7,8 +7,8 @@
         <!-- Header -->
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="mb-3 d-none d-md-block">Semua Produk</h2>
-                <h5 class="mb-3 d-md-none">Produk Digital</h5>
+                <h2 class="mb-3 d-none d-md-block">All Products</h2>
+                <h5 class="mb-3 d-md-none">Digital Products</h5>
 
                 <!-- Search Bar -->
                 <div class="row mb-4">
@@ -29,7 +29,7 @@
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="d-flex flex-wrap align-items-center">
-                                <span class="text-muted me-2 mb-2" style="font-size: 0.9rem;">Filter aktif:</span>
+                                <span class="text-muted me-2 mb-2" style="font-size: 0.9rem;">Filter active:</span>
 
                                 @if (request('search'))
                                     <span class="filter-badge">
@@ -74,7 +74,7 @@
                                 @endif
 
                                 <a href="{{ route('user.products.index') }}" class="btn btn-outline-secondary btn-sm mb-2">
-                                    <i class="fas fa-times me-1"></i>Hapus Semua
+                                    <i class="fas fa-times me-1"></i>Delete All
                                 </a>
                             </div>
                         </div>
@@ -84,8 +84,8 @@
                 <!-- Filter Bar - Condensed for Mobile -->
                 <div class="row g-2 mb-4">
                     <div class="col-6 col-md-3">
-                        <select class="form-select form-select-sm" id="categoryFilter">
-                            <option value="">Semua Kategori</option>
+                        <select class="form-select form-select-md" id="categoryFilter">
+                            <option value="">All</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}"
                                     {{ request('category') == $category->id ? 'selected' : '' }}>
@@ -95,27 +95,25 @@
                         </select>
                     </div>
                     <div class="col-6 col-md-3">
-                        <select class="form-select form-select-sm" id="sortFilter">
-                            <option value="">Urutkan</option>
-                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Terbaru</option>
-                            <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Termurah
+                        <select class="form-select form-select-md" id="sortFilter">
+                            <option value="">Sorting</option>
+                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
+                            <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Lowest Price
                             </option>
-                            <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Termahal
+                            <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Highest Price
                             </option>
-                            <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>Terpopuler
-                            </option>
-                            <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Rating Tertinggi
-                            </option>
+                            <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>Popular</option>
+                            <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Highest Rated</option>
                         </select>
                     </div>
-                    <div class="col-6 col-md-3 d-none d-md-block">
+                    {{-- <div class="col-6 col-md-3 d-none d-md-block">
                         <button class="btn btn-outline-secondary btn-sm w-100" id="resetFilter">
                             <i class="fas fa-undo me-1"></i>Reset
                         </button>
-                    </div>
-                    <div class="col-6 col-md-3">
+                    </div> --}}
+                    <div class="col-6 col-md-6">
                         <div class="text-muted text-end" style="font-size: 0.85rem; padding: 0.375rem 0.5rem;">
-                            {{ $products->total() }} produk ditemukan
+                            {{ $products->total() }} products found
                         </div>
                     </div>
                 </div>
@@ -129,9 +127,9 @@
                     <x-product-card :product="$product" />
                 </div>
             @empty
-                <x-empty-state icon="fas fa-search" title="Produk tidak ditemukan"
-                    message="Coba gunakan kata kunci yang berbeda atau hapus filter yang ada" :actionUrl="route('user.products.index')"
-                    actionText="Lihat Semua Produk" />
+                <x-empty-state icon="fas fa-search" title="Product not found"
+                    message="Try using different keywords or removing existing filters." :actionUrl="route('user.products.index')"
+                    actionText="See All Products" />
             @endforelse
         </div>
 
@@ -203,12 +201,12 @@
                     })
                     .done(function(response) {
                         if (response.success) {
-                            button.html('<i class="fas fa-check me-1"></i>Berhasil')
+                            button.html('<i class="fas fa-check me-1"></i>Success')
                                 .removeClass('btn-boomtale')
                                 .addClass('btn-success');
 
                             // Show toast notification
-                            showToast('Produk berhasil ditambahkan ke keranjang!', 'success');
+                            showToast('Product Success added to cart!', 'success');
 
                             setTimeout(() => {
                                 button.prop('disabled', false)
@@ -223,7 +221,7 @@
                     })
                     .fail(function(xhr) {
                         const response = xhr.responseJSON;
-                        showToast(response?.message || 'Gagal menambahkan ke keranjang', 'error');
+                        showToast(response?.message || 'Failed to add to cart', 'error');
                         button.prop('disabled', false).html(originalText);
                     });
             });

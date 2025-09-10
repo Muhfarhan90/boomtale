@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Keranjang Belanja - Boomtale')
+@section('title', 'Cart - Boomtale')
 
 @section('content')
     <div class="container py-4">
@@ -8,7 +8,7 @@
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('user.home') }}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Keranjang Belanja</li>
+                <li class="breadcrumb-item active" aria-current="page">Cart</li>
             </ol>
         </nav>
 
@@ -17,11 +17,11 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">
                         <i class="fas fa-shopping-cart me-2 text-primary"></i>
-                        Keranjang Belanja
+                        Cart
                     </h2>
                     @if ($cartItems->count() > 0)
                         <button type="button" class="btn btn-outline-danger btn-sm" onclick="clearCart()">
-                            <i class="fas fa-trash me-1"></i>Kosongkan Keranjang
+                            <i class="fas fa-trash me-1"></i>Clear cart
                         </button>
                     @endif
                 </div>
@@ -77,10 +77,9 @@
                                                 </div>
                                                 <div>
                                                     <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        onclick="removeItem({{ $item->id }})"
-                                                        title="Hapus dari keranjang">
+                                                        onclick="removeItem({{ $item->id }})" title="Delete from cart">
                                                         <i class="fas fa-trash"></i>
-                                                        <span class="d-none d-lg-inline ms-1">Hapus</span>
+                                                        <span class="d-none d-lg-inline ms-1">Delete</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -95,7 +94,7 @@
                             <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
                                 <div class="card-header bg-primary text-white">
                                     <h5 class="mb-0 fs-6">
-                                        <i class="fas fa-calculator me-2"></i>Ringkasan Pesanan
+                                        <i class="fas fa-calculator me-2"></i>Order Summary
                                     </h5>
                                 </div>
                                 <div class="card-body p-3">
@@ -127,14 +126,14 @@
 
                                         <!-- Total calculation -->
                                         <div class="d-flex justify-content-between mb-2">
-                                            <span class="fs-7">Subtotal ({{ $cartItems->count() }} produk)</span>
+                                            <span class="fs-7">Subtotal ({{ $cartItems->count() }} product)</span>
                                             <span id="cart-subtotal" class="fs-7">Rp
                                                 {{ number_format($total, 0, ',', '.') }}</span>
                                         </div>
 
                                         <div class="d-flex justify-content-between mb-2">
-                                            <span class="fs-7">Biaya Admin</span>
-                                            <span class="text-success fs-7">Gratis</span>
+                                            <span class="fs-7">Admin Fee</span>
+                                            <span class="text-success fs-7">Free</span>
                                         </div>
 
                                         {{-- <div class="d-flex justify-content-between mb-2">
@@ -146,7 +145,7 @@
                                         <hr class="border-2">
 
                                         <div class="d-flex justify-content-between mb-3">
-                                            <span class="fw-bold fs-6">Total Pembayaran</span>
+                                            <span class="fw-bold fs-6">Total Payment</span>
                                             <span class="fw-bold text-primary fs-5" id="cart-total">
                                                 Rp {{ number_format($total, 0, ',', '.') }}
                                             </span>
@@ -154,11 +153,11 @@
 
                                         <div class="d-grid gap-2">
                                             <a href="{{ route('user.checkout.index') }}" class="btn btn-primary">
-                                                <i class="fas fa-credit-card me-2"></i>Lanjut ke Pembayaran
+                                                <i class="fas fa-credit-card me-2"></i>Proceed to Payment
                                             </a>
                                             <a href="{{ route('user.products.index') }}"
                                                 class="btn btn-outline-secondary btn-sm">
-                                                <i class="fas fa-arrow-left me-2"></i>Lanjut Belanja
+                                                <i class="fas fa-arrow-left me-2"></i>Continue Shopping
                                             </a>
                                         </div>
                                     </div>
@@ -173,17 +172,17 @@
                             <div class="text-center py-5">
                                 <div class="empty-cart-illustration mb-4">
                                     <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
-                                    <h4 class="text-muted">Keranjang Belanja Kosong</h4>
+                                    <h4 class="text-muted">Empty cart</h4>
                                     <p class="text-muted mb-4 fs-6">
-                                        Sepertinya Anda belum menambahkan produk apapun ke keranjang belanja.
-                                        Ayo mulai berbelanja sekarang!
+                                        It looks like you haven't added any products to your cart yet.
+                                        Start shopping now!
                                     </p>
                                     <div class="d-grid gap-2 d-md-block">
                                         <a href="{{ route('user.products.index') }}" class="btn btn-primary">
-                                            <i class="fas fa-shopping-bag me-2"></i>Mulai Belanja
+                                            <i class="fas fa-shopping-bag me-2"></i>Start shopping
                                         </a>
                                         <a href="{{ route('user.home') }}" class="btn btn-outline-secondary">
-                                            <i class="fas fa-home me-2"></i>Kembali ke Home
+                                            <i class="fas fa-home me-2"></i>Back to Home
                                         </a>
                                     </div>
                                 </div>
@@ -202,17 +201,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title fs-6" id="removeItemModalLabel">
-                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>Konfirmasi Hapus
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>Delete Confirmation
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="fs-6">Apakah Anda yakin ingin menghapus produk ini dari keranjang?</p>
+                    <p class="fs-6">Are you sure you want to remove this product from your cart?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-danger btn-sm" id="confirmRemove">
-                        <i class="fas fa-trash me-2"></i>Hapus
+                        <i class="fas fa-trash me-2"></i>Delete
                     </button>
                 </div>
             </div>
@@ -226,18 +225,18 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title fs-6" id="clearCartModalLabel">
-                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>Konfirmasi Kosongkan Keranjang
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>Empty Cart Confirmation
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="fs-6">Apakah Anda yakin ingin mengosongkan semua produk dari keranjang?</p>
-                    <p class="text-muted"><small>Tindakan ini tidak dapat dibatalkan.</small></p>
+                    <p class="fs-6">Are you sure you want to empty all products from the cart?</p>
+                    <p class="text-muted"><small>This action cannot be undone.</small></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-danger btn-sm" onclick="confirmClearCart()">
-                        <i class="fas fa-trash me-2"></i>Kosongkan Keranjang
+                        <i class="fas fa-trash me-2"></i>Clear cart
                     </button>
                 </div>
             </div>
@@ -465,7 +464,7 @@
                                     }
                                 });
 
-                            showNotification('Produk berhasil dihapus dari keranjang');
+                            showNotification('Product successfully removed from cart');
                             $('#removeItemModal').modal('hide');
 
                             if (typeof window.updateCartCount === 'function') {
@@ -473,7 +472,7 @@
                             }
                         },
                         error: function() {
-                            showNotification('Gagal menghapus produk', 'error');
+                            showNotification('Failed to delete product', 'error');
                             $('#removeItemModal').modal('hide');
                         }
                     });
@@ -492,11 +491,11 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function() {
-                        showNotification('Keranjang berhasil dikosongkan');
+                        showNotification('Cart successfully emptied');
                         setTimeout(() => location.reload(), 1000);
                     },
                     error: function() {
-                        showNotification('Gagal mengosongkan keranjang', 'error');
+                        showNotification('Failed to empty cart', 'error');
                     },
                     complete: function() {
                         $('#clearCartModal').modal('hide');

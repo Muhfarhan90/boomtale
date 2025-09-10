@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Pesanan ' . $order->invoice_number)
+@section('title', 'Order Detail ' . $order->invoice_number)
 
 @push('styles')
     <style>
@@ -156,19 +156,19 @@
     <div class="container py-5">
         <div class="row mb-4 align-items-center">
             <div class="col-md-6">
-                <h1 class="h3 mb-0">Detail Pesanan</h1>
+                <h1 class="h3 mb-0">Order Detail</h1>
                 <p class="text-muted mb-0">#{{ $order->invoice_number }}</p>
             </div>
             <div class="col-md-6 text-md-end">
                 <a href="{{ route('user.orders.index') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar Pesanan
+                    <i class="fas fa-arrow-left me-2"></i>Back to Orders
                 </a>
             </div>
         </div>
 
         <div class="card shadow-sm border-0">
             <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
-                <div>Tanggal Pesanan :
+                <div>Order Date :
                     <span class="text-muted" data-utc-time="{{ $order->created_at->toIsoString() }}"></span>
                 </div>
                 <div>
@@ -178,31 +178,31 @@
                 </div>
             </div>
             <div class="card-body p-4">
-                <!-- Countdown Timer Section - Moved to top and more prominent -->
+                <!-- Countdown Timer -->
                 @if ($order->expired_at && $order->status === 'waiting_payment')
                     <div class="countdown-container" id="countdown-container">
                         <div class="text-center">
                             <h5 class="mb-2">
                                 <i class="fas fa-clock me-2"></i>
-                                Batas Waktu Pembayaran
+                                Payment Deadline
                             </h5>
                             <div class="countdown-display" id="countdown-display">
                                 <div class="time-unit">
                                     <span class="time-number" id="hours">00</span>
-                                    <span class="time-text">Jam</span>
+                                    <span class="time-text">Hours</span>
                                 </div>
                                 <div class="time-unit">
                                     <span class="time-number" id="minutes">00</span>
-                                    <span class="time-text">Menit</span>
+                                    <span class="time-text">Minutes</span>
                                 </div>
                                 <div class="time-unit">
                                     <span class="time-number" id="seconds">00</span>
-                                    <span class="time-text">Detik</span>
+                                    <span class="time-text">Seconds</span>
                                 </div>
                             </div>
                             <div class="countdown-label">
                                 <small class="text-muted">
-                                    Expired pada: {{ $order->expired_at->format('d M Y, H:i') }}
+                                    Expires at: {{ $order->expired_at->format('d M Y, H:i') }}
                                 </small>
                             </div>
                             <div id="countdown-message" class="mt-2"></div>
@@ -213,14 +213,14 @@
                 <div class="row g-4">
                     <!-- Order Items -->
                     <div class="col-lg-8">
-                        <h5 class="mb-3">Produk Pesanan</h5>
+                        <h5 class="mb-3">Order Items</h5>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Produk</th>
-                                        <th scope="col" class="text-center">Kuantitas</th>
-                                        <th scope="col" class="text-end">Harga Satuan</th>
+                                        <th scope="col">Product</th>
+                                        <th scope="col" class="text-center">Quantity</th>
+                                        <th scope="col" class="text-end">Unit Price</th>
                                         <th scope="col" class="text-end">Subtotal</th>
                                     </tr>
                                 </thead>
@@ -254,7 +254,7 @@
                     <div class="col-lg-4">
                         <div class="card bg-light border">
                             <div class="card-body">
-                                <h5 class="card-title mb-3">Ringkasan Pembayaran</h5>
+                                <h5 class="card-title mb-3">Payment Summary</h5>
                                 <ul class="list-group list-group-flush">
                                     <li
                                         class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
@@ -263,7 +263,7 @@
                                     </li>
                                     <li
                                         class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
-                                        Biaya Admin
+                                        Admin Fee
                                         <span>Rp 0</span>
                                     </li>
                                     <li
@@ -278,13 +278,13 @@
                                     <div class="payment-section">
                                         <div class="d-grid">
                                             <button id="pay-button" class="btn btn-success btn-lg">
-                                                <i class="fas fa-credit-card me-2"></i>Bayar Sekarang
+                                                <i class="fas fa-credit-card me-2"></i>Pay Now
                                             </button>
                                         </div>
                                         <div class="text-center mt-3">
                                             <small class="text-muted">
                                                 <i class="fas fa-shield-alt me-1"></i>
-                                                Pembayaran aman dengan Midtrans
+                                                Secure payment with Midtrans
                                             </small>
                                         </div>
                                     </div>
@@ -294,19 +294,19 @@
 
                         <div class="card bg-light border mt-3">
                             <div class="card-body">
-                                <h5 class="card-title mb-3">Detail Pembayaran</h5>
-                                <p class="mb-1"><strong class="d-inline-block" style="width: 120px;">Metode</strong>:
+                                <h5 class="card-title mb-3">Payment Details</h5>
+                                <p class="mb-1"><strong class="d-inline-block" style="width: 120px;">Method</strong>:
                                     {{ ucwords(str_replace('_', ' ', $order->transaction->payment_type ?? '-')) }}</p>
                                 <p class="mb-1"><strong class="d-inline-block" style="width: 120px;">Status</strong>:
                                     {{ ucwords($order->transaction->status ?? '-') }}</p>
-                                <p class="mb-0"><strong class="d-inline-block" style="width: 120px;">ID
-                                        Transaksi</strong>:
+                                <p class="mb-0"><strong class="d-inline-block" style="width: 120px;">Transaction
+                                        ID</strong>:
                                     <span
-                                        class="text-break">{{ $order->transaction->transaction_id ?? 'Belum tersedia' }}</span>
+                                        class="text-break">{{ $order->transaction->transaction_id ?? 'Not available yet' }}</span>
                                 </p>
                                 @if ($order->status == 'completed')
                                     <p class="mb-0">
-                                        <strong class="d-inline-block" style="width: 120px;">Waktu Transaksi</strong>:
+                                        <strong class="d-inline-block" style="width: 120px;">Transaction Time</strong>:
                                         <span
                                             data-utc-time="{{ $order->transaction->created_at ? $order->transaction->created_at->toIsoString() : '' }}">
                                         </span>
@@ -337,12 +337,11 @@
                             console.log('Payment Success:', result);
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Pembayaran Berhasil!',
-                                text: 'Anda akan diarahkan ke halaman produk saya.',
+                                title: 'Payment Successful!',
+                                text: 'You will be redirected to My Products page.',
                                 timer: 3000,
                                 showConfirmButton: false
                             }).then(() => {
-                                // Arahkan ke halaman produk saya
                                 window.location.href =
                                     '{{ route('user.user-products.index') }}';
                             });
@@ -351,14 +350,14 @@
                             console.log('Payment Pending:', result);
                             Swal.fire({
                                 icon: 'info',
-                                title: 'Menunggu Pembayaran',
-                                text: 'Selesaikan pembayaran Anda.',
+                                title: 'Waiting for Payment',
+                                text: 'Please complete your payment.',
                             });
                         },
                         onError: function(result) {
                             console.error('Payment Error:', result);
-                            Swal.fire('Pembayaran Gagal',
-                                'Terjadi kesalahan saat memproses pembayaran.', 'error');
+                            Swal.fire('Payment Failed',
+                                'An error occurred while processing the payment.', 'error');
                         },
                         onClose: function() {
                             console.log('Payment popup closed');
@@ -388,17 +387,17 @@
 
                             countdownContainer.removeClass('danger').addClass('expired');
                             messageElement.html(`
-                            <div class="alert alert-danger mb-0">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                <strong>Waktu pembayaran telah habis!</strong><br>
-                                <small>Silakan lakukan pemesanan ulang.</small>
-                            </div>
-                        `);
+                                <div class="alert alert-danger mb-0">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Payment time has expired!</strong><br>
+                                    <small>Please place a new order.</small>
+                                </div>
+                            `);
 
                             payButton.prop('disabled', true)
                                 .removeClass('btn-success')
                                 .addClass('btn-secondary')
-                                .html('<i class="fas fa-times me-2"></i>Pembayaran Expired');
+                                .html('<i class="fas fa-times me-2"></i>Payment Expired');
 
                             return;
                         }
@@ -418,36 +417,34 @@
                             countdownContainer.addClass('danger');
                             if (distance < 300000) { // Less than 5 minutes
                                 messageElement.html(`
-                                <div class="alert alert-warning mb-0">
-                                    <i class="fas fa-exclamation-triangle me-2"></i>
-                                    <strong>Segera lakukan pembayaran!</strong><br>
-                                    <small>Waktu hampir habis.</small>
-                                </div>
-                            `);
+                                    <div class="alert alert-warning mb-0">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <strong>Make your payment immediately!</strong><br>
+                                        <small>Time is almost up.</small>
+                                    </div>
+                                `);
                             } else {
                                 messageElement.html(`
-                                <div class="alert alert-info mb-0">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <small>Segera selesaikan pembayaran Anda.</small>
-                                </div>
-                            `);
+                                    <div class="alert alert-info mb-0">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <small>Please complete your payment soon.</small>
+                                    </div>
+                                `);
                             }
                         } else {
                             countdownContainer.removeClass('danger');
                             messageElement.html(`
-                            <div class="alert alert-success mb-0">
-                                <i class="fas fa-check-circle me-2"></i>
-                                <small>Masih banyak waktu untuk menyelesaikan pembayaran.</small>
-                            </div>
-                        `);
+                                <div class="alert alert-success mb-0">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <small>You still have plenty of time to complete the payment.</small>
+                                </div>
+                            `);
                         }
                     }
 
-                    // Initial update and set interval
                     updateCountdown();
                     const countdownInterval = setInterval(updateCountdown, 1000);
 
-                    // Clean up interval when page is unloaded
                     $(window).on('beforeunload', function() {
                         clearInterval(countdownInterval);
                     });

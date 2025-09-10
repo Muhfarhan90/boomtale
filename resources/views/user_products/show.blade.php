@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $userProduct->product->name . ' - Produk Saya')
+@section('title', $userProduct->product->name . ' - My Products')
 
 @section('content')
     <div class="container py-4">
@@ -10,7 +10,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('user.home') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('user.user-products.index') }}">Produk Saya</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('user.user-products.index') }}">My Products</a></li>
                         <li class="breadcrumb-item active">{{ Str::limit($userProduct->product->name, 30) }}</li>
                     </ol>
                 </nav>
@@ -51,15 +51,15 @@
                                         src="{{ route('user.user-products.stream', $userProduct->id) }}#toolbar=1&navpanes=0&scrollbar=1&view=FitH"
                                         width="100%" height="100%" style="border: none;" title="{{ $product->name }}"
                                         loading="lazy">
-                                        <!-- Fallback content jika iframe gagal -->
+                                        <!-- Fallback content if iframe fails -->
                                         <div class="text-center py-5">
                                             <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
-                                            <h5>Tidak dapat memuat PDF</h5>
-                                            <p class="text-muted">Browser tidak mendukung PDF viewer</p>
+                                            <h5>Unable to load PDF</h5>
+                                            <p class="text-muted">Your browser does not support PDF viewer</p>
                                             <div class="d-grid gap-2">
                                                 <a href="{{ route('user.user-products.stream', $userProduct->id) }}"
                                                     target="_blank" class="btn btn-primary">
-                                                    <i class="fas fa-external-link-alt me-2"></i>Buka di Tab Baru
+                                                    <i class="fas fa-external-link-alt me-2"></i>Open in New Tab
                                                 </a>
                                                 {{-- <button type="button" class="btn btn-outline-primary download-btn"
                                                     onclick="downloadFile('{{ route('user.user-products.download', $userProduct->id) }}', '{{ $product->name }}')">
@@ -79,8 +79,8 @@
                                             type="{{ $debugInfo['mime_type'] ?? 'video/mp4' }}">
                                         <div class="text-center py-5">
                                             <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
-                                            <h5>Browser tidak mendukung video player</h5>
-                                            <p class="text-muted">Silakan download file untuk menonton</p>
+                                            <h5>Your browser does not support video player</h5>
+                                            <p class="text-muted">Please download the file to watch</p>
                                             <button type="button" class="btn btn-primary download-btn"
                                                 onclick="downloadFile('{{ route('user.user-products.download', $userProduct->id) }}', '{{ $product->name }}')">
                                                 <i class="fas fa-download me-2"></i>Download Video
@@ -93,7 +93,7 @@
                                 <div class="text-center py-5">
                                     <i class="fas fa-file fa-4x text-muted mb-3"></i>
                                     <h5>File {{ strtoupper($fileExtension) }}</h5>
-                                    <p class="text-muted">Preview tidak tersedia untuk tipe file ini</p>
+                                    <p class="text-muted">Preview not available for this file type</p>
                                     <button type="button" class="btn btn-primary download-btn"
                                         onclick="downloadFile('{{ route('user.user-products.download', $userProduct->id) }}', '{{ $product->name }}')">
                                         <i class="fas fa-download me-1"></i>Download File
@@ -104,8 +104,8 @@
                             <!-- File Not Found -->
                             <div class="text-center py-5">
                                 <i class="fas fa-exclamation-triangle fa-4x text-warning mb-3"></i>
-                                <h5>File Tidak Ditemukan</h5>
-                                <p class="text-muted">File digital tidak tersedia. Silakan hubungi admin.</p>
+                                <h5>File Not Found</h5>
+                                <p class="text-muted">Digital file is not available. Please contact admin.</p>
                             </div>
                         @endif
                     </div>
@@ -118,7 +118,7 @@
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-header bg-white">
                         <h6 class="mb-0">
-                            <i class="fas fa-info-circle me-1"></i>Informasi Produk
+                            <i class="fas fa-info-circle me-1"></i>Product Information
                         </h6>
                     </div>
                     <div class="card-body">
@@ -140,16 +140,16 @@
                         <div class="small">
                             @if ($product->category)
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-muted">Kategori:</span>
+                                    <span class="text-muted">Category:</span>
                                     <span class="fw-medium">{{ $product->category->name }}</span>
                                 </div>
                             @endif
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="text-muted">Dibeli:</span>
+                                <span class="text-muted">Purchased:</span>
                                 <span class="fw-medium">{{ $userProduct->purchased_at->format('d M Y') }}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="text-muted">Harga Beli:</span>
+                                <span class="text-muted">Purchase Price:</span>
                                 <span class="fw-bold text-success">Rp
                                     {{ number_format($userProduct->purchase_price, 0, ',', '.') }}</span>
                             </div>
@@ -159,7 +159,7 @@
                                     <span class="fw-medium">{{ strtoupper($debugInfo['extension']) }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <span class="text-muted">Ukuran:</span>
+                                    <span class="text-muted">Size:</span>
                                     <span class="fw-medium">{{ $debugInfo['file_size_formatted'] }}</span>
                                 </div>
                             @endif
@@ -172,7 +172,7 @@
                     <div class="card shadow-sm border-0 mb-4">
                         <div class="card-header bg-success text-white">
                             <h6 class="mb-0">
-                                <i class="fas fa-tools me-1"></i>Aksi
+                                <i class="fas fa-tools me-1"></i>Actions
                             </h6>
                         </div>
                         <div class="card-body">
@@ -186,15 +186,15 @@
 
                                 @if ($isPdf)
                                     <button class="btn btn-outline-secondary" onclick="openInNewTab()">
-                                        <i class="fas fa-external-link-alt me-1"></i>Buka di Tab Baru
+                                        <i class="fas fa-external-link-alt me-1"></i>Open in New Tab
                                     </button>
                                     {{-- <button class="btn btn-outline-secondary d-md-none" onclick="toggleFullscreen()">
-                                        <i class="fas fa-expand me-1"></i>Mode Fullscreen
+                                        <i class="fas fa-expand me-1"></i>Fullscreen Mode
                                     </button> --}}
                                 @endif
 
                                 <a href="{{ route('user.user-products.index') }}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-arrow-left me-1"></i>Kembali ke Daftar
+                                    <i class="fas fa-arrow-left me-1"></i>Back to List
                                 </a>
                             </div>
                         </div>
@@ -207,31 +207,31 @@
 
 @push('scripts')
     <script>
-        // Set document title saat PDF dimuat
+        // Set document title when PDF is loaded
         function setPdfTitle() {
             const iframe = document.getElementById('pdf-iframe');
             if (iframe) {
                 iframe.onload = function() {
                     try {
-                        // Coba akses document iframe untuk set title
+                        // Try accessing iframe document to set title
                         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
                         if (iframeDoc) {
                             iframeDoc.title = '{{ $userProduct->product->name }}';
                         }
                     } catch (e) {
-                        // Cross-origin restriction, ini normal untuk PDF
+                        // Cross-origin restriction, normal for PDF
                         console.log('Cannot access iframe document (normal for PDF)');
                     }
                 };
             }
         }
 
-        // Open PDF in new tab dengan title yang benar
+        // Open PDF in new tab with correct title
         function openInNewTab() {
             const url = '{{ route('user.user-products.stream', $userProduct->id) }}';
             const newTab = window.open(url, '_blank');
 
-            // Set title untuk tab baru (jika memungkinkan)
+            // Set title for new tab (if possible)
             if (newTab) {
                 newTab.onload = function() {
                     try {
@@ -243,7 +243,7 @@
             }
         }
 
-        // Panggil saat halaman dimuat
+        // Call when page is loaded
         document.addEventListener('DOMContentLoaded', function() {
             setPdfTitle();
         });
@@ -256,14 +256,14 @@
                 if (!document.fullscreenElement) {
                     pdfContainer.requestFullscreen().then(() => {
                         pdfContainer.classList.add('fullscreen-active');
-                        showToast('Mode fullscreen diaktifkan', 'success');
+                        showToast('Fullscreen mode enabled', 'success');
                     }).catch(err => {
-                        showToast('Fullscreen tidak didukung', 'error');
+                        showToast('Fullscreen not supported', 'error');
                     });
                 } else {
                     document.exitFullscreen().then(() => {
                         pdfContainer.classList.remove('fullscreen-active');
-                        showToast('Mode fullscreen dinonaktifkan', 'info');
+                        showToast('Fullscreen mode disabled', 'info');
                     });
                 }
             }
@@ -313,12 +313,12 @@
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
-                    showToast('Download berhasil!', 'success');
+                    showToast('Download successful!', 'success');
                 })
                 .catch(error => {
                     console.error('Download failed:', error);
                     window.open(url, '_blank');
-                    showToast('Download error, membuka tab baru...', 'error');
+                    showToast('Download error, opening new tab...', 'error');
                 })
                 .finally(() => {
                     btn.innerHTML = originalText;
