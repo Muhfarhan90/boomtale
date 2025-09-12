@@ -251,7 +251,7 @@
                                         <span class="input-group-text">Rp</span>
                                         <input type="number" class="form-control @error('price') is-invalid @enderror"
                                             id="price" name="price" value="{{ old('price', $product->price) }}"
-                                            placeholder="100000" required min="0" step="1000">
+                                            placeholder="100000" required min="0">
                                         @error('price')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -270,7 +270,7 @@
                                             class="form-control @error('discount_price') is-invalid @enderror"
                                             id="discount_price" name="discount_price"
                                             value="{{ old('discount_price', $product->discount_price ?? $product->price) }}"
-                                            placeholder="75000" required min="0" step="1000">
+                                            placeholder="75000" required min="0">
                                         @error('discount_price')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
