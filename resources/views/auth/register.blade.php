@@ -295,7 +295,7 @@
                     <span class="divider-line"></span>
                 </div>
 
-                <a href="{{ route('google-auth') }}" class="btn btn-google w-100">
+                <a href="{{ route('auth.google') }}" class="btn btn-google w-100">
                     <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo">
                     Login or Register with Google
                 </a>

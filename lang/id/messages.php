@@ -82,6 +82,10 @@ return [
     'price_low' => 'Harga Terendah',
     'price_high' => 'Harga Tertinggi',
     'highest_rated' => 'Terpopuler',
+    'login_to_purchase' => 'Harap login untuk membeli produk.',
+    'login_with_google' => 'Login dengan Google',
+    'login_purchase_description' => 'Login ke akun Anda atau daftar akun baru untuk membeli dan mengunduh produk.',
+    'login_required' => 'Anda perlu login untuk melakukan tindakan ini.',
     /*
     |--------------------------------------------------------------------------
     | Keranjang & Checkout

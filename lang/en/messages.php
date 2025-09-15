@@ -84,6 +84,10 @@ return [
     'highest_rated' => 'Highest Rated',
     'reset_all' => 'Reset All',
     'active_filters' => 'Active Filters',
+    'login_to_purchase' => 'Please login to purchase products.',
+    'login_with_google' => 'Login with Google',
+    'login_purchase_description' => 'Login to your account or register a new one to purchase and download products.',
+    'login_required' => 'You need to be logged in to perform this action.',
     /*
     |--------------------------------------------------------------------------
     | Cart & Checkout

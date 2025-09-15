@@ -630,43 +630,10 @@
                                         <i class="fas fa-shopping-cart me-2"></i>{{ __('messages.add_to_cart') }}
                                     </button>
                                 @else
-                                    <!-- Login Prompt Section -->
-                                    <div class="login-prompt">
-                                        <div class="text-center mb-3">
-                                            <i class="fas fa-lock text-primary fa-2x mb-2"></i>
-                                            <h6 class="fw-bold text-primary">{{ __('messages.login_to_purchase') }}</h6>
-                                            <p class="text-muted mb-3">{{ __('messages.login_purchase_description') }}</p>
-                                        </div>
-
-                                        <div class="d-grid gap-2">
-                                            <button class="btn btn-add-to-cart text-white" id="loginPromptCart"
-                                                data-product-id="{{ $product->id }}">
-                                                <i class="fas fa-shopping-cart me-2"></i>{{ __('messages.add_to_cart') }}
-                                            </button>
-
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <a href="{{ route('auth.google') }}" class="btn btn-danger w-100">
-                                                        <i
-                                                            class="fab fa-google me-2"></i>{{ __('messages.login_with_google') }}
-                                                    </a>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <a href="{{ route('login') }}" class="btn btn-primary w-100">
-                                                        <i class="fas fa-sign-in-alt me-2"></i>{{ __('messages.login') }}
-                                                    </a>
-                                                </div>
-                                            </div>
-
-                                            <div class="text-center mt-2">
-                                                <small class="text-muted">
-                                                    {{ __('messages.dont_have_account') }}
-                                                    <a href="{{ route('register') }}"
-                                                        class="text-decoration-none">{{ __('messages.register_here') }}</a>
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <a href="{{ route('auth.google') }}" class="btn btn-add-to-cart text-white cta-pulse" id="addToCart"
+                                        data-product-id="{{ $product->id }}">
+                                        <i class="fas fa-shopping-cart me-2"></i>{{ __('messages.add_to_cart') }}
+                                    </a>
                                 @endauth
                             </div>
                         </div>
