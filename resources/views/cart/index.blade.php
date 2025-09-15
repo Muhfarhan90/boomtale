@@ -72,7 +72,7 @@
                                             <div class="d-flex justify-content-end align-items-center gap-3">
                                                 <div class="product-price">
                                                     <span class="fw-bold text-primary fs-6">
-                                                        {{ $item->product->formatted_price }}
+                                                        {{ $item->product->formatted_discount_price }}
                                                     </span>
                                                 </div>
                                                 <div>
@@ -115,7 +115,7 @@
                                                     </div>
                                                     <div class="text-end">
                                                         <span class="fw-bold text-primary fs-7">
-                                                            Rp {{ number_format($item->product->price, 0, ',', '.') }}
+                                                            Rp {{ number_format($item->product->discount_price, 0, ',', '.') }}
                                                         </span>
                                                     </div>
                                                 </div>

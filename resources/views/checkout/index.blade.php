@@ -88,7 +88,7 @@
                                     </div>
                                     <div class="text-end">
                                         <span class="fw-bold">Rp
-                                            {{ number_format($item->product->price * ($item->quantity ?? 1), 0, ',', '.') }}</span>
+                                            {{ number_format($item->product->discount_price * ($item->quantity ?? 1), 0, ',', '.') }}</span>
                                     </div>
                                 </div>
                             @endforeach

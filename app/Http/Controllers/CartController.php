@@ -15,7 +15,7 @@ class CartController extends Controller
             ->get();
 
         $total = $cartItems->sum(function ($item) {
-            return $item->product->price * $item->quantity ?? 1;
+            return $item->product->discount_price * $item->quantity ?? 1;
         });
         $count = $cartItems->count();
         return view('cart.index', compact('cartItems', 'total', 'count'));
@@ -80,7 +80,7 @@ class CartController extends Controller
             'user_id' => auth()->id(),
             'product_id' => $product->id,
             'quantity' => $quantity,
-            'price' => $product->price
+            'price' => $product->discount_price
         ]);
 
         return response()->json([
