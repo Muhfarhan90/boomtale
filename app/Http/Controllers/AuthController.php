@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Exceptions\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -106,5 +108,57 @@ class AuthController extends Controller
 
         return redirect()->route('user.home')
             ->with('success', 'Anda berhasil logout.');
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleAuthGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+
+            // Cari user yang sudah terhubung dengan google_id ini
+            $user = User::where('google_id', $googleUser->getId())->first();
+
+            if ($user) {
+                // Jika sudah ada, langsung login
+                Auth::login($user);
+                return redirect('/');
+            }
+
+            // Jika tidak ada, cari berdasarkan email
+            $existingUser = User::where('email', $googleUser->getEmail())->first();
+
+            if ($existingUser) {
+                // Jika user dengan email tersebut sudah ada (misalnya daftar manual)
+                // Update datanya untuk menautkan google_id dan avatar
+                $existingUser->update([
+                    'google_id' => $googleUser->getId(),
+                    'avatar' => $googleUser->getAvatar(),
+                ]);
+
+                Auth::login($existingUser);
+                return redirect('/');
+            }
+
+            // Jika tidak ada sama sekali, buat user baru
+            $newUser = User::create([
+                'name' => $googleUser->getName(),
+                'email' => $googleUser->getEmail(),
+                'google_id' => $googleUser->getId(),
+                'avatar' => $googleUser->getAvatar(),
+                'password' => encrypt('my-google')
+            ]);
+
+            Auth::login($newUser);
+            return redirect('/');
+        } catch (Exception $e) {
+            // Anda bisa menambahkan logging di sini untuk melacak error
+            // \Log::error($e->getMessage());
+            return redirect('/login')->with('error', 'Something went wrong!');
+        }
     }
 }

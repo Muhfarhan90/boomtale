@@ -117,6 +117,50 @@
             border: none;
         }
 
+        .divider-container {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .divider-line {
+            flex-grow: 1;
+            height: 1px;
+            background-color: #dee2e6;
+        }
+
+        .divider-text {
+            padding: 0 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn-google {
+            background-color: #ffffff;
+            color: #495057;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            border-color: #ced4da;
+            transform: translateY(-2px);
+        }
+
+        .btn-google img {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+        }
+
         /* Media Query for mobile devices (less than 576px) */
         @media (max-width: 575.98px) {
             .auth-card {
@@ -149,6 +193,11 @@
             }
 
             .btn-primary {
+                font-size: 0.9rem;
+                padding: 0.6rem 1.5rem;
+            }
+
+            .btn-google {
                 font-size: 0.9rem;
                 padding: 0.6rem 1.5rem;
             }
@@ -240,12 +289,22 @@
                     </button>
                 </form>
 
-                <div class="text-center mt-3">
+                <div class="divider-container my-4">
+                    <span class="divider-line"></span>
+                    <span class="divider-text">or</span>
+                    <span class="divider-line"></span>
+                </div>
+
+                <a href="{{ route('google-auth') }}" class="btn btn-google w-100">
+                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo">
+                    Login or Register with Google
+                </a>
+                {{-- <div class="text-center mt-3">
                     <p class="mb-0">
                         Already have an account?
                         <a href="{{ route('login') }}" class="auth-link">Sign in here</a>
                     </p>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

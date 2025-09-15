@@ -21,7 +21,8 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-
+Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('google-auth');
+Route::get('auth/google/callback', [AuthController::class, 'handleAuthGoogleCallback']);
 
 /*
 |--------------------------------------------------------------------------
