@@ -16,7 +16,7 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">
-                        <i class="fas fa-shopping-cart me-2 text-primary"></i>
+                        <i class="fas fa-shopping-cart me-2 text-boomtale"></i>
                         Cart
                     </h2>
                     @if ($cartItems->count() > 0)
@@ -152,7 +152,7 @@
                                         </div>
 
                                         <div class="d-grid gap-2">
-                                            <a href="{{ route('user.checkout.index') }}" class="btn btn-primary">
+                                            <a href="{{ route('user.checkout.index') }}" class="btn btn-boomtale">
                                                 <i class="fas fa-credit-card me-2"></i>Proceed to Payment
                                             </a>
                                             <a href="{{ route('user.products.index') }}"
@@ -178,7 +178,7 @@
                                         Start shopping now!
                                     </p>
                                     <div class="d-grid gap-2 d-md-block">
-                                        <a href="{{ route('user.products.index') }}" class="btn btn-primary">
+                                        <a href="{{ route('user.products.index') }}" class="btn btn-boomtale">
                                             <i class="fas fa-shopping-bag me-2"></i>Start shopping
                                         </a>
                                         <a href="{{ route('user.home') }}" class="btn btn-outline-secondary">

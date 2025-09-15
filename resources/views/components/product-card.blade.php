@@ -128,7 +128,7 @@
                 @for ($i = 0; $i < 5; $i++)
                     <i class="far fa-star"></i>
                 @endfor
-                <span class="rating-text ms-1">No reviews yet</span>
+                <span class="rating-text ms-1">{{ __('messages.no_reviews_yet') }}</span>
             </div>
         @endif
 
@@ -138,9 +138,11 @@
                 @php
                     // Ambil harga dari database
                     $originalPrice = $product->price ?? 0;
-                    $discountPrice = $product->discount_price ?? $product->price ?? 0;
+                    $discountPrice = $product->discount_price ?? ($product->price ?? 0);
                     $hasDiscount = $originalPrice > $discountPrice && $originalPrice > 0;
-                    $discountPercentage = $hasDiscount ? round((($originalPrice - $discountPrice) / $originalPrice) * 100) : 0;
+                    $discountPercentage = $hasDiscount
+                        ? round((($originalPrice - $discountPrice) / $originalPrice) * 100)
+                        : 0;
                 @endphp
 
                 <div class="price-display">
@@ -164,7 +166,7 @@
 
                     @if ($product->isDigital())
                         <span class="badge bg-info" style="font-size: 0.6rem;">
-                            <i class="fas fa-download me-1"></i>Digital
+                            <i class="fas fa-download me-1"></i>{{ __('messages.digital') }}
                         </span>
                     @endif
                 </div>
@@ -173,7 +175,7 @@
                 @if ($product)
                     <div class="sales-count">
                         <i class="fas fa-fire-alt text-danger"></i>
-                        <span>{{ $product->orders_count ?? 0 }} Sold</span>
+                        <span>{{ $product->orders_count ?? 0 }} {{ __('messages.sold') }}</span>
                     </div>
                 @endif
             </div>
@@ -182,17 +184,17 @@
             <div class="d-grid gap-1 d-md-flex">
                 <a href="{{ route('user.products.show', $product) }}" class="btn btn-outline-secondary btn-sm">
                     <i class="fas fa-eye me-1"></i>
-                    <span class="d-md-inline">Detail</span>
+                    <span class="d-md-inline">{{ __('messages.view_details') }}</span>
                 </a>
                 @auth
                     <button class="btn btn-boomtale btn-sm btn-add-cart" data-product-id="{{ $product->id }}">
                         <i class="fas fa-cart-plus me-1"></i>
-                        <span class="d-md-inline">Cart</span>
+                        <span class="d-md-inline">{{ __('messages.add_to_cart') }}</span>
                     </button>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-boomtale btn-sm">
                         <i class="fas fa-cart-plus me-1"></i>
-                        <span class="d-md-inline">Cart</span>
+                        <span class="d-md-inline">{{ __('messages.cart') }}</span>
                     </a>
                 @endauth
             </div>

@@ -15,7 +15,7 @@
                 </nav>
 
                 <h2 class="mb-3">
-                    <i class="fas fa-book me-2 text-primary"></i>
+                    <i class="fas fa-book me-2 text-boomtale"></i>
                     My Products
                 </h2>
                 <p class="text-muted">Your collection of purchased digital products</p>

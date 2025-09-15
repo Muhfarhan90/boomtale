@@ -19,7 +19,7 @@
                 <!-- Header -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">
-                        <i class="fas fa-list-alt me-2 text-primary"></i>
+                        <i class="fas fa-list-alt me-2 text-boomtale"></i>
                         Order History
                     </h2>
                     <div class="d-flex gap-2">
@@ -27,7 +27,7 @@
                             data-bs-target="#filterModal">
                             <i class="fas fa-filter me-1"></i>Filter
                         </button>
-                        <a href="{{ route('user.products.index') }}" class="btn btn-primary btn-sm">
+                        <a href="{{ route('user.products.index') }}" class="btn btn-boomtale btn-sm">
                             <i class="fas fa-shopping-bag me-1"></i>Shop Again
                         </a>
                     </div>

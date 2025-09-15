@@ -46,6 +46,13 @@ class Product extends Model
             get: fn() => 'Rp ' . number_format($this->discount_price ?? 0, 0, ',', '.'),
         );
     }
+
+    public function formattedSavings(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->price && $this->discount_price ? 'Rp ' . number_format($this->price - $this->discount_price, 0, ',', '.') : null,
+        );
+    }
     public function category()
     {
         return $this->belongsTo(Category::class);

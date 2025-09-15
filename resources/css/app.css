@@ -1,3 +1,6 @@
+/* ================ GLOBAL FONT SETUP ================ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -10,8 +13,6 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-/* ================ GLOBAL FONT SETUP ================ */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 /* ================ ADMIN STYLES - BOOMTALE THEME ================ */
 
@@ -443,6 +444,26 @@ body.admin-body {
     color: var(--boomtale-secondary);
 }
 
+.breadcrumb {
+    background: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    content: '>';
+    color: #6c757d;
+    margin: 0 0.5rem;
+}
+
+.breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    font-size: 0.75rem;
+}
+.breadcrumb .breadcrumb-item a {
+    color: var(--boomtale-primary);
+    text-decoration: none;
+}
 /* ================ ADMIN COMPONENTS ================ */
 
 /* Boomtale Buttons */
@@ -950,7 +971,7 @@ body.admin-body {
 
     .btn-sm {
         font-size: 0.8rem !important;
-        padding: 0.375rem 0.75rem !important;
+        padding: 0.3rem 0.6rem !important;
     }
 
     /* Product card optimizations */

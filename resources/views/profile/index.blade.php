@@ -12,7 +12,7 @@
         }
 
         .profile-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--boomtale-primary) 0%, var(--boomtale-secondary) 100%);
             padding: 2rem;
             color: white;
             text-align: center;
@@ -135,7 +135,7 @@
 
                             <!-- Submit Button -->
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-save text-white">
+                                <button type="submit" class="btn btn-boomtale text-white">
                                     <i class="fas fa-save me-2"></i>
                                     Save Changes
                                 </button>

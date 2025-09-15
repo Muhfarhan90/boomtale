@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Produk Digital - Boomtale')
+@section('title', __('messages.digital_products') . ' - Boomtale')
 
 @section('content')
     <div class="container py-4">
         <!-- Header -->
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="mb-3 d-none d-md-block">All Products</h2>
-                <h5 class="mb-3 d-md-none">Digital Products</h5>
+                <h2 class="mb-3 d-none d-md-block">{{ __('messages.all_products') }}</h2>
+                <h5 class="mb-3 d-md-none">{{ __('messages.digital_products') }}</h5>
 
                 <!-- Search Bar -->
                 <div class="row mb-4">
@@ -29,7 +29,8 @@
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="d-flex flex-wrap align-items-center">
-                                <span class="text-muted me-2 mb-2" style="font-size: 0.9rem;">Filter active:</span>
+                                <span class="text-muted me-2 mb-2"
+                                    style="font-size: 0.9rem;">{{ __('messages.active_filters') }}</span>
 
                                 @if (request('search'))
                                     <span class="filter-badge">
@@ -59,9 +60,9 @@
                                 @if (request('sort'))
                                     @php
                                         $sortLabels = [
-                                            'newest' => 'Terbaru',
-                                            'price_low' => 'Termurah',
-                                            'price_high' => 'Termahal',
+                                            'newest' => 'Newest',
+                                            'price_low' => 'Lowest Price',
+                                            'price_high' => 'Highest Price',
                                         ];
                                     @endphp
                                     <span class="filter-badge">
@@ -74,7 +75,7 @@
                                 @endif
 
                                 <a href="{{ route('user.products.index') }}" class="btn btn-outline-secondary btn-sm mb-2">
-                                    <i class="fas fa-times me-1"></i>Delete All
+                                    <i class="fas fa-times me-1"></i> {{ __('messages.reset_all') }}
                                 </a>
                             </div>
                         </div>
@@ -96,14 +97,15 @@
                     </div>
                     <div class="col-6 col-md-3">
                         <select class="form-select form-select-md" id="sortFilter">
-                            <option value="">Sorting</option>
-                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
-                            <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Lowest Price
+                            <option value="">{{ __('messages.sorting') }}</option>
+                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>
+                                {{ __('messages.newest') }}</option>
+                            <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>
+                                {{ __('messages.price_low') }}</option>
+                            <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>
+                                {{ __('messages.price_high') }}</option>
+                            <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>{{__('messages.highest_rated')}}
                             </option>
-                            <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Highest Price
-                            </option>
-                            <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>Popular</option>
-                            <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Highest Rated</option>
                         </select>
                     </div>
                     {{-- <div class="col-6 col-md-3 d-none d-md-block">

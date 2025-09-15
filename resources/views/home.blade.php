@@ -1,7 +1,7 @@
 {{-- filepath: d:\FREELANCE\boomtale\resources\views\home.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Home - Boomtale')
+@section('title', __('messages.home') . ' - Boomtale')
 
 @section('content')
     <!-- Hero Section -->
@@ -10,10 +10,10 @@
             <div class="row align-items-center pt-4">
                 <div class="col-lg-6">
                     {{-- PERBAIKAN: Ukuran font dibuat responsif --}}
-                    <h1 class="fs-2 fw-bold mb-3">Welcome to Boomtale</h1>
-                    <p class="lead mb-4">Discover various high-quality digital products for your needs.</p>
+                    <h1 class="fs-2 fw-bold mb-3">{{ __('messages.welcome') }}</h1>
+                    <p class="lead mb-4">{{ __('messages.welcome_message') }}</p>
                     <a href="{{ route('user.products.index') }}" class="btn btn-boomtale btn-sm">
-                        <i class="fas fa-play me-2"></i>Start Exploring
+                        <i class="fas fa-play me-2"></i>{{ __('messages.start_now') }}
                     </a>
                 </div>
                 <div class="col-lg-6 text-center d-none d-lg-block">
@@ -32,8 +32,9 @@
                         <form action="{{ route('user.products.index') }}" method="GET">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" name="search" class="form-control" placeholder="Search for products...">
-                                <button class="btn btn-boomtale" type="submit">Search</button>
+                                <input type="text" name="search" class="form-control"
+                                    placeholder="Search for products...">
+                                <button class="btn btn-boomtale" type="submit">{{ __('messages.search') }}</button>
                             </div>
                         </form>
                     </div>
@@ -50,8 +51,9 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     {{-- PERBAIKAN: Ukuran font dibuat lebih kecil untuk mobile --}}
-                    <h2 class="h3 mb-0">Latest Products</h2>
-                    <a href="{{ route('user.products.index') }}" class="btn btn-outline-boomtale btn-sm">View All</a>
+                    <h2 class="h3 mb-0">{{ __('messages.latest_products') }}</h2>
+                    <a href="{{ route('user.products.index') }}"
+                        class="btn btn-outline-boomtale btn-sm">{{ __('messages.view_all') }}</a>
                 </div>
                 <div class="row g-3">
                     @forelse ($latestProducts as $product)
@@ -60,7 +62,7 @@
                         </div>
                     @empty
                         <div class="col-12">
-                            <p class="text-center text-muted">There are no products available yet.</p>
+                            <p class="text-center text-muted">{{ __('messages.no_products_available') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -71,7 +73,7 @@
         <div class="row mb-5">
             <div class="col-12">
                 {{-- PERBAIKAN: Ukuran font dibuat lebih kecil untuk mobile --}}
-                <h2 class="h3 text-center mb-3">Explore Categories</h2>
+                <h2 class="h3 text-center mb-3">{{ __('messages.explore_categories') }}</h2>
                 <div class="row g-3">
                     @forelse ($categories as $category)
                         <div class="col-6 col-md-3">
@@ -81,14 +83,15 @@
                                     <div class="card-body">
                                         <i class="fas fa-folder fa-2x text-boomtale mb-2"></i>
                                         <h6 class="mb-0">{{ $category->name }}</h6>
-                                        <small class="text-muted">{{ $category->products_count }} products</small>
+                                        <small class="text-muted">{{ $category->products_count }}
+                                            {{ trans_choice('messages.products_count', $category->products_count) }}</small>
                                     </div>
                                 </div>
                             </a>
                         </div>
                     @empty
                         <div class="col-12">
-                            <p class="text-center text-muted">There are no categories available yet.</p>
+                            <p class="text-center text-muted">{{ __('messages.no_categories_available') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -163,7 +166,7 @@
                     <!-- Social Media & Copyright -->
                     <div class="col-lg-6 text-lg-end">
                         <div class="social-section mb-4">
-                            <h5 class="social-title mb-3">Follow me</h5>
+                            <h5 class="social-title mb-3">{{ __('messages.follow_me') }}</h5>
                             <div class="social-links">
                                 @if (!empty($footerSettings['social_facebook']))
                                     <a href="{{ $footerSettings['social_facebook'] }}" target="_blank"
@@ -196,7 +199,7 @@
                             <div class="copyright-text">
                                 <p class="mb-1">© {{ date('Y') }} {{ $footerSettings['site_name'] ?? 'Boomtale' }}
                                 </p>
-                                <p class="mb-0">All rights reserved</p>
+                                <p class="mb-0">{{ __('messages.all_rights_reserved') }}</p>
                             </div>
                         </div>
                     </div>
@@ -507,6 +510,15 @@
 
 @push('scripts')
     <script>
+        // Define translated messages for JavaScript
+        const i18n = {
+            loading: "{{ __('messages.loading') }}",
+            added: "{{ __('messages.added') }}",
+            success_cart_add: "{{ __('messages.success_cart_add') }}",
+            error_reordering: "{{ __('messages.error_reordering') }}",
+            error_general: "{{ __('messages.error_general') }}"
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             // Handle Add to Cart buttons
             document.querySelectorAll('.btn-add-cart').forEach(button => {
@@ -518,7 +530,7 @@
 
                     // Disable button and show loading
                     this.disabled = true;
-                    this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Loading...';
+                    this.innerHTML = `<i class="fas fa-spinner fa-spin me-1"></i>${i18n.loading}`;
 
                     // Send AJAX request
                     fetch('{{ route('user.cart.add') }}', {
@@ -538,14 +550,14 @@
                         .then(data => {
                             if (data.success) {
                                 // Show success message
-                                showToast('Product successfully add to cart!',
+                                showToast(i18n.success_cart_add,
                                     'success');
 
                                 // Update cart badge if exists
                                 updateCartBadge();
 
                                 // Change button to "Added"
-                                this.innerHTML = '<i class="fas fa-check me-1"></i>Added';
+                                this.innerHTML = `<i class="fas fa-check me-1"></i>${i18n.added}`;
                                 this.classList.remove('btn-boomtale');
                                 this.classList.add('btn-success');
 
@@ -559,12 +571,12 @@
 
                             } else {
                                 throw new Error(data.message ||
-                                    'Failed to add to cart');
+                                    i18n.error_reordering);
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            showToast(error.message || 'An error occurred!', 'error');
+                            showToast(error.message || i18n.error_general, 'error');
 
                             // Reset button
                             this.innerHTML = originalText;

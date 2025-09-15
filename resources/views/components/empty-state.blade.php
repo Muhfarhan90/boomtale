@@ -5,7 +5,7 @@
     <h5 class="text-muted">{{ $title }}</h5>
     <p class="text-muted">{{ $message }}</p>
     @if ($actionUrl && $actionText)
-        <a href="{{ $actionUrl }}" class="btn btn-primary mt-2">
+        <a href="{{ $actionUrl }}" class="btn btn-boomtale mt-2">
             <i class="fas fa-arrow-left me-1"></i>{{ $actionText }}
         </a>
     @endif
