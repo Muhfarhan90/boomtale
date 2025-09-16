@@ -71,7 +71,7 @@
                                         <div class="col-md-5 col-5">
                                             <div class="d-flex justify-content-end align-items-center gap-3">
                                                 <div class="product-price">
-                                                    <span class="fw-bold text-primary fs-6">
+                                                    <span class="fw-bold text-boomtale fs-6">
                                                         {{ $item->product->formatted_discount_price }}
                                                     </span>
                                                 </div>
@@ -92,7 +92,7 @@
                         <!-- Order Summary -->
                         <div class="col-lg-4">
                             <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
-                                <div class="card-header bg-primary text-white">
+                                <div class="card-header bg-boomtale text-white">
                                     <h5 class="mb-0 fs-6">
                                         <i class="fas fa-calculator me-2"></i>Order Summary
                                     </h5>
@@ -114,7 +114,7 @@
                                                         @endif
                                                     </div>
                                                     <div class="text-end">
-                                                        <span class="fw-bold text-primary fs-7">
+                                                        <span class="fw-bold text-boomtale fs-7">
                                                             Rp {{ number_format($item->product->discount_price, 0, ',', '.') }}
                                                         </span>
                                                     </div>
@@ -146,7 +146,7 @@
 
                                         <div class="d-flex justify-content-between mb-3">
                                             <span class="fw-bold fs-6">Total Payment</span>
-                                            <span class="fw-bold text-primary fs-5" id="cart-total">
+                                            <span class="fw-bold text-boomtale fs-5" id="cart-total">
                                                 Rp {{ number_format($total, 0, ',', '.') }}
                                             </span>
                                         </div>

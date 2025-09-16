@@ -229,7 +229,7 @@
                                 Start shopping now!
                             </p>
                             <div class="d-grid gap-2 d-md-block">
-                                <a href="{{ route('user.products.index') }}" class="btn btn-primary btn-lg">
+                                <a href="{{ route('user.products.index') }}" class="btn btn-boomtale btn-lg">
                                     <i class="fas fa-shopping-bag me-2"></i>Start Shopping
                                 </a>
                             </div>

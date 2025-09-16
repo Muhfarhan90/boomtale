@@ -45,7 +45,7 @@
                     <div class="card shadow-sm border-0 mb-4">
                         <div class="card-header bg-white py-3">
                             <h4 class="mb-0">
-                                <i class="fas fa-user-circle text-primary me-2"></i>
+                                <i class="fas fa-user-circle text-boomtale me-2"></i>
                                 Shipping Details
                             </h4>
                         </div>
@@ -73,7 +73,7 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white py-3">
                             <h4 class="mb-0">
-                                <i class="fas fa-shopping-bag text-primary me-2"></i>
+                                <i class="fas fa-shopping-bag text-boomtale me-2"></i>
                                 Order Items ({{ $cartItems->count() }})
                             </h4>
                         </div>
@@ -87,7 +87,7 @@
                                         <small class="text-muted">Qty: {{ $item->quantity ?? 1 }}</small>
                                     </div>
                                     <div class="text-end">
-                                        <span class="fw-bold">Rp
+                                        <span class="fw-bold text-boomtale">Rp
                                             {{ number_format($item->product->discount_price * ($item->quantity ?? 1), 0, ',', '.') }}</span>
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@
                 <!-- Right Column: Order Summary -->
                 <div class="col-lg-5">
                     <div class="card shadow-sm border-0 order-summary-card">
-                        <div class="card-header bg-primary text-white py-3">
+                        <div class="card-header bg-boomtale text-white py-3">
                             <h4 class="mb-0">
                                 <i class="fas fa-receipt me-2"></i>
                                 Order Summary
@@ -113,16 +113,16 @@
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     Admin Fee
-                                    <span>Rp 0</span>
+                                    <span class="text-success">Free</span>
                                 </li>
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center px-0 bg-light fw-bold fs-5">
                                     Total Payment
-                                    <span class="text-primary">Rp {{ number_format($total, 0, ',', '.') }}</span>
+                                    <span class="text-boomtale">Rp {{ number_format($total, 0, ',', '.') }}</span>
                                 </li>
                             </ul>
                             <div class="d-grid mt-4">
-                                <button type="submit" id="pay-button" class="btn btn-primary btn-lg">
+                                <button type="submit" id="pay-button" class="btn btn-boomtale btn-lg">
                                     <i class="fas fa-shield-alt me-2"></i>
                                     Pay Now
                                 </button>
