@@ -275,4 +275,5 @@ return [
     'rating_text_4' => 'Good',
     'rating_text_5' => 'Very Good',
     'no_comment' => 'No comment',
+    'featured' => 'Popular'
 ];
