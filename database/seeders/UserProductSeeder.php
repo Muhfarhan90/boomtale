@@ -25,10 +25,10 @@ class UserProductSeeder extends Seeder
         }
 
         $salesData = [
-            'pengenalan-karakter-nataga-the-little-dragon' => ['sold' => 70],
-            'episode-1-nataga-the-little-dragon' => ['sold' => 188],
-            'episode-2-nataga-the-little-dragon' => ['sold' => 175],
-            'episode-3-nataga-the-little-dragon' => ['sold' => 167],
+            'pengenalan-karakter-nataga-the-little-dragon' => ['sold' => 212],
+            'episode-1-nataga-the-little-dragon' => ['sold' => 273],
+            'episode-2-nataga-the-little-dragon' => ['sold' => 258],
+            'episode-3-nataga-the-little-dragon' => ['sold' => 207],
             'perspective-eric-f-scott' => ['sold' => 37],
         ];
 
