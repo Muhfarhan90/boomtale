@@ -19,8 +19,8 @@ class UserProductSeeder extends Seeder
         $faker = Faker::create('id_ID');
         
         $users = User::where('role', 'user')->get();
-        if ($users->count() < 200) {
-            User::factory()->count(200 - $users->count())->create();
+        if ($users->count() < 300) {
+            User::factory()->count(count: 300 - $users->count())->create();
             $users = User::where('role', 'user')->get();
         }
 
