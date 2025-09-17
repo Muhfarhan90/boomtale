@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
     <div class="container">
         <!-- Brand -->
-        <a class="user-navbar-brand fw-bold" href="{{ route('user.home') }}">
+        <a class="user-navbar-brand fw-bold" href="https://boomtale.com">
             <img src="{{ asset('logo_boomtale.png') }}" alt="Boomtale Logo" class="user-navbar-logo">
         </a>
 
