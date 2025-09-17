@@ -35,4 +35,9 @@ class UserProduct extends Model
     public function order() {
         return $this->belongsTo(Order::class);
     }
+
+    public function orderItem() {
+        return $this->belongsTo(OrderItem::class);
+    }
+
 }

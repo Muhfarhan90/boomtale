@@ -50,7 +50,7 @@ Route::name('user.')->group(function () {
     Route::post('/search', [HomeController::class, 'search'])->name('search');
 
     // Public Review Routes
-    Route::get('/products/{product}/reviews', [ReviewController::class, 'productReviews'])->name('products.reviews');
+    Route::get('/products/{product}/reviews', [ReviewController::class, 'getReviews'])->name('products.reviews');
 
 
     // Public Product Routes

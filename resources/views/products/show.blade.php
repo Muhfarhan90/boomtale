@@ -221,6 +221,88 @@
             animation: slideInUp 0.5s ease-out;
         }
 
+        .review-card {
+            background: #fff;
+            /* Ubah background agar lebih clean */
+            border-radius: 8px;
+            /* Sedikit lebih kecil */
+            padding: 1rem;
+            /* Padding lebih kecil */
+            margin-bottom: 0.75rem;
+            border: 1px solid #e9ecef;
+            /* Ganti border-left agar lebih modern */
+            transition: box-shadow 0.3s ease;
+        }
+
+        .review-card:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .review-user-initials {
+            width: 35px;
+            height: 35px;
+            font-size: 0.8rem;
+        }
+
+        .review-card h6 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .review-card .rating-stars.small {
+            font-size: 0.8rem;
+        }
+
+        .review-card p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .review-card small.text-muted {
+            font-size: 0.75rem;
+        }
+
+        /* Tombol "Lihat Lainnya" */
+        .btn-load-more {
+            background-color: #fff;
+            border: 1px solid #c9a877;
+            color: #c9a877;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-load-more:hover {
+            background-color: #c9a877;
+            color: #fff;
+        }
+
+
+        /* PENYESUAIAN UNTUK MOBILE */
+        @media (max-width: 576px) {
+            .review-card {
+                padding: 0.75rem;
+            }
+
+            .review-user-initials {
+                width: 30px;
+                height: 30px;
+                font-size: 0.7rem;
+            }
+
+            .review-card .flex-grow-1.ms-3 {
+                margin-left: 0.75rem !important;
+                /* Kurangi margin */
+            }
+
+            .review-card h6 {
+                font-size: 0.9rem;
+            }
+
+            .review-card p {
+                font-size: 0.85rem;
+            }
+        }
+
         @keyframes slideInUp {
             from {
                 transform: translateY(20px);
@@ -630,8 +712,8 @@
                                         <i class="fas fa-shopping-cart me-2"></i>{{ __('messages.add_to_cart') }}
                                     </button>
                                 @else
-                                    <a href="{{ route('auth.google') }}" class="btn btn-add-to-cart text-white cta-pulse" id="addToCart"
-                                        data-product-id="{{ $product->id }}">
+                                    <a href="{{ route('auth.google') }}" class="btn btn-add-to-cart text-white cta-pulse"
+                                        id="addToCart" data-product-id="{{ $product->id }}">
                                         <i class="fas fa-shopping-cart me-2"></i>{{ __('messages.add_to_cart') }}
                                     </a>
                                 @endauth
@@ -769,55 +851,25 @@
                             </div>
 
                             <!-- Reviews List (Read Only) -->
-                            <div id="reviewsList">
-                                @forelse($reviews as $review)
-                                    <div class="review-card" data-review-id="{{ $review->id }}">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-shrink-0">
-                                                <div class="bg-{{ ['primary', 'success', 'info', 'warning', 'secondary'][rand(0, 4)] }} rounded-circle d-flex align-items-center justify-content-center"
-                                                    style="width: 40px; height: 40px;">
-                                                    <span
-                                                        class="text-white fw-bold">{{ strtoupper(substr($review->user->name, 0, 2)) }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <div class="d-flex justify-content-between align-items-start">
-                                                    <div>
-                                                        <h6 class="mb-1">{{ $review->user->name }}</h6>
-                                                        <div class="rating-stars small mb-1">
-                                                            @for ($i = 1; $i <= 5; $i++)
-                                                                <i
-                                                                    class="fas fa-star{{ $i <= $review->rating ? '' : '-o' }} text-warning"></i>
-                                                            @endfor
-                                                        </div>
-                                                        <span class="badge bg-success small">
-                                                            <i
-                                                                class="fas fa-check-circle me-1"></i>{{ __('messages.verified_purchase') }}
-                                                        </span>
-                                                    </div>
-                                                    <small
-                                                        class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
-                                                </div>
-                                                @if ($review->comment)
-                                                    <p class="mt-2 mb-0">{{ $review->comment }}</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                @empty
-                                    <div class="text-center py-4">
-                                        <i class="fas fa-comments fa-3x text-muted mb-3"></i>
-                                        <h5 class="text-muted">{{ __('messages.no_reviews_yet') }}</h5>
-                                        <p class="text-muted">{{ __('messages.be_first_reviewer') }}</p>
-                                    </div>
-                                @endforelse
+                            <div id="reviewsListContainer">
+                                {{-- Ulasan akan dimuat di sini oleh JavaScript --}}
+                            </div>
 
-                                <!-- Pagination -->
-                                @if ($reviews->hasPages())
-                                    <div class="d-flex justify-content-center mt-4">
-                                        {{ $reviews->appends(['reviews_page' => $reviews->currentPage()])->links() }}
+                            <div id="noReviewsMessage" class="text-center py-4 d-none">
+                                <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">{{ __('messages.no_reviews_yet') }}</h5>
+                                <p class="text-muted">{{ __('messages.be_first_reviewer') }}</p>
+                            </div>
+
+                            <div id="loadMoreContainer" class="text-center mt-3 d-none">
+                                <button class="btn btn-load-more" id="loadMoreReviews">
+                                    {{ __('messages.view_more') }}
+                                </button>
+                                <div id="loadingSpinner" class="d-none mt-2">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
                                     </div>
-                                @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -835,7 +887,7 @@
 
                 <div class="row">
                     @foreach ($relatedProducts as $related)
-                        <div class="col-6 col-md-3 mb-4">
+                        <div class="col-6 col-md-4 col-lg-3 mb-3">
                             <x-product-card :product="$related" />
                         </div>
                     @endforeach
@@ -982,6 +1034,111 @@
 
             // Price animation on load
             $('.price-section').addClass('price-comparison-enter');
+
+            // --- LOGIKA BARU UNTUK MEMUAT ULASAN ---
+
+            let currentPage = 1;
+            let lastPage = {{ $reviews->lastPage() }}; // Dapatkan halaman terakhir dari controller
+            const productId = '{{ $product->id }}';
+
+            // Fungsi untuk membuat HTML satu kartu ulasan
+            function createReviewCard(review) {
+                // Logika untuk inisial nama dengan warna random
+                const colors = ['primary', 'success', 'info', 'warning', 'secondary', 'danger'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                const initials = review.user.name.substring(0, 2).toUpperCase();
+
+                // Template HTML untuk kartu ulasan
+                return `
+            <div class="review-card" style="opacity:0; transform: translateY(20px);">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0">
+                        <div class="bg-${randomColor} rounded-circle d-flex align-items-center justify-content-center review-user-initials">
+                            <span class="text-white fw-bold">${initials}</span>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">${review.user.name}</h6>
+                                <div class="rating-stars small mb-1">
+                                    ${getStarRating(review.rating)}
+                                </div>
+                                <span class="badge bg-success small">
+                                    <i class="fas fa-check-circle me-1"></i>{{ __('messages.verified_purchase') }}
+                                </span>
+                            </div>
+                            <small class="text-muted text-nowrap">${review.created_at_human}</small>
+                        </div>
+                        ${review.comment ? `<p class="mt-2 mb-0">${review.comment}</p>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+            }
+
+            // Fungsi untuk membuat rating bintang
+            function getStarRating(rating) {
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    stars += `<i class="fas fa-star ${i <= rating ? 'text-warning' : 'text-secondary'}"></i>`;
+                }
+                return stars;
+            }
+
+            // Fungsi untuk memuat ulasan via AJAX
+            function loadReviews(page) {
+                $('#loadingSpinner').removeClass('d-none');
+                $('#loadMoreReviews').addClass('d-none');
+
+                $.get(`{{ route('user.products.reviews', $product->id) }}?page=${page}`)
+                    .done(function(response) {
+                        if (response.data.length > 0) {
+                            response.data.forEach(function(review, index) {
+                                const reviewCard = $(createReviewCard(review));
+                                $('#reviewsListContainer').append(reviewCard);
+                                // Tambahkan animasi fade-in
+                                setTimeout(() => {
+                                    reviewCard.css({
+                                        'opacity': '1',
+                                        'transform': 'translateY(0)',
+                                        'transition': 'all 0.5s ease'
+                                    });
+                                }, index * 100);
+                            });
+
+                            currentPage = response.current_page;
+                            lastPage = response.last_page;
+
+                            if (currentPage < lastPage) {
+                                $('#loadMoreContainer').removeClass('d-none');
+                            } else {
+                                $('#loadMoreContainer').addClass('d-none');
+                            }
+                        } else if (page === 1) {
+                            $('#noReviewsMessage').removeClass('d-none');
+                        }
+
+                    })
+                    .fail(function() {
+                        // Tampilkan pesan error jika gagal
+                        $('#reviewsListContainer').append('<p class="text-danger">Gagal memuat ulasan.</p>');
+                    })
+                    .always(function() {
+                        $('#loadingSpinner').addClass('d-none');
+                        $('#loadMoreReviews').removeClass('d-none');
+                    });
+            }
+
+            // Panggil fungsi untuk memuat ulasan pertama kali
+            loadReviews(1);
+
+            // Event listener untuk tombol "Lihat Lainnya"
+            $('#loadMoreReviews').on('click', function() {
+                if (currentPage < lastPage) {
+                    loadReviews(currentPage + 1);
+                }
+            });
         });
     </script>
 @endpush

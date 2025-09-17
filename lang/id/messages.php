@@ -86,6 +86,10 @@ return [
     'login_with_google' => 'Login dengan Google',
     'login_purchase_description' => 'Login ke akun Anda atau daftar akun baru untuk membeli dan mengunduh produk.',
     'login_required' => 'Anda perlu login untuk melakukan tindakan ini.',
+        'view_more' => 'Lihat Lebih Banyak',
+            'no_image_available' => 'Gambar Produk Tidak Tersedia',
+
+
     /*
     |--------------------------------------------------------------------------
     | Keranjang & Checkout

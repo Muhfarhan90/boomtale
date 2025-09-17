@@ -117,6 +117,29 @@ class ReviewController extends Controller
         return back()->with('success', 'Review berhasil dihapus.');
     }
 
+    public function getReviews(Request $request, Product $product)
+    {
+        // Ambil ulasan dengan relasi user, paginasi 5 per halaman
+        $reviews = $product->reviews()->with('user')
+            ->latest() // Urutkan dari yang terbaru
+            ->paginate(5); // Ubah angka 5 jika ingin lebih banyak/sedikit
+
+        // Tambahkan atribut 'created_at_human' untuk format diffForHumans()
+        $reviews->getCollection()->transform(function ($review) {
+            $review->created_at_human = $review->created_at->diffForHumans();
+            return $review;
+        });
+
+        if ($request->ajax()) {
+            return response()->json($reviews);
+        }
+
+        // Fallback jika tidak diakses via AJAX (opsional)
+        return back();
+    }
+
+
+
     // ==================== ADMIN METHODS ====================
 
     /**

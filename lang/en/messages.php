@@ -88,6 +88,8 @@ return [
     'login_with_google' => 'Login with Google',
     'login_purchase_description' => 'Login to your account or register a new one to purchase and download products.',
     'login_required' => 'You need to be logged in to perform this action.',
+    'view_more' => 'View More',
+    'no_image_available' => 'No Image Available',
     /*
     |--------------------------------------------------------------------------
     | Cart & Checkout
