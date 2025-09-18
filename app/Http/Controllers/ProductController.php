@@ -79,6 +79,17 @@ class ProductController extends Controller
         // Load relationships
         $product->load(['category', 'reviews.user']);
 
+        // Cara 1: Jika Anda punya relasi 'orders' atau 'transactions'
+        // Anggap setiap OrderItem yang statusnya 'completed' adalah 1 penjualan
+        $ordersCount = $product->orderItems()
+            ->whereHas('order', function ($query) {
+                $query->where('status', 'completed');
+            })
+            ->sum('quantity');
+
+        // Tambahkan data sold_count ke objek produk
+        $product->sold_count = $ordersCount;
+
         $userOwnsProduct = false;
         $userHasReviewed = false;
         $userReview = null;
@@ -284,10 +295,10 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'discount_price' => 'required|numeric|min:0',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
-            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20000',
             // File digital tidak wajib jika sudah ada, tapi jika diupload, harus valid
-            'digital_file' => 'nullable|file|mimes:zip,pdf,epub,mp4|max:307200',
+            'digital_file' => 'nullable|file|mimes:zip,pdf,epub,mp4|max:1000000',
             'stock' => 'nullable|required_if:type,physical|integer|min:0',
             // Mengharapkan array dari gambar yang ada untuk dipertahankan
             'existing_gallery_images' => 'nullable|array'
