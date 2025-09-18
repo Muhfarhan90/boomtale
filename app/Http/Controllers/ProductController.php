@@ -76,40 +76,42 @@ class ProductController extends Controller
             abort(404, 'Produk tidak tersedia');
         }
 
-        // Load relationships
-        $product->load(['category', 'reviews.user']);
+        // =====================================================================
+        // PERBAIKAN: Muat ulang model dengan relasi yang dibutuhkan
+        // =====================================================================
+        $product->load([
+            'category',
+            'reviews.user'
+        ])->loadCount([
+            // Menghitung jumlah user yang membeli (unik per user)
+            'userProducts as sold_count',
 
-        // Cara 1: Jika Anda punya relasi 'orders' atau 'transactions'
-        // Anggap setiap OrderItem yang statusnya 'completed' adalah 1 penjualan
-        $ordersCount = $product->orderItems()
-            ->whereHas('order', function ($query) {
-                $query->where('status', 'completed');
-            })
-            ->sum('quantity');
+            // Menghitung total ulasan
+            'reviews as reviews_count'
+        ]);
 
-        // Tambahkan data sold_count ke objek produk
-        $product->sold_count = $ordersCount;
+        // Anda juga bisa menghitung total kuantitas terjual jika relasinya benar
+        // Misalnya, jika Anda punya relasi `completedOrderItems` di model Product
+        // $product->loadSum('completedOrderItems', 'quantity');
+        // Untuk saat ini, kita akan tetap dengan hitungan berdasarkan userProducts.
 
         $userOwnsProduct = false;
         $userHasReviewed = false;
         $userReview = null;
 
         if (auth()->check()) {
-            // Check if user owns the product
-            $userOwnsProduct = auth()->user()->userProducts()
+            $user = auth()->user();
+            // Cek kepemilikan produk
+            $userOwnsProduct = $user->userProducts()
                 ->where('product_id', $product->id)
                 ->exists();
 
-            // Check if user has reviewed this product
-            $userHasReviewed = auth()->user()->reviews()
+            // Cek ulasan pengguna
+            $userReview = $user->reviews()
                 ->where('product_id', $product->id)
-                ->exists();
+                ->first();
 
-            if ($userHasReviewed) {
-                $userReview = auth()->user()->reviews()
-                    ->where('product_id', $product->id)
-                    ->first();
-            }
+            $userHasReviewed = (bool) $userReview;
         }
 
         // Get paginated reviews
@@ -122,14 +124,14 @@ class ProductController extends Controller
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', true)
-            ->withCount('userProducts as orders_count') // Tambahkan juga di sini
+            ->withCount('userProducts as sold_count') // Menggunakan sold_count agar konsisten
             ->limit(4)
             ->get();
 
         // Calculate review statistics
         $reviewStats = [
             'average' => round($product->reviews()->avg('rating') ?? 0, 1),
-            'total' => $product->reviews()->count(),
+            'total' => $product->reviews_count, // Gunakan hasil dari loadCount
             'distribution' => [
                 5 => $product->reviews()->where('rating', 5)->count(),
                 4 => $product->reviews()->where('rating', 4)->count(),
@@ -138,7 +140,6 @@ class ProductController extends Controller
                 1 => $product->reviews()->where('rating', 1)->count(),
             ]
         ];
-
         return view('products.show', compact(
             'product',
             'userOwnsProduct',

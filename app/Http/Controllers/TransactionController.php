@@ -84,7 +84,7 @@ class TransactionController extends Controller
                 ], 400);
             }
         }
-        
+
         try {
             return DB::transaction(function () use ($user, $cartItems, $request) {
                 $currency = $request->currency ?? 'IDR'; // Default to IDR
@@ -155,13 +155,17 @@ class TransactionController extends Controller
                 $snapToken = \Midtrans\Snap::getSnapToken($params);
 
                 // 7. Buat record Transaction
-                $order->transaction()->create([
-                    'external_order_id' => $order->invoice_number,
-                    'snap_token' => $snapToken,
-                    'gross_amount' => $totalAmount,
-                    'status' => 'pending',
-                    'payment_type' => 'midtrans',
-                ]);
+                // Buat/Update record Transaction
+                $order->transaction()->updateOrCreate(
+                    ['order_id' => $order->id], // Cari berdasarkan order_id
+                    [
+                        'external_order_id' => $order->invoice_number,
+                        'snap_token' => $snapToken,
+                        'gross_amount' => $totalAmount,
+                        'status' => 'pending', // Status transaksi di Midtrans
+                        'payment_type' => 'midtrans',
+                    ]
+                );
 
                 // 8. Hapus keranjang
                 Cart::where('user_id', $user->id)->delete();
@@ -226,7 +230,7 @@ class TransactionController extends Controller
             $invoiceNumber = $notification->order_id;
 
             // 4. Cari Order berdasarkan invoice number
-            $order = Order::with('orderItems')->where('invoice_number', $invoiceNumber)->first();
+            $order = Order::with('orderItems.product')->where('invoice_number', $invoiceNumber)->first();
 
             if (!$order) {
                 Log::warning('Midtrans notification for non-existent order.', ['order_id' => $invoiceNumber]);
@@ -272,6 +276,10 @@ class TransactionController extends Controller
                                 'purchase_price' => $item->price,
                             ]
                         );
+
+                        if ($item->product) { // Pastikan relasi product ada
+                            $item->product->increment('sold_count', $item->quantity);
+                        }
                     }
                 }
             });

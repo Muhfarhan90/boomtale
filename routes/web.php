@@ -21,8 +21,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
-Route::get('auth/google/callback', [AuthController::class, 'handleAuthGoogleCallback']);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +34,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('auth/google/callback', [AuthController::class, 'handleAuthGoogleCallback']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

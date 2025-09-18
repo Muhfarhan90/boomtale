@@ -142,7 +142,7 @@
 
 @push('scripts')
     <!-- Midtrans Snap.js -->
-    <script src="https://app.{{ config('midtrans.isProduction' ? '' : 'sandbox') }}midtrans.com/snap/snap.js"
+    <script src="https://app.{{ config('midtrans.isProduction') ? '' : 'sandbox.' }}midtrans.com/snap/snap.js"
         data-client-key="{{ config('midtrans.client_key') }}"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -170,6 +170,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     if (data.error) {
                         throw new Error(data.error);
                     }
@@ -211,9 +212,21 @@
                             },
                             onClose: function() {
                                 console.log('Payment popup closed');
-                                Swal.fire('Payment Cancelled',
-                                    'You closed the payment window before completing.',
-                                    'warning');
+
+                                // Tampilkan popup peringatan terlebih dahulu
+                                Swal.fire({
+                                    title: 'Payment Cancelled',
+                                    text: 'You closed the payment window. You can continue the payment later from the My Orders page.',
+                                    icon: 'warning',
+                                    timer: 4000, // Beri waktu 4 detik untuk membaca
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    // Setelah popup tertutup (otomatis setelah 4 detik), redirect pengguna
+                                    window.location.href =
+                                        "{{ route('user.orders.index') }}";
+                                });
+
+                                // Reset tombol bayar
                                 payButton.disabled = false;
                                 payButton.innerHTML = originalButtonText;
                             }
