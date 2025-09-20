@@ -766,30 +766,6 @@
                 }
             });
 
-            // Digital file validation and display
-            const digitalFileInput = document.getElementById('digital_file');
-            const digitalFileName = document.getElementById('digitalFileName');
-
-            digitalFileInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const file = this.files[0];
-                    const isValid = validateDigitalFile(file, 'digitalFileError', 'digitalFileSuccess');
-
-                    if (isValid) {
-                        digitalFileName.textContent = `File dipilih: ${file.name}`;
-                        digitalFileName.style.color = '#198754';
-                    } else {
-                        // Clear the input if invalid
-                        this.value = '';
-                        digitalFileName.textContent = '';
-                    }
-                } else {
-                    digitalFileName.textContent = '';
-                    hideError('digitalFileError');
-                    hideSuccess('digitalFileSuccess');
-                }
-            });
-
             // Form submission with validation
             const productForm = document.getElementById('productForm');
             if (productForm) {
