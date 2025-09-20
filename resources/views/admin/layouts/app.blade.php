@@ -24,6 +24,9 @@
     <!-- Admin CSS dari resources -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    {{-- File Upload --}}
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+
     <style>
         :root {
             --boomtale-primary: #C9a877;

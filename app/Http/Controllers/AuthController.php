@@ -29,7 +29,7 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
+        
         $credentials = $request->only('email', 'password');
         $remember = $request->boolean('remember');
 

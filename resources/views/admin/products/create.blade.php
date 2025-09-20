@@ -3,6 +3,7 @@
 @section('page-title', 'Tambah Produk Baru')
 
 @push('styles')
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <style>
         .image-preview-container,
         .gallery-preview-container {
@@ -263,27 +264,20 @@
                                 <div class="mb-3">
                                     <label for="digital_file" class="form-label">Upload File <span
                                             class="text-danger">*</span></label>
-                                    <input type="file" class="form-control @error('digital_file') is-invalid @enderror"
+
+                                    <input type="file" class="@error('digital_file_path') is-invalid @enderror"
                                         id="digital_file" name="digital_file">
+
+                                    <input type="hidden" name="digital_file_path" id="digital_file_path">
+
                                     <div class="form-text">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        Format yang didukung: PDF atau MP4 (Maksimal: 1GB)
+                                        Format yang didukung: PDF, ZIP, MP4, EPUB (Maksimal: 1GB)
                                     </div>
-                                    @error('digital_file')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <div id="digitalFileName" class="file-name"></div>
-                                    <div id="digitalFileError" class="file-error" style="display: none;"></div>
-                                    <div id="digitalFileSuccess" class="file-success" style="display: none;"></div>
 
-                                    <div class="progress-container" id="progressContainer">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-boomtale"
-                                                id="progressBar" role="progressbar" style="width: 0%;" aria-valuenow="0"
-                                                aria-valuemin="0" aria-valuemax="100">0%</div>
-                                        </div>
-                                    </div>
-                                    <div id="uploadStatus" class="form-text mt-1"></div>
+                                    @error('digital_file_path')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -434,9 +428,90 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+    {{-- File Upload --}}
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // 1. Daftarkan plugin FilePond yang dibutuhkan
+            FilePond.registerPlugin(
+                FilePondPluginFileValidateType,
+                FilePondPluginFileValidateSize
+            );
+
+            // 2. Ambil elemen-elemen yang dibutuhkan
+            const digitalFileInput = document.querySelector('input[id="digital_file"]');
+            const hiddenInput = document.getElementById('digital_file_path');
+            const submitButton = document.getElementById('submitButton');
+            let isUploading = false;
+
+            // 3. Inisialisasi FilePond pada input file digital
+            const pond = FilePond.create(digitalFileInput, {
+                labelIdle: `Seret & Lepas file Anda atau <span class="filepond--label-action">Jelajahi</span>`,
+                maxFileSize: '1GB', // Batas validasi di sisi client
+                labelMaxFileSizeExceeded: 'File terlalu besar',
+                labelMaxFileSize: 'Ukuran maksimal adalah {filesize}',
+                acceptedFileTypes: ['application/pdf', 'video/mp4', 'application/zip',
+                    'application/epub+zip'
+                ],
+                labelFileTypeNotAllowed: 'Format file tidak valid',
+                fileValidateTypeLabelExpectedTypes: 'Harapkan file berjenis {allButLastType} atau {lastType}',
+            });
+
+            // 4. Konfigurasi server untuk chunked upload
+            FilePond.setOptions({
+                chunkUploads: true,
+                chunkSize: '5MB', // Ukuran setiap potongan file
+                chunkForce: true,
+                server: {
+                    process: {
+                        url: '{{ route('admin.products.upload') }}',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        onload: (response) => {
+                            // Server akan merespons dengan JSON berisi path file
+                            const responseData = JSON.parse(response);
+                            // Simpan path file ke hidden input
+                            hiddenInput.value = responseData.path;
+                            // Tandai bahwa upload selesai
+                            isUploading = false;
+                            // Aktifkan kembali tombol submit
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Produk';
+                            // Mengembalikan path agar FilePond tahu proses berhasil
+                            return responseData.path;
+                        },
+                        onerror: (response) => {
+                            // Handle error jika upload gagal
+                            isUploading = false;
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Produk';
+                            alert('Upload gagal! Silakan coba lagi.');
+                            return null;
+                        }
+                    },
+                    // URL untuk revert tidak kita gunakan saat ini
+                    revert: null,
+                },
+                // Tambahkan event listener untuk memantau status upload
+                onaddfile: (error, file) => {
+                    if (error) return;
+                    isUploading = true;
+                    // Nonaktifkan tombol submit saat file mulai di-upload
+                    submitButton.disabled = true;
+                    submitButton.innerHTML =
+                        `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="ms-2">Menunggu Upload Selesai...</span>`;
+                },
+                onremovefile: (error, file) => {
+                    // Jika file dibatalkan, aktifkan kembali tombol submit
+                    isUploading = false;
+                    hiddenInput.value = '';
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Produk';
+                }
+            });
             // File size limits (dalam bytes)
             const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
             const MAX_DIGITAL_FILE_SIZE = 1000 * 1024 * 1024; // 1000MB
@@ -717,113 +792,30 @@
 
             // Form submission with validation
             const productForm = document.getElementById('productForm');
-            const submitButton = document.getElementById('submitButton');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const uploadStatus = document.getElementById('uploadStatus');
-
             if (productForm) {
                 productForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-
-                    // Final validation before submit
-                    let hasErrors = false;
-
-                    // Validate featured image if selected
-                    const featuredImage = featuredImageInput.files[0];
-                    if (featuredImage && !validateImageFile(featuredImage, 'featuredImageError',
-                            'featuredImageSuccess')) {
-                        hasErrors = true;
-                    }
-
-                    // Validate gallery images if selected
-                    if (galleryImagesInput.files.length > 0) {
-                        Array.from(galleryImagesInput.files).forEach(file => {
-                            if (!validateImageFile(file, 'galleryImagesError',
-                                    'galleryImagesSuccess')) {
-                                hasErrors = true;
-                            }
-                        });
-                    }
-
-                    // Validate digital file if digital product
-                    if (typeDigital.checked) {
-                        const digitalFile = digitalFileInput.files[0];
-                        if (digitalFile && !validateDigitalFile(digitalFile, 'digitalFileError',
-                                'digitalFileSuccess')) {
-                            hasErrors = true;
-                        }
-                    }
-
-                    if (hasErrors) {
-                        alert('Terdapat file yang tidak valid. Silakan perbaiki terlebih dahulu.');
+                    // Cek apakah file besar sedang dalam proses upload
+                    if (isUploading) {
+                        e.preventDefault(); // Hentikan submit
+                        alert('Harap tunggu hingga proses upload file digital selesai.');
                         return;
                     }
 
-                    // Proceed with upload
-                    progressContainer.style.display = 'block';
-                    progressBar.style.width = '0%';
-                    progressBar.textContent = '0%';
-                    progressBar.classList.remove('bg-success');
-                    progressBar.classList.add('progress-bar-striped', 'progress-bar-animated');
-                    uploadStatus.textContent = 'Mempersiapkan upload...';
+                    // Cek jika produk digital tapi path file kosong (upload belum selesai/dihapus)
+                    const typeDigital = document.getElementById('typeDigital');
+                    if (typeDigital.checked && !hiddenInput.value) {
+                        e.preventDefault(); // Hentikan submit
+                        alert('Anda harus mengupload file untuk produk digital.');
+                        return;
+                    }
 
+                    // Lanjutkan submit form seperti biasa
                     submitButton.disabled = true;
-                    submitButton.innerHTML = `
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        <span class="ms-2">Mengupload...</span>
-                    `;
-
-                    const formData = new FormData(productForm);
-
-                    const config = {
-                        onUploadProgress: function(progressEvent) {
-                            const percentCompleted = Math.round((progressEvent.loaded * 100) /
-                                progressEvent.total);
-                            progressBar.style.width = percentCompleted + '%';
-                            progressBar.textContent = percentCompleted + '%';
-                            uploadStatus.textContent =
-                                `Mengupload... (${formatFileSize(progressEvent.loaded)} / ${formatFileSize(progressEvent.total)})`;
-
-                            if (percentCompleted === 100) {
-                                uploadStatus.textContent =
-                                    'Upload selesai. Memproses file di server...';
-                                submitButton.innerHTML = `
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                    <span class="ms-2">Memproses...</span>
-                                `;
-                            }
-                        }
-                    };
-
-                    axios.post(productForm.action, formData, config)
-                        .then(function(response) {
-                            uploadStatus.textContent = 'Produk berhasil disimpan! Mengalihkan...';
-                            progressBar.classList.remove('progress-bar-striped',
-                                'progress-bar-animated');
-                            progressBar.classList.add('bg-success');
-                            window.location.href = "{{ route('admin.products.index') }}";
-                        })
-                        .catch(function(error) {
-                            progressContainer.style.display = 'none';
-                            submitButton.disabled = false;
-                            submitButton.innerHTML = '<i class="fas fa-save me-2"></i>Simpan Produk';
-
-                            if (error.response && error.response.status === 422) {
-                                uploadStatus.textContent = 'Gagal! Terdapat kesalahan pada input Anda.';
-                                let errorMessages = 'Validasi gagal:\n';
-                                for (const key in error.response.data.errors) {
-                                    errorMessages += `- ${error.response.data.errors[key][0]}\n`;
-                                }
-                                alert(errorMessages);
-                            } else {
-                                uploadStatus.textContent = 'Terjadi kesalahan saat memproses file.';
-                                alert('Error: ' + (error.response ? error.response.data.message : error
-                                    .message));
-                            }
-                        });
+                    submitButton.innerHTML =
+                        `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="ms-2">Menyimpan...</span>`;
                 });
             }
+        }
         });
     </script>
 @endpush
