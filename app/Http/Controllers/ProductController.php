@@ -222,49 +222,57 @@ class ProductController extends Controller
 
     public function upload(Request $request)
     {
-        $receiver = new FileReceiver('digital_file', $request, HandlerFactory::classFromRequest($request));
+        try {
+            $receiver = new FileReceiver('digital_file', $request, HandlerFactory::classFromRequest($request));
 
-        // Pastikan file belum di-upload sepenuhnya
-        if ($receiver->isUploaded() === false) {
-            throw new \Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException();
-        }
+            if ($receiver->isUploaded() === false) {
+                throw new \Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException();
+            }
 
-        // Menerima file, akan menyimpan sementara (chunks) atau menyatukan jika sudah selesai
-        $save = $receiver->receive();
+            $save = $receiver->receive();
 
-        // Jika upload sudah selesai
-        if ($save->isFinished()) {
-            // Ambil file yang sudah disatukan
-            $file = $save->getFile();
+            if ($save->isFinished()) {
+                $file = $save->getFile();
+                $originalName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
 
-            // Pindahkan ke lokasi final Anda
-            // Ganti 'digital_files' dengan folder yang Anda inginkan
-            $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
-            $path = Storage::disk('private')->putFileAs('digital_files', $file, $fileName);
+                // Buat nama file yang lebih baik: slug dari nama asli + id unik
+                $fileName = Str::slug(pathinfo($originalName, PATHINFO_FILENAME)) . '-' . uniqid() . '.' . $extension;
 
-            // Hapus file temporary
-            unlink($file->getPathname());
+                // Simpan ke disk 'private' (storage/app/) untuk keamanan
+                $path = $file->storeAs('digital_files', $fileName, 'private');
 
-            // Kirim kembali path file yang sudah disimpan untuk digunakan di frontend
+                // Hapus file temporary yang dibuat oleh library
+                @unlink($file->getPathname());
+
+                Log::info("File upload selesai. Disimpan di: " . $path);
+
+                // Kirim kembali path file yang akan disimpan di database
+                return response()->json([
+                    'path' => $path,
+                ]);
+            }
+
+            $handler = $save->handler();
+
             return response()->json([
-                'path' => $path,
-                'name' => $fileName
+                'done' => $handler->getPercentageDone(),
             ]);
+        } catch (\Exception $e) {
+            // Catat error jika terjadi kegagalan
+            Log::error("Chunk upload error: " . $e->getMessage());
+            return response()->json(['error' => 'Terjadi kesalahan saat mengupload file.'], 500);
         }
-
-        // Jika masih dalam proses upload (chunk belum selesai)
-        $handler = $save->handler();
-        return response()->json([
-            'done' => $handler->getPercentageDone(),
-            'status' => true
-        ]);
     }
+
     /**
-     * Store a newly created product
+     * Store a newly created product.
+     * VERSI PERBAIKAN: Logika lebih bersih dan tidak ada duplikasi.
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // 1. Validasi semua data input
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255|unique:products,name',
             'description' => 'required|string',
             'type' => 'required|in:digital,physical',
@@ -273,17 +281,20 @@ class ProductController extends Controller
             'discount_price' => 'required|numeric|min:0',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20000',
-            // File digital wajib jika tipe produknya digital
-            'digital_file_path' => 'required_if:type,digital|string',
+            'digital_file_path' => 'required_if:type,digital|string', // Validasi path dari hidden input
             'stock' => 'nullable|required_if:type,physical|integer|min:0',
         ]);
-        $data = $request->except(['_token', 'digital_file']); // Hapus 'digital_file' dari data
 
-        $data = $request->except(['featured_image', 'gallery_images', 'digital_file']);
-        $data['slug'] = Str::slug($request->name);
+        // 2. Siapkan data untuk dimasukkan ke database dari hasil validasi
+        // Tidak perlu lagi menggunakan $request->except() berulang kali
+        $data = $validatedData;
+
+        // 3. Tambahkan data yang tidak ada di form validasi
+        $data['slug'] = Str::slug($validatedData['name']);
         $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
 
+        // 4. Handle upload untuk file gambar (non-chunked)
         if ($request->hasFile('featured_image')) {
             $data['featured_image'] = $request->file('featured_image')->store('products/featured', 'public');
         }
@@ -298,12 +309,7 @@ class ProductController extends Controller
             $data['gallery_images'] = []; // Pastikan selalu ada array, meskipun kosong
         }
 
-        if ($request->filled('digital_file_path')) {
-            $data['digital_file_path'] = $request->input('digital_file_path');
-        }
-
-
-
+        // 5. Buat produk di database
         Product::create($data);
 
         return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambahkan.');
